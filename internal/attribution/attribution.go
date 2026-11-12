@@ -62,6 +62,9 @@ func DefaultConfig() Config {
 		TauMin: 0.55,
 		Delta:  0.15,
 		Weights: map[string]float64{
+			// Accuracy, refusal, latency, and truncation are direct diagnostic
+			// signals; style and length receive lower weight because they overlap
+			// across model and request-configuration changes.
 			"accuracy": 1, "refusal": 1, "json_valid": 1, "response_length": 0.8,
 			"latency": 1, "style": 0.8, "truncation": 1, "output_tokens": 1,
 		},
