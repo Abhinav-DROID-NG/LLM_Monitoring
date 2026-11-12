@@ -135,6 +135,22 @@ func CreateRun(ctx context.Context, db *sql.DB, id, status string) error {
 	return nil
 }
 
+func UpdateRunStatus(ctx context.Context, db *sql.DB, id, status string) error {
+	if id == "" || status == "" {
+		return errors.New("run ID and status are required")
+	}
+	result, err := db.ExecContext(ctx, "UPDATE probe_runs SET status = ? WHERE id = ?", status, id)
+	if err != nil {
+		return fmt.Errorf("update probe run %q: %w", id, err)
+	}
+	if count, err := result.RowsAffected(); err != nil {
+		return fmt.Errorf("inspect probe run update %q: %w", id, err)
+	} else if count != 1 {
+		return fmt.Errorf("probe run %q does not exist", id)
+	}
+	return nil
+}
+
 func SaveObservation(ctx context.Context, db *sql.DB, observation Observation) error {
 	if observation.ID == "" || observation.RunID == "" || observation.TaskID == "" {
 		return errors.New("observation ID, run ID, and task ID are required")
