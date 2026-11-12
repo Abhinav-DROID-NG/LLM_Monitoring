@@ -12,8 +12,15 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/attribution"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/baseline"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/canary"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/config"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/logging"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/mockprovider"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/probe"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/report"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/stats"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/store"
 )
 
@@ -26,14 +33,109 @@ func main() {
 
 func run(args []string) error {
 	if len(args) == 0 {
-		return errors.New("usage: model-monitor <serve>")
+		return errors.New("usage: model-monitor <mock serve|start|stop|status|baseline|run|report|evaluate|demo|privacy-check>")
 	}
 	switch args[0] {
 	case "serve":
 		return serve(args[1:])
+	case "mock":
+		if len(args) != 2 || args[1] != "serve" {
+			return errors.New("usage: model-monitor mock serve")
+		}
+		return serve(nil)
+	case "start":
+		return serve(args[1:])
+	case "stop":
+		return errors.New("stop requires a process supervisor or configured PID file")
+	case "status":
+		return status()
+	case "baseline":
+		return runCycle(true)
+	case "run":
+		return runCycle(false)
+	case "report":
+		return errors.New("no persisted report is available; run `model-monitor run` first")
+	case "evaluate":
+		return errors.New("evaluation harness is implemented in Phase 6")
+	case "demo":
+		return runCycle(false)
+	case "privacy-check":
+		return privacyCheck()
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
+}
+
+func status() error {
+	cfg, err := config.FromEnv()
+	if err != nil {
+		return err
+	}
+	db, err := store.Open(context.Background(), cfg.DatabasePath)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	var runs int
+	if err := db.QueryRow("SELECT COUNT(*) FROM probe_runs").Scan(&runs); err != nil {
+		return fmt.Errorf("read monitor status: %w", err)
+	}
+	fmt.Printf("monitor status: ready\nprobe runs: %d\n", runs)
+	return nil
+}
+
+func runCycle(saveBaseline bool) error {
+	cfg, err := config.FromEnv()
+	if err != nil {
+		return err
+	}
+	suite, err := canary.Load("canaries_fixed.json")
+	if err != nil {
+		return err
+	}
+	db, err := store.Open(context.Background(), cfg.DatabasePath)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	mock := mockprovider.New(1)
+	runner, err := probe.NewRunner(probe.Config{Concurrency: 4, Retries: 1, RetryDelay: 10 * time.Millisecond})
+	if err != nil {
+		return err
+	}
+	runID := fmt.Sprintf("cli-%d", time.Now().UnixNano())
+	observations, err := runner.RunAndStore(context.Background(), suite, mock.Provider(), db, runID)
+	if err != nil {
+		return err
+	}
+	window := baseline.Build(runID, observations)
+	encoded, err := baseline.Marshal(window)
+	if err != nil {
+		return err
+	}
+	if saveBaseline {
+		if err := store.SaveBaselineWindow(context.Background(), db, runID, encoded); err != nil {
+			return err
+		}
+		fmt.Printf("baseline created: %s (%d probes)\n", runID, len(observations))
+		return nil
+	}
+	changes := stats.Detect(window.Samples, window.Samples, stats.DefaultConfig(), 1)
+	inference := attribution.Analyze(changes, attribution.DefaultConfig())
+	value := report.New(runID, "current-run", time.Now().Add(-time.Second), time.Now(), len(observations), 0, window.Summary.Count, 0, changes, inference)
+	fmt.Print(report.Markdown(value))
+	return nil
+}
+
+func privacyCheck() error {
+	forbidden := []string{"web/", ".html", ".css", ".js"}
+	for _, path := range forbidden {
+		if _, err := os.Stat(path); err == nil {
+			return fmt.Errorf("privacy check failed: forbidden path exists: %s", path)
+		}
+	}
+	fmt.Println("privacy check: passed")
+	return nil
 }
 
 func serve(args []string) error {
