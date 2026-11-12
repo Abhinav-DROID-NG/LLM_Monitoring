@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
@@ -28,6 +29,7 @@ import (
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/provider"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/report"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/router"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/scheduler"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/stats"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/store"
 )
@@ -52,7 +54,7 @@ func run(args []string) error {
 		}
 		return mockServe()
 	case "start":
-		return serve(args[1:])
+		return startMonitor()
 	case "stop":
 		return errors.New("stop requires a process supervisor or configured PID file")
 	case "status":
@@ -401,14 +403,63 @@ func serve(args []string) error {
 	}
 }
 
+func startMonitor() error {
+	cfg, err := config.FromEnv()
+	if err != nil {
+		return err
+	}
+	logger := logging.New(cfg.LogLevel)
+	db, err := store.Open(context.Background(), cfg.DatabasePath)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	server := &http.Server{
+		Addr: cfg.HTTPAddr, Handler: healthHandler(),
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+	errs := make(chan error, 2)
+	go func() {
+		logger.Info("server started", slog.String("addr", cfg.HTTPAddr))
+		errs <- server.ListenAndServe()
+	}()
+	go func() {
+		errs <- scheduler.Run(ctx, scheduler.Config{
+			Interval: cfg.Interval, Profile: scheduler.Profile(cfg.Profile),
+		}, func(ctx context.Context, _ int) error {
+			if _, err := store.NextCycle(ctx, db); err != nil {
+				return err
+			}
+			return runCycle(false)
+		})
+	}()
+	select {
+	case <-ctx.Done():
+		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer shutdownCancel()
+		return server.Shutdown(shutdownCtx)
+	case err := <-errs:
+		if errors.Is(err, context.Canceled) || errors.Is(err, http.ErrServerClosed) {
+			return nil
+		}
+		return fmt.Errorf("start: %w", err)
+	}
+}
+
 func mockServe() error {
 	cfg, err := config.FromEnv()
 	if err != nil {
 		return err
 	}
 	mock := mockprovider.New(1)
+	providerURL, err := url.Parse(cfg.ProviderURL)
+	if err != nil || providerURL.Host == "" {
+		return fmt.Errorf("invalid provider URL %q", cfg.ProviderURL)
+	}
 	server := &http.Server{
-		Addr:              cfg.ProviderURL,
+		Addr:              providerURL.Host,
 		Handler:           mock.Handler(),
 		ReadHeaderTimeout: 5 * time.Second,
 	}

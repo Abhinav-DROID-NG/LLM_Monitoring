@@ -9,7 +9,7 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const currentSchemaVersion = 3
+const currentSchemaVersion = 4
 
 type Observation struct {
 	ID                string
@@ -130,6 +130,20 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 		`); err != nil {
 			return fmt.Errorf("apply schema migration 3: %w", err)
 		}
+		if version < 4 {
+			if _, err := tx.ExecContext(ctx, `
+				CREATE TABLE IF NOT EXISTS cycle_state (
+					id INTEGER PRIMARY KEY CHECK (id = 1),
+					cycle INTEGER NOT NULL
+				);
+				INSERT OR IGNORE INTO cycle_state(id, cycle) VALUES (1, 0);
+			`); err != nil {
+				return fmt.Errorf("apply schema migration 4: %w", err)
+			}
+			if _, err := tx.ExecContext(ctx, "INSERT INTO schema_migrations(version) VALUES (?)", 4); err != nil {
+				return fmt.Errorf("record schema migration 4: %w", err)
+			}
+		}
 		if _, err := tx.ExecContext(ctx, "INSERT INTO schema_migrations(version) VALUES (?)", 3); err != nil {
 			return fmt.Errorf("record schema migration 3: %w", err)
 		}
@@ -238,4 +252,15 @@ func LatestReport(ctx context.Context, db *sql.DB) (string, error) {
 		return "", fmt.Errorf("read latest report: %w", err)
 	}
 	return markdown, nil
+}
+
+func NextCycle(ctx context.Context, db *sql.DB) (int64, error) {
+	if _, err := db.ExecContext(ctx, "UPDATE cycle_state SET cycle = cycle + 1 WHERE id = 1"); err != nil {
+		return 0, fmt.Errorf("increment cycle counter: %w", err)
+	}
+	var cycle int64
+	if err := db.QueryRowContext(ctx, "SELECT cycle FROM cycle_state WHERE id = 1").Scan(&cycle); err != nil {
+		return 0, fmt.Errorf("read cycle counter: %w", err)
+	}
+	return cycle, nil
 }
