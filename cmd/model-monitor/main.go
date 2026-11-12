@@ -77,7 +77,7 @@ func run(args []string) error {
 }
 
 func evaluate() error {
-	harness := evaluation.New(10000)
+	harness := evaluation.New(evaluation.EvaluationSeed)
 	schedule := make([]groundtruth.Entry, 0, len(harness.Scenarios))
 	for _, scenario := range harness.Scenarios {
 		schedule = append(schedule, groundtruth.Entry{
@@ -92,7 +92,7 @@ func evaluate() error {
 	if _, err := sealedLog.Commit(); err != nil {
 		return err
 	}
-	mock := mockprovider.New(10000)
+	mock := mockprovider.New(evaluation.BaselineSeed)
 	aliasRouter, err := router.New(router.Config{Alias: "support-bot-v1", Upstream: "synthetic-mock"}, mock.Handler(), mock)
 	if err != nil {
 		return err

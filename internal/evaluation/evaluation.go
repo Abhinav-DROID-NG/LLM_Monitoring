@@ -21,6 +21,11 @@ type Scenario struct {
 	Seed  int64
 }
 
+const (
+	BaselineSeed   int64 = 20000
+	EvaluationSeed int64 = 10000
+)
+
 type Trial struct {
 	Scenario         Scenario
 	Predicted        string

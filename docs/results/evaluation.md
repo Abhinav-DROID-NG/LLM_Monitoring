@@ -18,9 +18,9 @@ Requests/cycle: 81.00
 
 Prompt tokens/cycle: 1717.00
 
-Completion tokens/cycle: 649.62
+Completion tokens/cycle: 649.67
 
-Latency/cycle: 38.19 ms
+Latency/cycle: 36.51 ms
 
 ## Confusion matrix
 
