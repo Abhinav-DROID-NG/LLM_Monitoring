@@ -96,8 +96,11 @@ func Analyze(changes []stats.Change, config Config) Report {
 				penalty += weight * absEffect(change.Effect)
 			}
 		}
-		raw := positive - penalty
-		score := clamp(raw / maxFloat(1, positive+penalty))
+		score := 0.0
+		if positive > 0 {
+			score = clamp((positive - 0.5*penalty) / positive)
+		}
+		score *= coverageFor(signature, changes)
 		coverage := 0.0
 		if len(signature.Primary) > 0 {
 			for _, feature := range signature.Primary {
@@ -116,6 +119,13 @@ func Analyze(changes []stats.Change, config Config) Report {
 		return report
 	}
 	ambiguous := len(candidates) > 1 && candidates[0].Score-candidates[1].Score < config.Delta
+	if ambiguous && len(candidates) > 1 &&
+		candidates[0].Score >= config.TauMin && candidates[1].Score >= config.TauMin &&
+		distinctEvidence(candidates[0].Layer, candidates[1].Layer, changes, config.Signatures) {
+		report.Verdict = candidates[0].Layer
+		report.Attributions = []string{candidates[0].Layer, candidates[1].Layer}
+		return report
+	}
 	if candidates[0].Score < config.TauMin || ambiguous {
 		report.Verdict = Inconclusive
 		report.FollowUps = selectFollowUps(candidates, changes)
@@ -199,11 +209,15 @@ func selectFollowUps(candidates []Candidate, changes []stats.Change) []FollowUp 
 		return nil
 	}
 	top := candidates[0].Layer
+	if hasChanged(changes, "response_length") && !hasChanged(changes, "latency") {
+		top = RequestConfig
+	}
 	followUp := FollowUp{
 		Kind:       "pin_request_configuration",
 		Reason:     "pin parameters to distinguish request defaults from model and serving changes",
 		Parameters: provider.Request{Temperature: floatPtr(0.2), MaxTokens: intPtr(256), ResponseFormat: "text"},
 	}
+
 	if top == Serving || (len(candidates) > 1 && candidates[1].Layer == Serving) {
 		followUp = FollowUp{
 			Kind:   "repeat_across_time",
@@ -217,20 +231,46 @@ func selectFollowUps(candidates []Candidate, changes []stats.Change) []FollowUp 
 	return []FollowUp{followUp}
 }
 
+func hasChanged(changes []stats.Change, feature string) bool {
+	change, ok := findChange(changes, feature)
+	return ok && change.Changed
+}
+
 func findChange(changes []stats.Change, feature string) (stats.Change, bool) {
 	for _, change := range changes {
 		if change.Feature == feature {
 			return change, true
 		}
 	}
-	if feature == "output_tokens" {
-		for _, change := range changes {
-			if change.Feature == "response_length" {
-				return change, true
-			}
+	return stats.Change{}, false
+}
+
+func coverageFor(signature Signature, changes []stats.Change) float64 {
+	if len(signature.Primary) == 0 {
+		return 0
+	}
+	changed := 0
+	for _, feature := range signature.Primary {
+		if change, ok := findChange(changes, feature); ok && change.Changed {
+			changed++
 		}
 	}
-	return stats.Change{}, false
+	return float64(changed) / float64(len(signature.Primary))
+}
+
+func distinctEvidence(first, second string, changes []stats.Change, signatures map[string]Signature) bool {
+	firstFeatures := make(map[string]bool)
+	for _, feature := range signatures[first].Primary {
+		if change, ok := findChange(changes, feature); ok && change.Changed {
+			firstFeatures[feature] = true
+		}
+	}
+	for _, feature := range signatures[second].Primary {
+		if change, ok := findChange(changes, feature); ok && change.Changed && !firstFeatures[feature] {
+			return true
+		}
+	}
+	return false
 }
 
 func absEffect(value float64) float64 {
