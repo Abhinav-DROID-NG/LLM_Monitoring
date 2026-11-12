@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"time"
@@ -52,6 +53,8 @@ func execute(command string, cfg monitor.Config) error {
 	if err != nil {
 		return err
 	}
+	aliasServer := httptest.NewServer(router.Handler())
+	defer aliasServer.Close()
 	layers := healthy(cfg)
 	var entries []monitor.GroundTruthEntry
 	cycle := 0
@@ -71,7 +74,7 @@ func execute(command string, cfg monitor.Config) error {
 			}
 		}
 		cycle++
-		observations := monitor.Run(context.Background(), library, router, 4)
+		observations := monitor.RunViaAlias(context.Background(), library, aliasServer.URL+"/v1/chat/completions", nil, 4)
 		return monitor.SaveJSON(filepath.Join(cfg.DataDir, command+"-"+time.Now().UTC().Format("20060102T150405Z")+".json"), observations)
 	}
 	if command != "start" {
@@ -135,8 +138,10 @@ func evaluate(cfg monitor.Config) error {
 	if err != nil {
 		return err
 	}
+	aliasServer := httptest.NewServer(router.Handler())
+	defer aliasServer.Close()
 
-	reference := monitor.Run(context.Background(), library, router, 4)
+	reference := monitor.RunViaAlias(context.Background(), library, aliasServer.URL+"/v1/chat/completions", nil, 4)
 	previous := router.Layers()
 	experimentID := fmt.Sprintf("exp-%d", time.Now().UnixNano())
 	scenarios := make([]monitor.GroundTruthEntry, 0, 4)
@@ -162,53 +167,75 @@ func evaluate(cfg monitor.Config) error {
 		return err
 	}
 	results := make([]map[string]any, 0, len(scenarios))
+	control := monitor.Analyze(reference, reference)
+	results = append(results, map[string]any{"experiment_id": experimentID + "-control", "alias": monitor.Alias,
+		"actual_layer": "", "detected": control.Detected, "confidence": control.Confidence,
+		"predicted_layer": control.PredictedLayer, "evidence": control.Evidence})
 	for _, scenario := range scenarios {
 		router.SetLayers(scenario.New)
-		current := monitor.Run(context.Background(), library, router, 4)
-		changed, confidence, evidence := monitor.Compare(reference, current)
-		results = append(results, map[string]any{"experiment_id": scenario.Experiment, "alias": monitor.Alias, "detected": changed, "confidence": confidence, "predicted_layer": inferLayer(evidence), "evidence": evidence})
+		current := monitor.RunViaAlias(context.Background(), library, aliasServer.URL+"/v1/chat/completions", nil, 4)
+		analysis := monitor.Analyze(reference, current)
+		results = append(results, map[string]any{"experiment_id": scenario.Experiment, "alias": monitor.Alias,
+			"actual_layer": scenario.Layer, "detected": analysis.Detected, "confidence": analysis.Confidence,
+			"predicted_layer": analysis.PredictedLayer, "evidence": analysis.Evidence})
 	}
-	result := map[string]any{"experiment_id": experimentID, "results": results}
+	result := map[string]any{"experiment_id": experimentID, "results": results, "metrics": score(results)}
 	data, _ := json.MarshalIndent(result, "", "  ")
 	fmt.Println(string(data))
 	return monitor.SaveJSON(filepath.Join(cfg.DataDir, "evaluation.json"), result)
 }
 
-func newRouter(cfg monitor.Config) (*monitor.Router, error) {
-	client := &http.Client{Timeout: 60 * time.Second}
-	return monitor.NewProviderRouter(map[string]monitor.Upstream{
-		cfg.ModelA: monitor.Groq{Endpoint: cfg.Endpoint, APIKey: cfg.APIKey, Client: client},
-		cfg.ModelB: monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client},
-		cfg.ModelC: monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client},
-	}, healthy(cfg))
-}
-
-func inferLayer(evidence []string) string {
-	if len(evidence) == 0 {
-		return "unknown"
-	}
-	refusal, config, latency := 0, 0, 0
-	for _, item := range evidence {
-		switch {
-		case len(item) >= 4 && item[:4] == "REF-":
-			refusal++
-		case len(item) >= 4 && (item[:4] == "FMT-" || item[:4] == "INS-"):
-			config++
-		case len(item) >= 8 && item[len(item)-8:] == "increased":
-			latency++
+func score(results []map[string]any) map[string]float64 {
+	var correct, predictedPositive, actualPositive, truePositive, falsePositive, falseNegative, layerCorrect float64
+	for _, result := range results {
+		actual := result["actual_layer"].(string)
+		predicted := result["predicted_layer"].(string)
+		detected := result["detected"].(bool)
+		positive := actual != ""
+		if positive {
+			actualPositive++
+		}
+		if detected {
+			predictedPositive++
+		}
+		if detected && positive {
+			truePositive++
+		}
+		if !detected && positive {
+			falseNegative++
+		}
+		if detected && !positive {
+			falsePositive++
+		}
+		if detected == positive {
+			correct++
+		}
+		if predicted == actual {
+			layerCorrect++
 		}
 	}
-	if latency > refusal+config && latency > 0 {
-		return "serving"
+	divide := func(n, d float64) float64 {
+		if d == 0 {
+			return 0
+		}
+		return n / d
 	}
-	if refusal > config && refusal > 0 {
-		return "safety"
-	}
-	if config > 0 {
-		return "request_config"
-	}
-	if len(evidence) >= 3 {
-		return "model"
-	}
-	return "unknown"
+	return map[string]float64{"detection_accuracy": divide(correct, float64(len(results))),
+		"precision": divide(truePositive, predictedPositive), "recall": divide(truePositive, actualPositive),
+		"false_positive_rate":        divide(falsePositive, float64(len(results))-actualPositive),
+		"false_negative_rate":        divide(falseNegative, actualPositive),
+		"layer_attribution_accuracy": divide(layerCorrect, float64(len(results)))}
+}
+
+func newRouter(cfg monitor.Config) (*monitor.Router, error) {
+	client := &http.Client{Timeout: 60 * time.Second}
+	groq := monitor.Groq{Endpoint: cfg.Endpoint, APIKey: cfg.APIKey, Client: client}
+	localB := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
+	localC := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
+	return monitor.NewProviderRouter(map[string]monitor.Upstream{
+		cfg.ModelA: groq, cfg.ModelB: localB, cfg.ModelC: localC,
+		cfg.ModelA + "|groq-a": groq, cfg.ModelA + "|groq-c": groq,
+		cfg.ModelB + "|groq-a": localB, cfg.ModelB + "|groq-c": localC,
+		cfg.ModelC + "|groq-a": localC, cfg.ModelC + "|groq-c": localC,
+	}, healthy(cfg))
 }
