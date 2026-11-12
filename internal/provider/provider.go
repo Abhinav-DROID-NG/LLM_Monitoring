@@ -33,6 +33,6 @@ type Choice struct {
 }
 
 type Usage struct {
-	PromptTokens     int
-	CompletionTokens int
+	PromptTokens     int `json:"prompt_tokens"`
+	CompletionTokens int `json:"completion_tokens"`
 }
