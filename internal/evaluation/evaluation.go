@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/attribution"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/groundtruth"
 )
 
 type Scenario struct {
@@ -62,6 +63,7 @@ func New(seed int64) Harness {
 		{"NONE", 60}, {attribution.Model, 30}, {attribution.Safety, 30},
 		{attribution.RequestConfig, 30}, {attribution.Serving, 30}, {"model+safety", 40},
 	}
+
 	scenarios := make([]Scenario, 0, 220)
 	id := 0
 	for _, group := range counts {
@@ -71,6 +73,23 @@ func New(seed int64) Harness {
 		}
 	}
 	return Harness{Scenarios: scenarios, TruthSealed: true}
+}
+
+func TrueLayers(scenario Scenario) groundtruth.Layers {
+	switch scenario.Truth {
+	case attribution.Model:
+		return groundtruth.Layers{Model: true}
+	case attribution.Safety:
+		return groundtruth.Layers{Safety: true}
+	case attribution.RequestConfig:
+		return groundtruth.Layers{RequestConfig: true}
+	case attribution.Serving:
+		return groundtruth.Layers{Serving: true}
+	case "model+safety":
+		return groundtruth.Layers{Model: true, Safety: true}
+	default:
+		return groundtruth.Layers{}
+	}
 }
 
 func (h *Harness) Commit() (string, error) {

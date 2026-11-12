@@ -1,6 +1,6 @@
 metric,value
 trials,220
-detection_rate,1
-false_alarm_rate,0
-single_layer_attribution_accuracy,1
-latency_per_cycle_ms,1
+detection_rate,0.8125
+false_alarm_rate,0.016666666666666666
+single_layer_attribution_accuracy,0.25
+latency_per_cycle_ms,36.04545454545455

@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"os/signal"
 	"syscall"
@@ -20,11 +21,13 @@ import (
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/config"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/evaluation"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/features"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/groundtruth"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/logging"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/mockprovider"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/probe"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/provider"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/report"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/router"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/stats"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/store"
 )
@@ -73,25 +76,88 @@ func run(args []string) error {
 
 func evaluate() error {
 	harness := evaluation.New(10000)
+	schedule := make([]groundtruth.Entry, 0, len(harness.Scenarios))
+	for _, scenario := range harness.Scenarios {
+		schedule = append(schedule, groundtruth.Entry{
+			ScenarioID: scenario.ID, TrueLayers: evaluation.TrueLayers(scenario),
+		})
+	}
+	sealedLog := groundtruth.New(schedule)
 	commitment, err := harness.Commit()
 	if err != nil {
 		return err
+	}
+	if _, err := sealedLog.Commit(); err != nil {
+		return err
+	}
+	mock := mockprovider.New(10000)
+	aliasRouter, err := router.New(router.Config{Alias: "support-bot-v1", Upstream: "synthetic-mock"}, mock.Handler(), mock)
+	if err != nil {
+		return err
+	}
+	server := httptest.NewServer(aliasRouter.Handler())
+	defer server.Close()
+	httpProvider, err := provider.NewHTTPClient(server.URL, &http.Client{Timeout: 30 * time.Second}, 1)
+	if err != nil {
+		return err
+	}
+	suite, err := canary.Load("canaries_fixed.json")
+	if err != nil {
+		return err
+	}
+	runner, err := probe.NewRunner(probe.Config{Concurrency: 8, Retries: 1, Alias: "support-bot-v1"})
+	if err != nil {
+		return err
+	}
+	baselineObservations, err := runner.Run(context.Background(), suite, httpProvider, "evaluation-baseline")
+	if err != nil {
+		return err
+	}
+	baselineFeatures := make([]features.Features, 0, len(baselineObservations))
+	for _, observation := range baselineObservations {
+		baselineFeatures = append(baselineFeatures, observation.Features)
+	}
+	trials := make([]evaluation.Trial, 0, len(harness.Scenarios))
+	for _, scenario := range harness.Scenarios {
+		layers := evaluation.TrueLayers(scenario)
+		aliasRouter.SetLayers(layers)
+		if err := sealedLog.Append(groundtruth.Entry{
+			TimestampUTC: time.Now().UTC(), ScenarioID: scenario.ID, TrueLayers: layers,
+		}); err != nil {
+			return err
+		}
+		observations, err := runner.Run(context.Background(), suite, httpProvider,
+			fmt.Sprintf("evaluation-%d", scenario.ID))
+		if err != nil {
+			return err
+		}
+		currentFeatures := make([]features.Features, 0, len(observations))
+		trial := evaluation.Trial{Scenario: scenario}
+		for _, observation := range observations {
+			currentFeatures = append(currentFeatures, observation.Features)
+			trial.Requests++
+			trial.PromptTokens += observation.Store.InputTokens
+			trial.CompletionTokens += observation.Store.OutputTokens
+			trial.LatencyMS += observation.Store.LatencyMS
+		}
+		changes := stats.Detect(baselineFeatures, currentFeatures, stats.DefaultConfig(), scenario.Seed)
+		inference := attribution.Analyze(changes, attribution.DefaultConfig())
+		trial.Predicted = inference.Verdict
+		trial.Detected = false
+		for _, change := range changes {
+			if change.Changed {
+				trial.Detected = true
+				break
+			}
+		}
+		trials = append(trials, trial)
 	}
 	truth, err := harness.Unseal(commitment)
 	if err != nil {
 		return err
 	}
-	trials := make([]evaluation.Trial, 0, len(truth))
-	for _, scenario := range truth {
-		predicted := attribution.Inconclusive
-		detected := scenario.Truth != "NONE"
-		if scenario.Truth != "NONE" {
-			predicted = scenario.Truth
-		}
-		trials = append(trials, evaluation.Trial{
-			Scenario: scenario, Predicted: predicted, Detected: detected,
-			Requests: 81, PromptTokens: 100, CompletionTokens: 50, LatencyMS: 1,
-		})
+	if _, err := sealedLog.Unseal(sealedLog.Commitment()); err != nil {
+		return err
 	}
 	metrics := evaluation.Score(trials, truth)
 	if err := evaluation.WriteResults("docs/results", metrics); err != nil {
