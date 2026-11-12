@@ -16,6 +16,47 @@ type Check struct {
 	Values []string `json:"values,omitempty"`
 }
 
+func (c *Check) UnmarshalJSON(data []byte) error {
+	type rawCheck struct {
+		Type   string            `json:"type"`
+		Value  json.RawMessage   `json:"value,omitempty"`
+		Values []json.RawMessage `json:"values,omitempty"`
+	}
+	var raw rawCheck
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+	c.Type = raw.Type
+	if len(raw.Value) > 0 && string(raw.Value) != "null" {
+		var s string
+		if err := json.Unmarshal(raw.Value, &s); err == nil {
+			c.Value = s
+		} else {
+			var v any
+			if err := json.Unmarshal(raw.Value, &v); err != nil {
+				return err
+			}
+			c.Value = fmt.Sprintf("%v", v)
+		}
+	}
+	if len(raw.Values) > 0 {
+		c.Values = make([]string, 0, len(raw.Values))
+		for _, item := range raw.Values {
+			var s string
+			if err := json.Unmarshal(item, &s); err == nil {
+				c.Values = append(c.Values, s)
+			} else {
+				var v any
+				if err := json.Unmarshal(item, &v); err != nil {
+					return err
+				}
+				c.Values = append(c.Values, fmt.Sprintf("%v", v))
+			}
+		}
+	}
+	return nil
+}
+
 type Task struct {
 	ID        string  `json:"id"`
 	Division  string  `json:"division"`
