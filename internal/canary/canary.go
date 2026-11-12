@@ -198,6 +198,13 @@ func isNumber(raw json.RawMessage) bool {
 }
 
 func (s Suite) Execute(ctx context.Context, p provider.Provider, taskID string) (Result, error) {
+	return s.ExecuteWithAlias(ctx, p, taskID, "support-bot-v1")
+}
+
+func (s Suite) ExecuteWithAlias(ctx context.Context, p provider.Provider, taskID, alias string) (Result, error) {
+	if alias == "" {
+		return Result{}, errors.New("provider alias cannot be empty")
+	}
 	var task *Task
 	for i := range s.Tasks {
 		if s.Tasks[i].ID == taskID {
@@ -210,7 +217,7 @@ func (s Suite) Execute(ctx context.Context, p provider.Provider, taskID string) 
 	}
 	maxTokens := task.MaxTokens
 	request := provider.Request{
-		Model: "stable-alias", Messages: []provider.Message{{Role: "user", Content: task.Prompt}},
+		Model: alias, Messages: []provider.Message{{Role: "user", Content: task.Prompt}},
 		MaxTokens: &maxTokens, Temperature: task.Temperature,
 	}
 	response, err := p.ChatCompletion(ctx, request)

@@ -221,7 +221,8 @@ func selectFollowUps(candidates []Candidate, changes []stats.Change) []FollowUp 
 		Parameters: provider.Request{Temperature: floatPtr(0.2), MaxTokens: intPtr(256), ResponseFormat: "text"},
 	}
 
-	if top == Serving || (len(candidates) > 1 && candidates[1].Layer == Serving) {
+	if (top == Serving || (len(candidates) > 1 && candidates[1].Layer == Serving)) &&
+		!(hasChanged(changes, "response_length") && !hasChanged(changes, "latency")) {
 		followUp = FollowUp{
 			Kind:   "repeat_across_time",
 			Reason: "repeat unchanged synthetic probes to test serving-stack variability",

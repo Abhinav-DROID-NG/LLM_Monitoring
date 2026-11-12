@@ -17,6 +17,7 @@ type Config struct {
 	Concurrency int
 	Retries     int
 	RetryDelay  time.Duration
+	Alias       string
 }
 
 type Observation struct {
@@ -37,6 +38,9 @@ func NewRunner(config Config) (*Runner, error) {
 	}
 	if config.RetryDelay < 0 {
 		return nil, fmt.Errorf("retry delay cannot be negative")
+	}
+	if config.Alias == "" {
+		config.Alias = "support-bot-v1"
 	}
 	return &Runner{config: config}, nil
 }
@@ -136,7 +140,7 @@ func (r *Runner) execute(ctx context.Context, suite canary.Suite, p provider.Pro
 	var err error
 	retries := 0
 	for attempt := 0; attempt <= r.config.Retries; attempt++ {
-		result, err = suite.Execute(ctx, p, task.ID)
+		result, err = suite.ExecuteWithAlias(ctx, p, task.ID, r.config.Alias)
 		if err == nil {
 			break
 		}

@@ -21,6 +21,7 @@ import (
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/logging"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/mockprovider"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/probe"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/provider"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/report"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/stats"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/store"
@@ -44,7 +45,7 @@ func run(args []string) error {
 		if len(args) != 2 || args[1] != "serve" {
 			return errors.New("usage: model-monitor mock serve")
 		}
-		return serve(nil)
+		return mockServe()
 	case "start":
 		return serve(args[1:])
 	case "stop":
@@ -131,13 +132,16 @@ func runCycle(saveBaseline bool) error {
 		return err
 	}
 	defer db.Close()
-	mock := mockprovider.New(1)
+	httpProvider, err := provider.NewHTTPClient(cfg.ProviderURL, &http.Client{Timeout: cfg.HTTPTimeout}, cfg.ProviderRetries)
+	if err != nil {
+		return err
+	}
 	runner, err := probe.NewRunner(probe.Config{Concurrency: 4, Retries: 1, RetryDelay: 10 * time.Millisecond})
 	if err != nil {
 		return err
 	}
 	runID := fmt.Sprintf("cli-%d", time.Now().UnixNano())
-	observations, err := runner.RunAndStore(context.Background(), suite, mock.Provider(), db, runID)
+	observations, err := runner.RunAndStore(context.Background(), suite, httpProvider, db, runID)
 	if err != nil {
 		return err
 	}
@@ -180,17 +184,23 @@ func demo() error {
 	if err != nil {
 		return err
 	}
-	mock := mockprovider.New(7)
-	run := func(label string, layers mockprovider.Layers) ([]probe.Observation, error) {
-		mock.SetLayers(layers)
-		observations, err := runner.Run(context.Background(), suite, mock.Provider(), label)
+	cfg, err := config.FromEnv()
+	if err != nil {
+		return err
+	}
+	httpProvider, err := provider.NewHTTPClient(cfg.ProviderURL, &http.Client{Timeout: cfg.HTTPTimeout}, cfg.ProviderRetries)
+	if err != nil {
+		return err
+	}
+	run := func(label string) ([]probe.Observation, error) {
+		observations, err := runner.Run(context.Background(), suite, httpProvider, label)
 		if err != nil {
 			return nil, err
 		}
 		fmt.Printf("demo %-20s probes=%d\n", label, len(observations))
 		return observations, nil
 	}
-	baselineObservations, err := run("demo-baseline", mockprovider.Layers{})
+	baselineObservations, err := run("demo-baseline")
 	if err != nil {
 		return err
 	}
@@ -199,16 +209,15 @@ func demo() error {
 		baselineFeatures = append(baselineFeatures, observation.Features)
 	}
 	for _, scenario := range []struct {
-		name   string
-		layers mockprovider.Layers
+		name string
 	}{
-		{"model-change", mockprovider.Layers{Model: true}},
-		{"safety-change", mockprovider.Layers{Safety: true}},
-		{"request-change", mockprovider.Layers{RequestConfig: true}},
-		{"serving-change", mockprovider.Layers{Serving: true}},
-		{"combined-change", mockprovider.Layers{Model: true, Safety: true}},
+		{"model-change"},
+		{"safety-change"},
+		{"request-change"},
+		{"serving-change"},
+		{"combined-change"},
 	} {
-		current, err := run("demo-"+scenario.name, scenario.layers)
+		current, err := run("demo-" + scenario.name)
 		if err != nil {
 			return err
 		}
@@ -233,6 +242,7 @@ func serve(args []string) error {
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
+
 	cfg, err := config.FromEnv()
 	if err != nil {
 		return err
@@ -266,6 +276,36 @@ func serve(args []string) error {
 		return fmt.Errorf("serve: %w", err)
 	case signal := <-signals:
 		logger.Info("shutdown requested", slog.String("signal", signal.String()))
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		return server.Shutdown(ctx)
+	}
+}
+
+func mockServe() error {
+	cfg, err := config.FromEnv()
+	if err != nil {
+		return err
+	}
+	mock := mockprovider.New(1)
+	server := &http.Server{
+		Addr:              cfg.ProviderURL,
+		Handler:           mock.Handler(),
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+	errs := make(chan error, 1)
+	go func() { errs <- server.ListenAndServe() }()
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
+	defer signal.Stop(signals)
+	select {
+	case err := <-errs:
+		if errors.Is(err, http.ErrServerClosed) {
+			return nil
+		}
+		return fmt.Errorf("mock serve: %w", err)
+	case signal := <-signals:
+		_ = signal
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		return server.Shutdown(ctx)
