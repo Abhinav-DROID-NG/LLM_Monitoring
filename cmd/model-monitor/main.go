@@ -52,13 +52,32 @@ func execute(command string, cfg monitor.Config) error {
 	if err != nil {
 		return err
 	}
+	layers := healthy(cfg)
+	var entries []monitor.GroundTruthEntry
+	cycle := 0
 	run := func() error {
+		if command == "start" && cycle > 0 && cycle%4 == 0 {
+			previous := layers
+			layers = scheduledLayers(cfg, layers, cycle/4)
+			router.SetLayers(layers)
+			entries = append(entries, monitor.GroundTruthEntry{Timestamp: time.Now().UTC(), Previous: previous, New: layers,
+				Layer: scheduledLayer(cycle / 4), Experiment: fmt.Sprintf("scheduled-%d", cycle/4)})
+			sealed, err := monitor.NewSealedLog(entries)
+			if err != nil {
+				return err
+			}
+			if err := sealed.Save(filepath.Join(cfg.DataDir, "ground-truth.sealed.json")); err != nil {
+				return err
+			}
+		}
+		cycle++
 		observations := monitor.Run(context.Background(), library, router, 4)
 		return monitor.SaveJSON(filepath.Join(cfg.DataDir, command+"-"+time.Now().UTC().Format("20060102T150405Z")+".json"), observations)
 	}
 	if command != "start" {
 		return run()
 	}
+
 	ticker := time.NewTicker(cfg.Interval)
 	defer ticker.Stop()
 	for {
@@ -67,6 +86,37 @@ func execute(command string, cfg monitor.Config) error {
 		}
 		<-ticker.C
 	}
+}
+
+func scheduledLayer(epoch int) string {
+	return []string{"model", "safety", "request_config", "serving"}[(epoch-1)%4]
+}
+
+func scheduledLayers(cfg monitor.Config, layers monitor.Layers, epoch int) monitor.Layers {
+	next := layers
+	switch scheduledLayer(epoch) {
+	case "model":
+		next.Model = cfg.ModelB
+	case "safety":
+		if next.Safety == "strict" {
+			next.Safety = "loose"
+		} else {
+			next.Safety = "strict"
+		}
+	case "request_config":
+		if next.RequestConfig == "default" {
+			next.RequestConfig, next.Temperature, next.MaxTokens, next.SystemPrompt = "changed", 0.8, 64, "Be concise and answer in JSON."
+		} else {
+			next.RequestConfig, next.Temperature, next.MaxTokens, next.SystemPrompt = "default", cfg.Temperature, cfg.MaxTokens, cfg.SystemPrompt
+		}
+	case "serving":
+		if next.Serving == "groq-a" {
+			next.Serving = "groq-c"
+		} else {
+			next.Serving = "groq-a"
+		}
+	}
+	return next
 }
 
 func healthy(cfg monitor.Config) monitor.Layers {
