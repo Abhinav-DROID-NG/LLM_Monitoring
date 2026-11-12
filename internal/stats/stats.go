@@ -135,12 +135,9 @@ func MannWhitney(x, y []float64) TestResult {
 			j++
 		}
 		rank := float64(i+j+1) / 2
-		if items[i].group == 0 {
-			rankSum += rank
-		}
 		for k := i; k < j; k++ {
 			if items[k].group == 0 {
-				rankSum += float64(k-i) * 0
+				rankSum += rank
 			}
 		}
 		t := j - i
