@@ -35,13 +35,14 @@ type Config struct {
 	Temperature   float64       `json:"temperature"`
 	MaxTokens     int           `json:"max_tokens"`
 	DataDir       string        `json:"data_dir"`
+	Concurrency   int           `json:"concurrency"`
 }
 
 func DefaultConfig() Config {
 	return Config{LocalEndpoint: "http://127.0.0.1:11434/api/chat",
 		ModelA: "qwen2.5:3b-instruct-fp16", ModelB: "qwen2.5:3b-instruct-q8_0", ModelC: "qwen2.5:3b-instruct-q4_K_M",
 		Interval: 15 * time.Minute, IntervalText: "15m", SystemPrompt: "Answer the synthetic canary precisely.",
-		Temperature: 0.2, MaxTokens: 256, DataDir: "data"}
+		Temperature: 0.2, MaxTokens: 256, DataDir: "data", Concurrency: 1}
 }
 
 func (c *Config) Normalize() error {
@@ -53,6 +54,9 @@ func (c *Config) Normalize() error {
 	}
 	if c.MaxTokens <= 0 {
 		c.MaxTokens = 256
+	}
+	if c.Concurrency <= 0 {
+		c.Concurrency = 1
 	}
 	if c.IntervalText != "" {
 		d, err := time.ParseDuration(c.IntervalText)
@@ -438,19 +442,42 @@ func RunViaAlias(ctx context.Context, library canary.Library, endpoint string, c
 	out := make(chan Observation, len(tasks))
 	var wg sync.WaitGroup
 	var completed atomic.Int64
+	startTime := time.Now()
+
+	fmt.Printf("Starting execution of %d canary prompts (concurrency: %d)...\n\n", len(tasks), concurrency)
+
 	for i := 0; i < concurrency; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			for task := range work {
 				response := callAlias(ctx, endpoint, client, task)
-				if response.Error == "" {
-					fmt.Fprintf(os.Stderr, "%d/%d done\n", completed.Add(1), len(tasks))
+				obs := Observation{
+					CanaryID:     task.ID,
+					Timestamp:    time.Now().UTC(),
+					Response:     response.Text,
+					LatencyMS:    response.Latency.Milliseconds(),
+					InputTokens:  response.InputTokens,
+					OutputTokens: response.OutputTokens,
+					FinishReason: response.FinishReason,
+					Error:        response.Error,
+					Checks:       checkTask(task, response),
 				}
-				out <- Observation{CanaryID: task.ID, Timestamp: time.Now().UTC(), Response: response.Text,
-					LatencyMS: response.Latency.Milliseconds(), InputTokens: response.InputTokens,
-					OutputTokens: response.OutputTokens, FinishReason: response.FinishReason, Error: response.Error,
-					Checks: checkTask(task, response)}
+				idx := completed.Add(1)
+				elapsedSec := float64(obs.LatencyMS) / 1000.0
+				if obs.Error != "" {
+					fmt.Printf("[%d/%d] %-8s FAILED (%.2fs) - Error: %s\n", idx, len(tasks), task.ID, elapsedSec, obs.Error)
+				} else {
+					passedChecks := 0
+					for _, chk := range obs.Checks {
+						if chk.Passed {
+							passedChecks++
+						}
+					}
+					fmt.Printf("[%d/%d] %-8s completed in %.2fs [%d/%d checks passed] (tokens: in=%d, out=%d)\n",
+						idx, len(tasks), task.ID, elapsedSec, passedChecks, len(obs.Checks), obs.InputTokens, obs.OutputTokens)
+				}
+				out <- obs
 			}
 		}()
 	}
@@ -466,6 +493,7 @@ func RunViaAlias(ctx context.Context, library canary.Library, endpoint string, c
 	for observation := range out {
 		observations = append(observations, observation)
 	}
+	fmt.Printf("\nAll %d/%d tasks completed in %s.\n", len(observations), len(tasks), time.Since(startTime).Round(time.Millisecond))
 	return observations
 }
 
