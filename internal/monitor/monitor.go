@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/canary"
@@ -436,12 +437,16 @@ func RunViaAlias(ctx context.Context, library canary.Library, endpoint string, c
 	work := make(chan canary.Task)
 	out := make(chan Observation, len(tasks))
 	var wg sync.WaitGroup
+	var completed atomic.Int64
 	for i := 0; i < concurrency; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			for task := range work {
 				response := callAlias(ctx, endpoint, client, task)
+				if response.Error == "" {
+					fmt.Fprintf(os.Stderr, "%d/%d done\n", completed.Add(1), len(tasks))
+				}
 				out <- Observation{CanaryID: task.ID, Timestamp: time.Now().UTC(), Response: response.Text,
 					LatencyMS: response.Latency.Milliseconds(), InputTokens: response.InputTokens,
 					OutputTokens: response.OutputTokens, FinishReason: response.FinishReason, Error: response.Error,
