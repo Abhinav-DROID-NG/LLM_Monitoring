@@ -37,9 +37,8 @@ type Config struct {
 }
 
 func DefaultConfig() Config {
-	return Config{APIKey: os.Getenv("GROQ_API_KEY"), Endpoint: "https://api.groq.com/openai/v1/chat/completions",
-		LocalEndpoint: "http://127.0.0.1:11434/api/chat",
-		ModelA:        "llama-3.1-8b-instant", ModelB: "llama3.1:8b", ModelC: "qwen2.5:7b",
+	return Config{LocalEndpoint: "http://127.0.0.1:11434/api/chat",
+		ModelA: "qwen2.5:3b-instruct-fp16", ModelB: "qwen2.5:3b-instruct-q8_0", ModelC: "qwen2.5:3b-instruct-q4_K_M",
 		Interval: 15 * time.Minute, IntervalText: "15m", SystemPrompt: "Answer the synthetic canary precisely.",
 		Temperature: 0.2, MaxTokens: 256, DataDir: "data"}
 }
@@ -81,7 +80,7 @@ type Layers struct {
 }
 
 func healthyLayers(c Config) Layers {
-	return Layers{Model: c.ModelA, Safety: "strict", RequestConfig: "default", Serving: "groq-a",
+	return Layers{Model: c.ModelA, Safety: "strict", RequestConfig: "default", Serving: "local-a",
 		Temperature: c.Temperature, MaxTokens: c.MaxTokens, SystemPrompt: c.SystemPrompt}
 }
 

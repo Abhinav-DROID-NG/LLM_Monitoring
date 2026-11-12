@@ -46,9 +46,6 @@ func execute(command string, cfg monitor.Config) error {
 	if err != nil {
 		return err
 	}
-	if cfg.APIKey == "" {
-		return errors.New("GROQ_API_KEY is required for live monitoring")
-	}
 	router, err := newRouter(cfg)
 	if err != nil {
 		return err
@@ -113,23 +110,20 @@ func scheduledLayers(cfg monitor.Config, layers monitor.Layers, epoch int) monit
 			next.RequestConfig, next.Temperature, next.MaxTokens, next.SystemPrompt = "default", cfg.Temperature, cfg.MaxTokens, cfg.SystemPrompt
 		}
 	case "serving":
-		if next.Serving == "groq-a" {
-			next.Serving = "groq-c"
+		if next.Serving == "local-a" {
+			next.Serving = "local-c"
 		} else {
-			next.Serving = "groq-a"
+			next.Serving = "local-a"
 		}
 	}
 	return next
 }
 
 func healthy(cfg monitor.Config) monitor.Layers {
-	return monitor.Layers{Model: cfg.ModelA, Safety: "strict", RequestConfig: "default", Serving: "groq-a", Temperature: cfg.Temperature, MaxTokens: cfg.MaxTokens, SystemPrompt: cfg.SystemPrompt}
+	return monitor.Layers{Model: cfg.ModelA, Safety: "strict", RequestConfig: "default", Serving: "local-a", Temperature: cfg.Temperature, MaxTokens: cfg.MaxTokens, SystemPrompt: cfg.SystemPrompt}
 }
 
 func evaluate(cfg monitor.Config) error {
-	if cfg.APIKey == "" {
-		return errors.New("GROQ_API_KEY is required for evaluation")
-	}
 	library, err := canary.Load("canaries_fixed.json")
 	if err != nil {
 		return err
@@ -155,7 +149,7 @@ func evaluate(cfg monitor.Config) error {
 		case "request_config":
 			next.RequestConfig, next.Temperature, next.MaxTokens, next.SystemPrompt = "changed", 0.8, 64, "Be concise and answer in JSON."
 		case "serving":
-			next.Serving = "groq-c"
+			next.Serving = "local-c"
 		}
 		scenarios = append(scenarios, monitor.GroundTruthEntry{Timestamp: time.Now().UTC(), Previous: previous, New: next, Layer: layer, Experiment: experimentID + "-" + layer})
 	}
@@ -229,13 +223,13 @@ func score(results []map[string]any) map[string]float64 {
 
 func newRouter(cfg monitor.Config) (*monitor.Router, error) {
 	client := &http.Client{Timeout: 60 * time.Second}
-	groq := monitor.Groq{Endpoint: cfg.Endpoint, APIKey: cfg.APIKey, Client: client}
+	localA := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
 	localB := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
 	localC := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
 	return monitor.NewProviderRouter(map[string]monitor.Upstream{
-		cfg.ModelA: groq, cfg.ModelB: localB, cfg.ModelC: localC,
-		cfg.ModelA + "|groq-a": groq, cfg.ModelA + "|groq-c": groq,
-		cfg.ModelB + "|groq-a": localB, cfg.ModelB + "|groq-c": localC,
-		cfg.ModelC + "|groq-a": localC, cfg.ModelC + "|groq-c": localC,
+		cfg.ModelA: localA, cfg.ModelB: localB, cfg.ModelC: localC,
+		cfg.ModelA + "|local-a": localA, cfg.ModelA + "|local-c": localA,
+		cfg.ModelB + "|local-a": localB, cfg.ModelB + "|local-c": localB,
+		cfg.ModelC + "|local-a": localC, cfg.ModelC + "|local-c": localC,
 	}, healthy(cfg))
 }
