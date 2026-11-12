@@ -17,6 +17,7 @@ import (
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/canary"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/config"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/evaluation"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/features"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/logging"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/mockprovider"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/probe"
@@ -59,7 +60,7 @@ func run(args []string) error {
 	case "evaluate":
 		return evaluate()
 	case "demo":
-		return runCycle(false)
+		return demo()
 	case "privacy-check":
 		return privacyCheck()
 	default:
@@ -168,6 +169,62 @@ func privacyCheck() error {
 	}
 	fmt.Println("privacy check: passed")
 	return nil
+}
+
+func demo() error {
+	suite, err := canary.Load("canaries_fixed.json")
+	if err != nil {
+		return err
+	}
+	runner, err := probe.NewRunner(probe.Config{Concurrency: 8, Retries: 1})
+	if err != nil {
+		return err
+	}
+	mock := mockprovider.New(7)
+	run := func(label string, layers mockprovider.Layers) ([]probe.Observation, error) {
+		mock.SetLayers(layers)
+		observations, err := runner.Run(context.Background(), suite, mock.Provider(), label)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Printf("demo %-20s probes=%d\n", label, len(observations))
+		return observations, nil
+	}
+	baselineObservations, err := run("demo-baseline", mockprovider.Layers{})
+	if err != nil {
+		return err
+	}
+	baselineFeatures := make([]features.Features, 0, len(baselineObservations))
+	for _, observation := range baselineObservations {
+		baselineFeatures = append(baselineFeatures, observation.Features)
+	}
+	for _, scenario := range []struct {
+		name   string
+		layers mockprovider.Layers
+	}{
+		{"model-change", mockprovider.Layers{Model: true}},
+		{"safety-change", mockprovider.Layers{Safety: true}},
+		{"request-change", mockprovider.Layers{RequestConfig: true}},
+		{"serving-change", mockprovider.Layers{Serving: true}},
+		{"combined-change", mockprovider.Layers{Model: true, Safety: true}},
+	} {
+		current, err := run("demo-"+scenario.name, scenario.layers)
+		if err != nil {
+			return err
+		}
+		currentFeatures := make([]features.Features, 0, len(current))
+		for _, observation := range current {
+			currentFeatures = append(currentFeatures, observation.Features)
+		}
+		changes := stats.Detect(baselineFeatures, currentFeatures, stats.DefaultConfig(), 7)
+		inference := attribution.Analyze(changes, attribution.DefaultConfig())
+		fmt.Printf("demo %-20s verdict=%s\n", scenario.name, inference.Verdict)
+	}
+	fmt.Println("demo evaluation metrics:")
+	if err := evaluate(); err != nil {
+		return err
+	}
+	return privacyCheck()
 }
 
 func serve(args []string) error {
