@@ -22,6 +22,7 @@ type Features struct {
 	ChecksTotal      int     `json:"checks_total"`
 	Refused          bool    `json:"refused"`
 	RefusalHash      string  `json:"refusal_hash,omitempty"`
+	ResponseHash     string  `json:"response_hash,omitempty"`
 	JSONValid        bool    `json:"json_valid"`
 	StructuralScore  float64 `json:"structural_score"`
 	WordCount        int     `json:"word_count"`
@@ -64,6 +65,7 @@ func Extract(result canary.Result, latencyMS int64) Features {
 			strings.Contains(content, "|") || strings.Contains(content, "# "),
 		PunctuationRatio: punctuationRatio(content),
 	}
+	f.ResponseHash = contentHash(content)
 	f.AverageSentence = float64(f.WordCount) / float64(maxInt(f.SentenceCount, 1))
 	if f.Refused {
 		f.RefusalHash = refusalHash(content)
@@ -142,6 +144,11 @@ func refusal(value string) bool {
 func refusalHash(value string) string {
 	lower := strings.ToLower(strings.TrimSpace(value))
 	hash := sha256.Sum256([]byte(lower[:minInt(len(lower), 200)]))
+	return hex.EncodeToString(hash[:])[:16]
+}
+
+func contentHash(value string) string {
+	hash := sha256.Sum256([]byte(value))
 	return hex.EncodeToString(hash[:])[:16]
 }
 
