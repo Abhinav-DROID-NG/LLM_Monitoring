@@ -86,6 +86,9 @@ func Marshal(f Features) (string, error) {
 func StyleVector(content string) Vector {
 	var vector Vector
 	normalized := strings.ToLower(strings.Join(strings.Fields(content), " "))
+	// Hashing keeps the monitor dependency-free and prompt-free, but collisions
+	// are expected in this compact vector and can make unrelated styles appear
+	// closer than they are. It is a comparative signal, not semantic analysis.
 	for i := 0; i+2 < len(normalized); i++ {
 		if unicode.IsSpace(rune(normalized[i])) {
 			continue
