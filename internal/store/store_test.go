@@ -33,3 +33,34 @@ func TestOpenRunsMigrations(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestProbePersistence(t *testing.T) {
+	db, err := Open(context.Background(), filepath.Join(t.TempDir(), "monitor.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	ctx := context.Background()
+	if err := CreateRun(ctx, db, "run-1", "running"); err != nil {
+		t.Fatal(err)
+	}
+	if err := SaveObservation(ctx, db, Observation{
+		ID: "obs-1", RunID: "run-1", TaskID: "task-1", LatencyMS: 4,
+		HTTPStatus: 200, FeaturesJSON: `{"accuracy":1}`,
+	}); err != nil {
+		t.Fatal(err)
+	}
+	if err := UpdateRunStatus(ctx, db, "run-1", "complete"); err != nil {
+		t.Fatal(err)
+	}
+	if err := SaveBaselineWindow(ctx, db, "window-1", `{"count":1}`); err != nil {
+		t.Fatal(err)
+	}
+	var status string
+	if err := db.QueryRow("SELECT status FROM probe_runs WHERE id = 'run-1'").Scan(&status); err != nil {
+		t.Fatal(err)
+	}
+	if status != "complete" {
+		t.Fatalf("run status = %q", status)
+	}
+}
