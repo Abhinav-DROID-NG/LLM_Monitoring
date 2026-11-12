@@ -4,7 +4,11 @@ Trials: 220
 
 Detection rate: 0.8125 (95% CI 0.7450-0.8654)
 
-False-alarm rate: 0.0167 (95% CI 0.0029-0.0886)
+Missed-change rate: 0.1875
+
+False-alarm rate: 0.0000 (95% CI 0.0000-0.0602)
+
+INCONCLUSIVE predictions: 190
 
 Single-layer attribution accuracy: 0.2500
 
@@ -14,9 +18,9 @@ Requests/cycle: 81.00
 
 Prompt tokens/cycle: 1717.00
 
-Completion tokens/cycle: 649.66
+Completion tokens/cycle: 649.62
 
-Latency/cycle: 36.05 ms
+Latency/cycle: 38.19 ms
 
 ## Confusion matrix
 

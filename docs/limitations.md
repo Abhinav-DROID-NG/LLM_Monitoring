@@ -15,3 +15,9 @@ Rate limits and transient errors can reduce sample size despite bounded
 retries. Baselines describe only the observed canary suite and time window;
 they are not production traffic baselines. No frontend or live traffic
 dashboard is provided.
+
+The checked-in blind evaluation is a synthetic HTTP exercise, not evidence
+about a real hosted model. Its current generated result includes misses and
+`INCONCLUSIVE` attributions; see `docs/results/evaluation.md` and `.csv`
+for the measured values rather than a guaranteed detection or attribution
+rate.

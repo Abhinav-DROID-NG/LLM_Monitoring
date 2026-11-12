@@ -6,7 +6,8 @@ responses. `internal/mockprovider` supplies a deterministic local provider
 with independent model, serving, safety, and request-default switches.
 
 `internal/canary` loads and validates the existing `canaries_fixed.json`
-suite. `internal/probe` runs those tasks with bounded concurrency,
+suite (81 tasks: 9 divisions x 3 tiers x 3 tasks). `internal/probe` runs
+those tasks with bounded concurrency,
 cancellation, retries, and metadata persistence. `internal/features` derives
 privacy-safe structural metrics and hashed style vectors. `internal/baseline`
 builds aggregate windows, while `internal/stats` detects changes.
@@ -14,7 +15,14 @@ builds aggregate windows, while `internal/stats` detects changes.
 `internal/attribution` ranks hidden-layer hypotheses without accessing mock
 state. `internal/report` renders observed facts separately from inferred
 causes. `internal/store` owns SQLite migrations and persistence. The
-evaluation package is the only component allowed to unseal evaluation truth.
+`internal/scheduler` applies the easy/general/expensive cadence and
+`internal/router` exposes only the `support-bot-v1` OpenAI-compatible alias.
+`internal/groundtruth` commits the secret switch schedule before probes and
+the evaluation package is the only caller that unseals evaluation truth.
+
+The default provider is the synthetic `mock serve` process. Real
+OpenAI-compatible providers are optional and off by default; no production
+traffic route exists.
 
 Dependencies flow inward through interfaces: monitor logic uses
 `provider.Provider`, never mock internals. SQLite is the only persistence

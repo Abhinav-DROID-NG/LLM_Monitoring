@@ -33,6 +33,7 @@ type Trial struct {
 
 type Metrics struct {
 	Trials                         int                       `json:"trials"`
+	InconclusiveTrials             int                       `json:"inconclusive_trials"`
 	DetectionRate                  float64                   `json:"detection_rate"`
 	DetectionCI                    [2]float64                `json:"detection_ci"`
 	MissedChangeRate               float64                   `json:"missed_change_rate"`
@@ -143,6 +144,9 @@ func Score(trials []Trial, truth []Scenario) Metrics {
 		if predicted == "" {
 			predicted = attribution.Inconclusive
 		}
+		if predicted == attribution.Inconclusive {
+			metrics.InconclusiveTrials++
+		}
 		if metrics.Confusion[scenario.Truth] == nil {
 			metrics.Confusion[scenario.Truth] = map[string]int{}
 		}
@@ -194,7 +198,7 @@ func WriteResults(dir string, metrics Metrics) error {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
-	markdown := fmt.Sprintf("# Blind Evaluation Results\n\nTrials: %d\n\nDetection rate: %.4f (95%% CI %.4f-%.4f)\n\nFalse-alarm rate: %.4f (95%% CI %.4f-%.4f)\n\nSingle-layer attribution accuracy: %.4f\n\nCombined attribution rate: %.4f\n\nRequests/cycle: %.2f\n\nPrompt tokens/cycle: %.2f\n\nCompletion tokens/cycle: %.2f\n\nLatency/cycle: %.2f ms\n\n## Confusion matrix\n\n", metrics.Trials, metrics.DetectionRate, metrics.DetectionCI[0], metrics.DetectionCI[1], metrics.FalseAlarmRate, metrics.FalseAlarmCI[0], metrics.FalseAlarmCI[1], metrics.SingleLayerAttributionAccuracy, metrics.CombinedAttributionRate, metrics.RequestsPerCycle, metrics.PromptTokensPerCycle, metrics.CompletionTokensPerCycle, metrics.LatencyPerCycleMS)
+	markdown := fmt.Sprintf("# Blind Evaluation Results\n\nTrials: %d\n\nDetection rate: %.4f (95%% CI %.4f-%.4f)\n\nMissed-change rate: %.4f\n\nFalse-alarm rate: %.4f (95%% CI %.4f-%.4f)\n\nINCONCLUSIVE predictions: %d\n\nSingle-layer attribution accuracy: %.4f\n\nCombined attribution rate: %.4f\n\nRequests/cycle: %.2f\n\nPrompt tokens/cycle: %.2f\n\nCompletion tokens/cycle: %.2f\n\nLatency/cycle: %.2f ms\n\n## Confusion matrix\n\n", metrics.Trials, metrics.DetectionRate, metrics.DetectionCI[0], metrics.DetectionCI[1], metrics.MissedChangeRate, metrics.FalseAlarmRate, metrics.FalseAlarmCI[0], metrics.FalseAlarmCI[1], metrics.InconclusiveTrials, metrics.SingleLayerAttributionAccuracy, metrics.CombinedAttributionRate, metrics.RequestsPerCycle, metrics.PromptTokensPerCycle, metrics.CompletionTokensPerCycle, metrics.LatencyPerCycleMS)
 	keys := make([]string, 0, len(metrics.Confusion))
 	for key := range metrics.Confusion {
 		keys = append(keys, key)
@@ -217,7 +221,7 @@ func WriteResults(dir string, metrics Metrics) error {
 	if err := writer.Write([]string{"metric", "value"}); err != nil {
 		return err
 	}
-	rows := [][]string{{"trials", fmt.Sprint(metrics.Trials)}, {"detection_rate", fmt.Sprint(metrics.DetectionRate)}, {"false_alarm_rate", fmt.Sprint(metrics.FalseAlarmRate)}, {"single_layer_attribution_accuracy", fmt.Sprint(metrics.SingleLayerAttributionAccuracy)}, {"latency_per_cycle_ms", fmt.Sprint(metrics.LatencyPerCycleMS)}}
+	rows := [][]string{{"trials", fmt.Sprint(metrics.Trials)}, {"detection_rate", fmt.Sprint(metrics.DetectionRate)}, {"missed_change_rate", fmt.Sprint(metrics.MissedChangeRate)}, {"false_alarm_rate", fmt.Sprint(metrics.FalseAlarmRate)}, {"inconclusive_trials", fmt.Sprint(metrics.InconclusiveTrials)}, {"single_layer_attribution_accuracy", fmt.Sprint(metrics.SingleLayerAttributionAccuracy)}, {"latency_per_cycle_ms", fmt.Sprint(metrics.LatencyPerCycleMS)}}
 	for _, row := range rows {
 		if err := writer.Write(row); err != nil {
 			return err

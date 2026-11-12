@@ -12,6 +12,6 @@ There is no production proxy endpoint. The automated privacy test injects a
 sentinel into environment and context values, executes a run, scans stored
 observations, and verifies that the sentinel is absent.
 
-The mock provider's admin endpoint is separate from monitor APIs. Real
-providers are optional and disabled by default; tests use only the local
-mock and `httptest`.
+The mock provider's admin endpoint is separate from monitor APIs and is never
+called by the monitor. Real providers are optional and off by default; tests
+use only the local synthetic mock and `httptest`.

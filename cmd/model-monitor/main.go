@@ -189,11 +189,15 @@ func status() error {
 }
 
 func runCycle(saveBaseline bool) error {
-	cfg, err := config.FromEnv()
+	suite, err := canary.Load("canaries_fixed.json")
 	if err != nil {
 		return err
 	}
-	suite, err := canary.Load("canaries_fixed.json")
+	return runCycleWithSuite(saveBaseline, suite)
+}
+
+func runCycleWithSuite(saveBaseline bool, suite canary.Suite) error {
+	cfg, err := config.FromEnv()
 	if err != nil {
 		return err
 	}
@@ -428,11 +432,15 @@ func startMonitor() error {
 	go func() {
 		errs <- scheduler.Run(ctx, scheduler.Config{
 			Interval: cfg.Interval, Profile: scheduler.Profile(cfg.Profile),
-		}, func(ctx context.Context, _ int) error {
+		}, func(ctx context.Context, cycle int) error {
 			if _, err := store.NextCycle(ctx, db); err != nil {
 				return err
 			}
-			return runCycle(false)
+			suite, err := canary.Load("canaries_fixed.json")
+			if err != nil {
+				return err
+			}
+			return runCycleWithSuite(false, scheduler.Expand(suite, cycle, scheduler.Profile(cfg.Profile)))
 		})
 	}()
 	select {
