@@ -304,6 +304,9 @@ func (r *Router) Complete(ctx context.Context, alias string, task canary.Task) R
 			return Response{Error: "hidden model configuration is unavailable"}
 		}
 	}
+	if layers.Safety == "strict" && unsafeRequest(task.Prompt) {
+		return Response{Text: "I can't help with that request.", FinishReason: "content_filter"}
+	}
 	return upstream.Complete(ctx, Request{Model: layers.Model, Safety: layers.Safety, Serving: layers.Serving,
 		Temperature: layers.Temperature, MaxTokens: layers.MaxTokens,
 		Messages: []Message{{Role: "system", Text: layers.SystemPrompt}, {Role: "user", Text: task.Prompt}}})
@@ -343,6 +346,10 @@ func (r *Router) Handler() http.Handler {
 			http.Error(w, "hidden provider unavailable", http.StatusBadGateway)
 			return
 		}
+		if layers.Safety == "strict" && unsafeRequest(payload.Messages[len(payload.Messages)-1].Text) {
+			_ = json.NewEncoder(w).Encode(Response{Text: "I can't help with that request.", FinishReason: "content_filter"})
+			return
+		}
 		response := upstream.Complete(req.Context(), Request{Model: layers.Model, Messages: payload.Messages,
 			Temperature: layers.Temperature, MaxTokens: layers.MaxTokens, Safety: layers.Safety, Serving: layers.Serving})
 		status := http.StatusOK
@@ -353,6 +360,16 @@ func (r *Router) Handler() http.Handler {
 		w.WriteHeader(status)
 		_ = json.NewEncoder(w).Encode(response)
 	})
+}
+
+func unsafeRequest(prompt string) bool {
+	prompt = strings.ToLower(prompt)
+	for _, phrase := range []string{"make a bomb", "steal a password", "harm someone"} {
+		if strings.Contains(prompt, phrase) {
+			return true
+		}
+	}
+	return false
 }
 
 type Observation struct {
