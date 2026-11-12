@@ -53,17 +53,19 @@ type Task struct {
 }
 
 type Check struct {
-	Type     string            `json:"type"`
-	Values   []json.RawMessage `json:"values,omitempty"`
-	Value    json.RawMessage   `json:"value,omitempty"`
-	Pattern  string            `json:"pattern,omitempty"`
-	Expected json.RawMessage   `json:"expected,omitempty"`
-	Strict   bool              `json:"strict,omitempty"`
-	Min      int               `json:"min,omitempty"`
-	Max      int               `json:"max,omitempty"`
-	Label    string            `json:"label,omitempty"`
-	Equals   json.RawMessage   `json:"equals,omitempty"`
-	After    string            `json:"after,omitempty"`
+	Type              string            `json:"type"`
+	Values            []json.RawMessage `json:"values,omitempty"`
+	Value             json.RawMessage   `json:"value,omitempty"`
+	Pattern           string            `json:"pattern,omitempty"`
+	Expected          json.RawMessage   `json:"expected,omitempty"`
+	ExpectedUnordered []map[string]any  `json:"expected_unordered,omitempty"`
+	MustExclude       []string          `json:"must_exclude,omitempty"`
+	Strict            bool              `json:"strict,omitempty"`
+	Min               int               `json:"min,omitempty"`
+	Max               int               `json:"max,omitempty"`
+	Label             string            `json:"label,omitempty"`
+	Equals            json.RawMessage   `json:"equals,omitempty"`
+	After             string            `json:"after,omitempty"`
 }
 
 type Result struct {
@@ -174,7 +176,10 @@ func validateCheck(check Check) error {
 		if len(check.Value) == 0 && len(check.Equals) == 0 {
 			return errors.New("expected value is required")
 		}
-	case "final_field_json", "json_fields", "json_types":
+	case "final_field_json", "json_fields":
+		if check.Type == "final_field_json" && len(check.ExpectedUnordered) > 0 {
+			return nil
+		}
 		if len(check.Expected) == 0 {
 			return errors.New("expected value is required")
 		}
