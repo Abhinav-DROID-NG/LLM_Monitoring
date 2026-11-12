@@ -9,7 +9,7 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const currentSchemaVersion = 2
+const currentSchemaVersion = 3
 
 type Observation struct {
 	ID                string
@@ -118,6 +118,22 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 			return fmt.Errorf("record schema migration 2: %w", err)
 		}
 	}
+	if version < 3 {
+		if _, err := tx.ExecContext(ctx, `
+			CREATE TABLE IF NOT EXISTS reports (
+				id TEXT PRIMARY KEY,
+				created_at TEXT NOT NULL,
+				markdown TEXT NOT NULL,
+				changes_json TEXT NOT NULL,
+				attribution_json TEXT NOT NULL
+			);
+		`); err != nil {
+			return fmt.Errorf("apply schema migration 3: %w", err)
+		}
+		if _, err := tx.ExecContext(ctx, "INSERT INTO schema_migrations(version) VALUES (?)", 3); err != nil {
+			return fmt.Errorf("record schema migration 3: %w", err)
+		}
+	}
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("commit schema migrations: %w", err)
 	}
@@ -179,4 +195,47 @@ func SaveBaselineWindow(ctx context.Context, db *sql.DB, id, featuresJSON string
 		return fmt.Errorf("save baseline window %q: %w", id, err)
 	}
 	return nil
+}
+
+func LatestBaselineWindow(ctx context.Context, db *sql.DB) (string, error) {
+	var id, encoded string
+	err := db.QueryRowContext(ctx, `
+		SELECT id, features_json FROM baseline_windows
+		ORDER BY created_at DESC, rowid DESC LIMIT 1
+	`).Scan(&id, &encoded)
+	if errors.Is(err, sql.ErrNoRows) {
+		return "", sql.ErrNoRows
+	}
+	if err != nil {
+		return "", fmt.Errorf("read latest baseline window: %w", err)
+	}
+	return encoded, nil
+}
+
+func SaveReport(ctx context.Context, db *sql.DB, id, markdown, changesJSON, attributionJSON string) error {
+	if id == "" || markdown == "" {
+		return errors.New("report ID and markdown are required")
+	}
+	_, err := db.ExecContext(ctx, `
+		INSERT INTO reports(id, created_at, markdown, changes_json, attribution_json)
+		VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)
+	`, id, markdown, changesJSON, attributionJSON)
+	if err != nil {
+		return fmt.Errorf("save report %q: %w", id, err)
+	}
+	return nil
+}
+
+func LatestReport(ctx context.Context, db *sql.DB) (string, error) {
+	var markdown string
+	err := db.QueryRowContext(ctx, `
+		SELECT markdown FROM reports ORDER BY created_at DESC, rowid DESC LIMIT 1
+	`).Scan(&markdown)
+	if errors.Is(err, sql.ErrNoRows) {
+		return "", sql.ErrNoRows
+	}
+	if err != nil {
+		return "", fmt.Errorf("read latest report: %w", err)
+	}
+	return markdown, nil
 }

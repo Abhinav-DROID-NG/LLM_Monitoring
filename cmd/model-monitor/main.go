@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"database/sql"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -57,7 +59,7 @@ func run(args []string) error {
 	case "run":
 		return runCycle(false)
 	case "report":
-		return errors.New("no persisted report is available; run `model-monitor run` first")
+		return showReport()
 	case "evaluate":
 		return evaluate()
 	case "demo":
@@ -157,10 +159,61 @@ func runCycle(saveBaseline bool) error {
 		fmt.Printf("baseline created: %s (%d probes)\n", runID, len(observations))
 		return nil
 	}
-	changes := stats.Detect(window.Samples, window.Samples, stats.DefaultConfig(), 1)
+	encodedBaseline, err := store.LatestBaselineWindow(context.Background(), db)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return errors.New("no baseline exists; run `model-monitor baseline` first")
+		}
+		return err
+	}
+	var baselineWindow baseline.Window
+	if err := json.Unmarshal([]byte(encodedBaseline), &baselineWindow); err != nil {
+		return fmt.Errorf("decode saved baseline window: %w", err)
+	}
+	changes := stats.Detect(baselineWindow.Samples, window.Samples, stats.DefaultConfig(), 1)
 	inference := attribution.Analyze(changes, attribution.DefaultConfig())
-	value := report.New(runID, "current-run", time.Now().Add(-time.Second), time.Now(), len(observations), 0, window.Summary.Count, 0, changes, inference)
-	fmt.Print(report.Markdown(value))
+	failed, tokens := 0, 0
+	for _, observation := range observations {
+		if observation.Store.Error != "" {
+			failed++
+		}
+		tokens += observation.Store.InputTokens + observation.Store.OutputTokens
+	}
+	value := report.New(runID, baselineWindow.ID, time.Now().Add(-time.Second), time.Now(), len(observations), failed, tokens, 0, changes, inference)
+	markdown := report.Markdown(value)
+	changesJSON, err := json.Marshal(changes)
+	if err != nil {
+		return err
+	}
+	attributionJSON, err := json.Marshal(inference)
+	if err != nil {
+		return err
+	}
+	if err := store.SaveReport(context.Background(), db, runID, markdown, string(changesJSON), string(attributionJSON)); err != nil {
+		return err
+	}
+	fmt.Print(markdown)
+	return nil
+}
+
+func showReport() error {
+	cfg, err := config.FromEnv()
+	if err != nil {
+		return err
+	}
+	db, err := store.Open(context.Background(), cfg.DatabasePath)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	markdown, err := store.LatestReport(context.Background(), db)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return errors.New("no persisted report is available; run `model-monitor run` first")
+		}
+		return err
+	}
+	fmt.Print(markdown)
 	return nil
 }
 
