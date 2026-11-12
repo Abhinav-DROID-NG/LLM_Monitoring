@@ -1,8 +1,0 @@
-metric,value
-trials,220
-detection_rate,0.8125
-missed_change_rate,0.1875
-false_alarm_rate,0
-inconclusive_trials,190
-single_layer_attribution_accuracy,0.25
-latency_per_cycle_ms,36.50909090909091
