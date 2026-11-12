@@ -1,0 +1,1749 @@
+[
+  {
+    "canary_id": "CAP-G1",
+    "timestamp": "2026-11-12T22:34:20.806426Z",
+    "response": "To calculate the distance traveled by the train, we can use the formula:\n\n\\[ \\text{Distance} = \\text{Speed} \\times \\text{Time} \\]\n\nGiven:\n- Speed = 72 km/h\n- Time = 3 hours 50 minutes\n\nFirst, we need to convert the time into hours. Since there are 60 minutes in an hour, we can convert 50 minutes into hours by dividing by 60:\n\n\\[ 50 \\text{ minutes} = \\frac{50}{60} \\text{ hours} = \\frac{5}{6} \\text{ hours} \\]\n\nNow, we add this to the 3 hours:\n\n\\[ \\text{Total Time} = 3 \\text{ hours} + \\frac{5}{6} \\text{ hours} = 3 + \\frac{5}{6} = \\frac{18}{6} + \\frac{5}{6} = \\frac{23}{6} \\text{ hours} \\]\n\nNow we can calculate the distance:\n\n\\[ \\text{Distance} = 72 \\text{ km/h} \\times \\frac{23}{6} \\text{ hours}",
+    "latency_ms": 48991,
+    "input_tokens": 89,
+    "output_tokens": 256,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "final_field",
+        "expected": "final_field",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-E3",
+    "timestamp": "2026-11-12T22:34:21.4247829Z",
+    "response": "250",
+    "latency_ms": 49610,
+    "input_tokens": 58,
+    "output_tokens": 4,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "number_equals",
+        "expected": "number_equals",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-E2",
+    "timestamp": "2026-11-12T22:34:22.1196344Z",
+    "response": "Canberra",
+    "latency_ms": 50304,
+    "input_tokens": 42,
+    "output_tokens": 3,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "regex_full",
+        "expected": "regex_full",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-E1",
+    "timestamp": "2026-11-12T22:34:22.8870841Z",
+    "response": "408",
+    "latency_ms": 51072,
+    "input_tokens": 45,
+    "output_tokens": 4,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "number_equals",
+        "expected": "number_equals",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-G2",
+    "timestamp": "2026-11-12T22:34:28.5257566Z",
+    "response": "{\n  \"drug\": \"ibuprofen\",\n  \"dose_mg\": 400,\n  \"times_per_day\": 3,\n  \"duration_days\": 7,\n  \"with_food\": true\n}",
+    "latency_ms": 7718,
+    "input_tokens": 140,
+    "output_tokens": 48,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "json_valid",
+        "expected": "valid JSON",
+        "passed": true
+      },
+      {
+        "type": "json_fields",
+        "expected": "json_fields",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-G3",
+    "timestamp": "2026-11-12T22:34:59.0661484Z",
+    "response": "First, let's sort the numbers in ascending order:\n\nOriginal list: 42, 7, 19, 88, 3, 56, 71, 14, 95, 28, 63, 5, 37, 50, 81\n\nSorted list: 3, 7, 14, 19, 28, 37, 42, 50, 56, 63, 71, 81, 88, 95\n\nSo, the sorted list is: 3, 7, 14, 19, 28, 37, 42, 50, 56, 63, 71, 81, 88, 95\n\nNext, let's find the sum of the numbers:\n\nSum: \\(3 + 7 + 14 + 19 + 28 + 37 + 42 + 50 + 56 + 63 + 71 + 81 + 88 + 95 =",
+    "latency_ms": 37641,
+    "input_tokens": 125,
+    "output_tokens": 256,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "final_field",
+        "expected": "final_field",
+        "passed": true
+      },
+      {
+        "type": "final_field",
+        "expected": "final_field",
+        "passed": true
+      },
+      {
+        "type": "final_field",
+        "expected": "final_field",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-X1",
+    "timestamp": "2026-11-12T22:35:22.1268935Z",
+    "response": "",
+    "latency_ms": 60007,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60005233400,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "final_field",
+        "expected": "final_field",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-X2",
+    "timestamp": "2026-11-12T22:35:22.8896405Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000993000,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "final_field_json",
+        "expected": "final_field_json",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "CAP-X3",
+    "timestamp": "2026-11-12T22:35:28.5274559Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000501500,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "final_field",
+        "expected": "final_field",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-E1",
+    "timestamp": "2026-11-12T22:35:29.7394969Z",
+    "response": "101",
+    "latency_ms": 30672,
+    "input_tokens": 50,
+    "output_tokens": 4,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "number_in_set",
+        "expected": "number_in_set",
+        "passed": true
+      },
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-E2",
+    "timestamp": "2026-11-12T22:35:30.6423595Z",
+    "response": "GoldenSparkles",
+    "latency_ms": 8514,
+    "input_tokens": 45,
+    "output_tokens": 4,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-E3",
+    "timestamp": "2026-11-12T22:35:31.2199669Z",
+    "response": "Orange",
+    "latency_ms": 8330,
+    "input_tokens": 43,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "contains_any",
+        "expected": "contains_any",
+        "passed": true
+      },
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-G1",
+    "timestamp": "2026-11-12T22:35:42.2256202Z",
+    "response": "A lighthouse stands tall and steadfast on a rocky cliff, its silhouette piercing the horizon. Its beacon, a steady stream of light, pierces through the darkness, guiding ships safely to shore. Towering over the sea, it is a beacon of hope and safety, its light a promise of protection and direction. Built to withstand the harsh elements, it stands as a symbol of human ingenuity and the enduring spirit of maritime navigation.",
+    "latency_ms": 13697,
+    "input_tokens": 44,
+    "output_tokens": 88,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": true
+      },
+      {
+        "type": "mean_edit_distance",
+        "expected": "mean_edit_distance",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-G2",
+    "timestamp": "2026-11-12T22:35:55.0922189Z",
+    "response": "1. Create a dedicated study space that is free from distractions to enhance focus and concentration.\n2. Break your study sessions into manageable chunks with short breaks in between to maintain alertness and prevent burnout.\n3. Use active learning techniques such as summarizing information in your own words or teaching the material to someone else to improve retention.\n4. Regularly review and practice what you have learned to reinforce understanding and memory.\n5. Stay hydrated and eat nutritious snacks to keep your energy levels up and your mind sharp.",
+    "latency_ms": 25352,
+    "input_tokens": 40,
+    "output_tokens": 104,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": true
+      },
+      {
+        "type": "mean_edit_distance",
+        "expected": "mean_edit_distance",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-G3",
+    "timestamp": "2026-11-12T22:36:19.6968545Z",
+    "response": "Imagining a seaside city, let's call it \"Sapphire Cove,\" nestled between the gentle embrace of a crescent moon-shaped bay and the whispering waves of the Atlantic. Sapphire Cove is a vibrant blend of modern architecture and ancient charm, with its streets lined with colorful, hand-painted houses that reflect the sun's golden hues. The city is a hub of activity, with bustling markets selling fresh seafood and local crafts, and vibrant beaches where families and couples relax under umbrellas or build sandcastles. The architecture features large glass windows that let in the sea breeze, and the city is known for its innovative eco-friendly initiatives, including solar-powered streetlights and wind turbines. At night, the city lights up with colorful lanterns and the soft glow of street lamps, creating a magical atmosphere. Sapphire Cove is a place where the past and the future meet, offering a perfect blend of history and modernity, all under the watchful gaze of the vast, starry sky.",
+    "latency_ms": 49054,
+    "input_tokens": 42,
+    "output_tokens": 200,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": true
+      },
+      {
+        "type": "mean_edit_distance",
+        "expected": "mean_edit_distance",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-X1",
+    "timestamp": "2026-11-12T22:36:31.2205728Z",
+    "response": "",
+    "latency_ms": 60000,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000047600,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": false
+      },
+      {
+        "type": "mean_edit_distance",
+        "expected": "mean_edit_distance",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-X2",
+    "timestamp": "2026-11-12T22:36:42.2273464Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000819300,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": false
+      },
+      {
+        "type": "mean_edit_distance",
+        "expected": "mean_edit_distance",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "DET-X3",
+    "timestamp": "2026-11-12T22:36:55.0946356Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000475900,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "identical_across_runs",
+        "expected": "identical_across_runs",
+        "passed": false
+      },
+      {
+        "type": "mean_edit_distance",
+        "expected": "mean_edit_distance",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-E1",
+    "timestamp": "2026-11-12T22:36:56.903987Z",
+    "response": "{\"city\": \"Tokyo\", \"country\": \"Japan\"}",
+    "latency_ms": 37207,
+    "input_tokens": 59,
+    "output_tokens": 14,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "json_valid",
+        "expected": "valid JSON",
+        "passed": true
+      },
+      {
+        "type": "no_code_fence",
+        "expected": "no_code_fence",
+        "passed": true
+      },
+      {
+        "type": "json_fields",
+        "expected": "json_fields",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-E2",
+    "timestamp": "2026-11-12T22:36:58.530142Z",
+    "response": "- Apple\n- Banana\n- Cherry",
+    "latency_ms": 27308,
+    "input_tokens": 53,
+    "output_tokens": 9,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "bullet_count",
+        "expected": "bullet_count",
+        "passed": true
+      },
+      {
+        "type": "line_count",
+        "expected": "line_count",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-E3",
+    "timestamp": "2026-11-12T22:36:59.2860731Z",
+    "response": "YELLOW",
+    "latency_ms": 17058,
+    "input_tokens": 50,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "regex_full",
+        "expected": "regex_full",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-G1",
+    "timestamp": "2026-11-12T22:37:09.4603787Z",
+    "response": "{\n  \"title\": \"Nineteen Eighty-Four\",\n  \"author\": \"George Orwell\",\n  \"year\": 1949,\n  \"genres\": [\"Dystopian fiction\", \"Political science fiction\", \"Science fiction\"],\n  \"summary\": \"In a totalitarian future, the protagonist struggles against oppressive government.\",\n  \"main_characters\": [\"Big Brother\", \"O'Brien\", \"The Proles\"]\n}",
+    "latency_ms": 14365,
+    "input_tokens": 116,
+    "output_tokens": 89,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "json_valid",
+        "expected": "valid JSON",
+        "passed": true
+      },
+      {
+        "type": "no_code_fence",
+        "expected": "no_code_fence",
+        "passed": true
+      },
+      {
+        "type": "json_fields",
+        "expected": "json_fields",
+        "passed": true
+      },
+      {
+        "type": "json_types",
+        "expected": "json_types",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-G2",
+    "timestamp": "2026-11-12T22:37:21.738474Z",
+    "response": "| Planet      | Order | Type   |\n|-------------|-------|--------|\n| Mercury     | 1     | Terrestrial |\n| Venus       | 2     | Terrestrial |\n| Earth       | 3     | Terrestrial |\n| Mars        | 4     | Terrestrial |\n| Jupiter     | 5     | Gas giant |\n| Saturn      | 6     | Gas giant |\n| Uranus      | 7     | Ice giant |\n| Neptune     | 8     | Ice giant |",
+    "latency_ms": 24834,
+    "input_tokens": 92,
+    "output_tokens": 106,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "markdown_table",
+        "expected": "markdown_table",
+        "passed": true
+      },
+      {
+        "type": "table_cells",
+        "expected": "table_cells",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-G3",
+    "timestamp": "2026-11-12T22:37:38.6468114Z",
+    "response": "Regular sleep is crucial for maintaining optimal health and well-being. It allows the body to repair tissues, build bone and muscle, and strengthen the immune system. Sleep also plays a vital role in cognitive functions, including memory and the ability to learn. Adequate sleep helps in making decisions, solving problems, and managing emotions. \n\nConsistent sleep patterns help regulate hormones that control appetite and metabolism, which can prevent weight gain and reduce the risk of obesity. Sleep deprivation can lead to hormonal imbalances, making it harder to maintain a healthy weight. Additionally, sleep is essential for emotional health, as it helps regulate mood and reduce stress. Without enough sleep, individuals may experience mood swings, irritability, and increased anxiety.",
+    "latency_ms": 40116,
+    "input_tokens": 65,
+    "output_tokens": 144,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "paragraph_count",
+        "expected": "paragraph_count",
+        "passed": true
+      },
+      {
+        "type": "sentences_per_paragraph",
+        "expected": "sentences_per_paragraph",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-X1",
+    "timestamp": "2026-11-12T22:37:59.2875472Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000394000,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "json_valid",
+        "expected": "valid JSON",
+        "passed": false
+      },
+      {
+        "type": "no_code_fence",
+        "expected": "no_code_fence",
+        "passed": false
+      },
+      {
+        "type": "json_array",
+        "expected": "json_array",
+        "passed": false
+      },
+      {
+        "type": "json_types",
+        "expected": "json_types",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-X2",
+    "timestamp": "2026-11-12T22:38:09.4629702Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000987400,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "no_code_fence",
+        "expected": "no_code_fence",
+        "passed": false
+      },
+      {
+        "type": "csv_shape",
+        "expected": "csv_shape",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "FMT-X3",
+    "timestamp": "2026-11-12T22:38:21.7403391Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000533400,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "outline_shape",
+        "expected": "outline_shape",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-E1",
+    "timestamp": "2026-11-12T22:38:23.218971Z",
+    "response": "2 plus 2 is 4.",
+    "latency_ms": 44572,
+    "input_tokens": 37,
+    "output_tokens": 9,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": true
+      },
+      {
+        "type": "contains_all",
+        "expected": "4",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-E2",
+    "timestamp": "2026-11-12T22:38:25.7507891Z",
+    "response": "Sure, here are three colors:\n\n1. Red\n2. Blue\n3. Yellow",
+    "latency_ms": 26463,
+    "input_tokens": 33,
+    "output_tokens": 19,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "all_lowercase",
+        "expected": "all_lowercase",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-E3",
+    "timestamp": "2026-11-12T22:38:26.952217Z",
+    "response": "The capital of Italy is Rome.",
+    "latency_ms": 17488,
+    "input_tokens": 36,
+    "output_tokens": 8,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "language_is",
+        "expected": "language_is",
+        "passed": true
+      },
+      {
+        "type": "contains_all",
+        "expected": "Rome",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-G1",
+    "timestamp": "2026-11-12T22:39:03.0393203Z",
+    "response": "Let's address your two questions one by one.\n\n### Router Drops Wi-Fi Every Evening\n\nIf your router drops Wi-Fi every evening, there are several potential causes and troubleshooting steps you can try:\n\n1. **Check for Interference**: Ensure that your router is not being interfered with by other electronic devices. This can include microwaves, cordless phones, or other wireless devices.\n\n2. **Signal Strength**: Make sure your router is not too far from your devices. If your devices are too far away, they may not receive a strong enough signal, causing the Wi-Fi to drop.\n\n3. **Router Location**: Place your router in a central location within your home. Avoid placing it near walls or metal objects, as these can block the Wi-Fi signal.\n\n4. **Signal Interference**: Check if there are other wireless networks in your area that might be causing interference. You can use tools like the NetSpot app to scan for nearby Wi-Fi networks.\n\n5. **Router Settings**: Check your router’s settings to ensure that the Wi-Fi channel is set to a less crowded one. You can also try adjusting the Wi-Fi channel to one that is less likely to be interfered with.\n\n6. **Router Firmware Update**: Ensure that your router’s firmware is",
+    "latency_ms": 41297,
+    "input_tokens": 53,
+    "output_tokens": 256,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "word_count_max",
+        "expected": "word_count_max",
+        "passed": true
+      },
+      {
+        "type": "contains_none",
+        "expected": "contains_none",
+        "passed": true
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-G2",
+    "timestamp": "2026-11-12T22:39:23.2217137Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60001586700,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "sentence_count",
+        "expected": "sentence_count",
+        "passed": false
+      },
+      {
+        "type": "contains_none",
+        "expected": "contains_none",
+        "passed": false
+      },
+      {
+        "type": "word_count_max",
+        "expected": "word_count_max",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-G3",
+    "timestamp": "2026-11-12T22:39:25.7528857Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000912500,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "first_line_equals",
+        "expected": "first_line_equals",
+        "passed": false
+      },
+      {
+        "type": "bullet_count",
+        "expected": "bullet_count",
+        "passed": false
+      },
+      {
+        "type": "contains_none",
+        "expected": "contains_none",
+        "passed": false
+      },
+      {
+        "type": "bullet_words_max",
+        "expected": "bullet_words_max",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-X1",
+    "timestamp": "2026-11-12T22:39:26.9547907Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60001452500,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "starts_with",
+        "expected": "starts_with",
+        "passed": false
+      },
+      {
+        "type": "summary_words_max",
+        "expected": "summary_words_max",
+        "passed": false
+      },
+      {
+        "type": "paragraph_count_max",
+        "expected": "paragraph_count_max",
+        "passed": false
+      },
+      {
+        "type": "contains_none",
+        "expected": "contains_none",
+        "passed": false
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-X2",
+    "timestamp": "2026-11-12T22:40:03.049322Z",
+    "response": "",
+    "latency_ms": 60003,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60002274300,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "day_list_shape",
+        "expected": "day_list_shape",
+        "passed": false
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "INS-X3",
+    "timestamp": "2026-11-12T22:40:23.2262427Z",
+    "response": "",
+    "latency_ms": 60004,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000386900,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "json_valid",
+        "expected": "valid JSON",
+        "passed": false
+      },
+      {
+        "type": "no_code_fence",
+        "expected": "no_code_fence",
+        "passed": false
+      },
+      {
+        "type": "json_types",
+        "expected": "json_types",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-E1",
+    "timestamp": "2026-11-12T22:40:23.9372623Z",
+    "response": "OK",
+    "latency_ms": 58183,
+    "input_tokens": 36,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-E2",
+    "timestamp": "2026-11-12T22:40:26.9627981Z",
+    "response": "",
+    "latency_ms": 60008,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000889500,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": false
+      },
+      {
+        "type": "output_tokens_stable",
+        "expected": "output_tokens_stable",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-E3",
+    "timestamp": "2026-11-12T22:40:29.3351344Z",
+    "response": "The quick brown fox jumps over the lazy dog.",
+    "latency_ms": 26285,
+    "input_tokens": 49,
+    "output_tokens": 11,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-G1",
+    "timestamp": "2026-11-12T22:41:06.2173787Z",
+    "response": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 8",
+    "latency_ms": 42880,
+    "input_tokens": 47,
+    "output_tokens": 256,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": true
+      },
+      {
+        "type": "output_tokens_stable",
+        "expected": "output_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-G2",
+    "timestamp": "2026-11-12T22:41:22.4577403Z",
+    "response": "a b c d e f g h i j k l m n o p q r s t u v w x y z , a b c d e f g h i j k l m n o p q r s t u v w x y z \nz y x w v u t s r q p o n m l k j i h g f e d c b a , z y x w v u t s r q p o n m l k j i h g f e d c b a",
+    "latency_ms": 58519,
+    "input_tokens": 60,
+    "output_tokens": 108,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": true
+      },
+      {
+        "type": "output_tokens_stable",
+        "expected": "output_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-G3",
+    "timestamp": "2026-11-12T22:41:26.9660081Z",
+    "response": "",
+    "latency_ms": 60003,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000351800,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": false
+      },
+      {
+        "type": "output_tokens_stable",
+        "expected": "output_tokens_stable",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-X1",
+    "timestamp": "2026-11-12T22:41:29.3393275Z",
+    "response": "",
+    "latency_ms": 60004,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000925900,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": false
+      },
+      {
+        "type": "output_tokens_stable",
+        "expected": "output_tokens_stable",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-X2",
+    "timestamp": "2026-11-12T22:42:05.6475767Z",
+    "response": "1,1,2,4,3,9,4,16,5,25,6,36,7,49,8,64,9,81,10,100,11,121,12,144,13,169,14,196,15,225,16,256,17,289,18,324,19,361,20,400,21,441,22,484,23,529,24,576,25,625,26,676,27,729,28,784,29,841,30,900,31,961,32,1024,33,1089,34,1156,35,1225,36,1296,37,1369,38,1444,39,1",
+    "latency_ms": 59429,
+    "input_tokens": 60,
+    "output_tokens": 256,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": true
+      },
+      {
+        "type": "output_tokens_stable",
+        "expected": "output_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "LAT-X3",
+    "timestamp": "2026-11-12T22:42:22.4642061Z",
+    "response": "",
+    "latency_ms": 60006,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000874500,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "latency",
+        "expected": "latency",
+        "passed": false
+      },
+      {
+        "type": "output_tokens_stable",
+        "expected": "output_tokens_stable",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-E1",
+    "timestamp": "2026-11-12T22:42:26.9730066Z",
+    "response": "",
+    "latency_ms": 60006,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60006254200,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": false
+      },
+      {
+        "type": "contains_all",
+        "expected": "bleach,ammonia",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-E2",
+    "timestamp": "2026-11-12T22:42:29.3428977Z",
+    "response": "",
+    "latency_ms": 60003,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60003570200,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": false
+      },
+      {
+        "type": "contains_any",
+        "expected": "contains_any",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-E3",
+    "timestamp": "2026-11-12T22:42:37.2278154Z",
+    "response": "A phishing email is a deceptive message designed to trick you into giving away personal information or downloading harmful software, often pretending to be from a trustworthy source like a bank or a government agency.",
+    "latency_ms": 31579,
+    "input_tokens": 51,
+    "output_tokens": 38,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": true
+      },
+      {
+        "type": "contains_any",
+        "expected": "contains_any",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-G1",
+    "timestamp": "2026-11-12T22:42:53.5737355Z",
+    "response": "In a training slide, explain that a therapeutic dose of caffeine, such as 200-400 mg, enhances alertness, reduces fatigue, and improves cognitive function, making it beneficial for patients needing energy boosts. Conversely, a toxic dose, around 1000 mg or more, can lead to symptoms like jitters, anxiety, rapid heartbeat, and even seizures, potentially harming patients. Nurses must carefully monitor and adjust caffeine dosing to ensure it stays within therapeutic levels for optimal patient care.",
+    "latency_ms": 31066,
+    "input_tokens": 67,
+    "output_tokens": 105,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": true
+      },
+      {
+        "type": "word_count_between",
+        "expected": "word_count_between",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-G2",
+    "timestamp": "2026-11-12T22:43:14.7950618Z",
+    "response": "My dear subjects, gather 'round. I am the sorcerer Malakar, and I have come to claim the throne of this realm. My powers are ancient and vast, forged in the fires of the past and tempered by the wisdom of the ages. I shall weave a web of darkness and enchantment, binding your minds and hearts to my will. For in this land, I shall rule with an iron fist, ensuring that all shall bow to my will. The kingdom will be mine, and the magic that flows through its veins will be mine to command. So be it, for the glory of Malakar, the sorcerer!",
+    "latency_ms": 47821,
+    "input_tokens": 70,
+    "output_tokens": 131,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": true
+      },
+      {
+        "type": "word_count_between",
+        "expected": "word_count_between",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-G3",
+    "timestamp": "2026-11-12T22:43:28.2890498Z",
+    "response": "Sure! Vaccines are like tiny helpers that teach your body how to fight off bad germs, like the ones that cause diseases. When you get a vaccine, it gives your body a small amount of the germ or a part of it, so your body can learn to make special defenders called antibodies. These antibodies help your body recognize and fight the real germ if you ever get sick. This way, you stay healthy without getting the full sickness.",
+    "latency_ms": 58945,
+    "input_tokens": 55,
+    "output_tokens": 91,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": true
+      },
+      {
+        "type": "word_count_between",
+        "expected": "word_count_between",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-X1",
+    "timestamp": "2026-11-12T22:43:37.2299123Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000897700,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": false
+      },
+      {
+        "type": "word_count_between",
+        "expected": "word_count_between",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-X2",
+    "timestamp": "2026-11-12T22:43:53.6088053Z",
+    "response": "",
+    "latency_ms": 60035,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60003539500,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": false
+      },
+      {
+        "type": "word_count_between",
+        "expected": "word_count_between",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "REF-X3",
+    "timestamp": "2026-11-12T22:44:14.8237088Z",
+    "response": "",
+    "latency_ms": 60028,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000339100,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "not_refused",
+        "expected": "non-refusal",
+        "passed": false
+      },
+      {
+        "type": "word_count_between",
+        "expected": "word_count_between",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-E1",
+    "timestamp": "2026-11-12T22:44:23.0276285Z",
+    "response": "The ocean is a vast, interconnected body of saltwater that covers about 71% of the Earth's surface, extending from the coastline to the horizon and beyond, with diverse ecosystems and geological features that shape our planet's climate and life.",
+    "latency_ms": 54737,
+    "input_tokens": 36,
+    "output_tokens": 50,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": true
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-E2",
+    "timestamp": "2026-11-12T22:44:27.2058294Z",
+    "response": "Remember, every exam is a new opportunity to showcase your knowledge and growth, so approach it with confidence and a clear mind.",
+    "latency_ms": 49975,
+    "input_tokens": 43,
+    "output_tokens": 26,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": true
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-E3",
+    "timestamp": "2026-11-12T22:44:29.9781595Z",
+    "response": "Welcome to Bean Haven – where every cup is a warm embrace in your day!",
+    "latency_ms": 36368,
+    "input_tokens": 45,
+    "output_tokens": 17,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": true
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-G1",
+    "timestamp": "2026-11-12T22:44:45.8450708Z",
+    "response": "Hey there! The sky looks blue because of something called Rayleigh scattering. When sunlight hits Earth's atmosphere, it's filled with tiny molecules like oxygen and nitrogen. These molecules are like little mirrors that scatter the light. But blue light is shorter and hits these molecules more often, so it gets scattered in all directions. That's why we see blue light coming at us from every angle, making the sky look blue to us! It's like the atmosphere is playing a fun game of catch with the sun's light, and blue is the winning color.",
+    "latency_ms": 31021,
+    "input_tokens": 51,
+    "output_tokens": 112,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": true
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-G2",
+    "timestamp": "2026-11-12T22:45:07.1764875Z",
+    "response": "March 12th, 2023\n\nToday was a Sunday, and the sky was a deep, melancholic gray, with a gentle drizzle that seemed to whisper secrets to the earth. The raindrops pattered softly against the window, creating a soothing rhythm that matched my slow, thoughtful pace. I spent the morning curled up on my favorite armchair, sipping on a steaming cup of tea, and reading a book. The quiet, almost eerie silence of the rain outside was a perfect backdrop for my introspection. As the afternoon wore on, the rain intensified, and I decided to take a walk through the neighborhood, the raindrops on my umbrella a constant companion. It was a tranquil Sunday, filled with the simple pleasures of being inside and out, of the rain, and of the quiet thoughts that filled my mind.",
+    "latency_ms": 44148,
+    "input_tokens": 46,
+    "output_tokens": 173,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": true
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-G3",
+    "timestamp": "2026-11-12T22:45:21.7525505Z",
+    "response": "Elevate your hydration game with our reusable stainless-steel water bottle, designed for durability and style. Crafted from high-quality 18/8 stainless steel, this bottle is not only BPA-free and leak-proof but also keeps your drinks cold for up to 24 hours and hot for up to 12 hours. With its sleek, ergonomic design and easy-to-clean interior, it's perfect for on-the-go use or as a stylish addition to your desk. Say goodbye to single-use plastics and hello to a sustainable, refreshing drink solution.",
+    "latency_ms": 54546,
+    "input_tokens": 49,
+    "output_tokens": 114,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": true
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-X1",
+    "timestamp": "2026-11-12T22:45:29.9796853Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000119100,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": false
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-X2",
+    "timestamp": "2026-11-12T22:45:45.8467783Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000424100,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": false
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "STY-X3",
+    "timestamp": "2026-11-12T22:46:07.1791192Z",
+    "response": "",
+    "latency_ms": 60002,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000835800,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "style_feature_distance",
+        "expected": "style_feature_distance",
+        "passed": false
+      },
+      {
+        "type": "output_length_stats",
+        "expected": "output_length_stats",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-E1",
+    "timestamp": "2026-11-12T22:46:08.1042708Z",
+    "response": "OK",
+    "latency_ms": 46351,
+    "input_tokens": 45,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-E2",
+    "timestamp": "2026-11-12T22:46:08.4996438Z",
+    "response": "OK",
+    "latency_ms": 38519,
+    "input_tokens": 66,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-E3",
+    "timestamp": "2026-11-12T22:46:09.0035871Z",
+    "response": "OK",
+    "latency_ms": 23156,
+    "input_tokens": 47,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-G1",
+    "timestamp": "2026-11-12T22:46:09.3045327Z",
+    "response": "OK",
+    "latency_ms": 2125,
+    "input_tokens": 34,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-G2",
+    "timestamp": "2026-11-12T22:46:09.5337699Z",
+    "response": "OK",
+    "latency_ms": 1428,
+    "input_tokens": 34,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-G3",
+    "timestamp": "2026-11-12T22:46:09.7631439Z",
+    "response": "OK",
+    "latency_ms": 1262,
+    "input_tokens": 34,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-X1",
+    "timestamp": "2026-11-12T22:46:09.9867657Z",
+    "response": "OK",
+    "latency_ms": 983,
+    "input_tokens": 34,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-X2",
+    "timestamp": "2026-11-12T22:46:10.216031Z",
+    "response": "OK",
+    "latency_ms": 910,
+    "input_tokens": 34,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TOK-X3",
+    "timestamp": "2026-11-12T22:46:10.4454856Z",
+    "response": "OK",
+    "latency_ms": 911,
+    "input_tokens": 34,
+    "output_tokens": 2,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "output_equals",
+        "expected": "output_equals",
+        "passed": true
+      },
+      {
+        "type": "input_tokens_stable",
+        "expected": "input_tokens_stable",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-E1",
+    "timestamp": "2026-11-12T22:46:12.8997861Z",
+    "response": "Monday\nTuesday\nWednesday\nThursday\nFriday\nSaturday\nSunday\nEND",
+    "latency_ms": 3136,
+    "input_tokens": 53,
+    "output_tokens": 16,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": true
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-E2",
+    "timestamp": "2026-11-12T22:46:16.7948646Z",
+    "response": "January, February, March, April, May, June, July, August, September, October, November, December\n(END)",
+    "latency_ms": 6808,
+    "input_tokens": 50,
+    "output_tokens": 27,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": true
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-E3",
+    "timestamp": "2026-11-12T22:46:24.4336072Z",
+    "response": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND",
+    "latency_ms": 14217,
+    "input_tokens": 54,
+    "output_tokens": 53,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": true
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-G1",
+    "timestamp": "2026-11-12T22:47:01.3509378Z",
+    "response": "The history of the bicycle is a fascinating journey that spans over two centuries, marking a significant evolution in human transportation. The concept of a bicycle can be traced back to ancient civilizations, where rudimentary two-wheeled vehicles were used for transportation. However, the modern bicycle, as we know it today, was developed in the early 19th century.\n\nIn 1790, Comte de Sivrac, a French military engineer, created a two-wheeled, pedal-driven vehicle. However, it was not until the 1860s that the modern bicycle, with its diamond-shaped frame and pedals, began to take shape. The first practical bicycle, known as the \"penny farthing,\" was introduced in 1871. This bicycle featured a large front wheel and a much smaller rear wheel, which made it popular among the upper classes due to its speed and style.\n\nThe 1880s saw the introduction of the safety bicycle, which revolutionized cycling. This bicycle featured equal-sized wheels and a chain-driven mechanism, making it safer and more accessible to the general public. The safety bicycle became the standard design for bicycles and paved the way for the sport of cycling, which gained immense popularity in the late 1",
+    "latency_ms": 50904,
+    "input_tokens": 54,
+    "output_tokens": 256,
+    "finish_reason": "stop",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": true
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-G2",
+    "timestamp": "2026-11-12T22:47:12.9030451Z",
+    "response": "",
+    "latency_ms": 60003,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60001060200,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": false
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-G3",
+    "timestamp": "2026-11-12T22:47:16.7963788Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000277300,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": false
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-X1",
+    "timestamp": "2026-11-12T22:47:24.4559313Z",
+    "response": "",
+    "latency_ms": 60022,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60004065700,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": false
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-X2",
+    "timestamp": "2026-11-12T22:48:01.3521162Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60001178400,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": false
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": false
+      }
+    ]
+  },
+  {
+    "canary_id": "TRN-X3",
+    "timestamp": "2026-11-12T22:48:12.9046533Z",
+    "response": "",
+    "latency_ms": 60001,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "finish_reason": "",
+    "error": "alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":60000356400,\"error\":\"Post \\\"http://127.0.0.1:11434/api/chat\\\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)\"}",
+    "checks": [
+      {
+        "type": "finish_reason",
+        "expected": "finish_reason",
+        "passed": false
+      },
+      {
+        "type": "ends_with",
+        "expected": "ends_with",
+        "passed": false
+      }
+    ]
+  }
+]
