@@ -48,7 +48,7 @@ func execute(command string, cfg monitor.Config) error {
 	if cfg.APIKey == "" {
 		return errors.New("GROQ_API_KEY is required for live monitoring")
 	}
-	router, err := monitor.NewRouter(monitor.Groq{Endpoint: cfg.Endpoint, APIKey: cfg.APIKey, Client: &http.Client{Timeout: 60 * time.Second}}, healthy(cfg))
+	router, err := newRouter(cfg)
 	if err != nil {
 		return err
 	}
@@ -131,10 +131,11 @@ func evaluate(cfg monitor.Config) error {
 	if err != nil {
 		return err
 	}
-	router, err := monitor.NewRouter(monitor.Groq{Endpoint: cfg.Endpoint, APIKey: cfg.APIKey, Client: &http.Client{Timeout: 60 * time.Second}}, healthy(cfg))
+	router, err := newRouter(cfg)
 	if err != nil {
 		return err
 	}
+
 	reference := monitor.Run(context.Background(), library, router, 4)
 	previous := router.Layers()
 	experimentID := fmt.Sprintf("exp-%d", time.Now().UnixNano())
@@ -171,6 +172,15 @@ func evaluate(cfg monitor.Config) error {
 	data, _ := json.MarshalIndent(result, "", "  ")
 	fmt.Println(string(data))
 	return monitor.SaveJSON(filepath.Join(cfg.DataDir, "evaluation.json"), result)
+}
+
+func newRouter(cfg monitor.Config) (*monitor.Router, error) {
+	client := &http.Client{Timeout: 60 * time.Second}
+	return monitor.NewProviderRouter(map[string]monitor.Upstream{
+		cfg.ModelA: monitor.Groq{Endpoint: cfg.Endpoint, APIKey: cfg.APIKey, Client: client},
+		cfg.ModelB: monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client},
+		cfg.ModelC: monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client},
+	}, healthy(cfg))
 }
 
 func inferLayer(evidence []string) string {

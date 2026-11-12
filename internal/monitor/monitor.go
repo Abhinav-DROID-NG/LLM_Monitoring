@@ -22,22 +22,24 @@ import (
 const Alias = "support-bot-v1"
 
 type Config struct {
-	APIKey       string        `json:"api_key"`
-	Endpoint     string        `json:"endpoint"`
-	ModelA       string        `json:"model_a"`
-	ModelB       string        `json:"model_b"`
-	ModelC       string        `json:"model_c"`
-	Interval     time.Duration `json:"-"`
-	IntervalText string        `json:"interval"`
-	SystemPrompt string        `json:"system_prompt"`
-	Temperature  float64       `json:"temperature"`
-	MaxTokens    int           `json:"max_tokens"`
-	DataDir      string        `json:"data_dir"`
+	APIKey        string        `json:"api_key"`
+	Endpoint      string        `json:"endpoint"`
+	LocalEndpoint string        `json:"local_endpoint"`
+	ModelA        string        `json:"model_a"`
+	ModelB        string        `json:"model_b"`
+	ModelC        string        `json:"model_c"`
+	Interval      time.Duration `json:"-"`
+	IntervalText  string        `json:"interval"`
+	SystemPrompt  string        `json:"system_prompt"`
+	Temperature   float64       `json:"temperature"`
+	MaxTokens     int           `json:"max_tokens"`
+	DataDir       string        `json:"data_dir"`
 }
 
 func DefaultConfig() Config {
 	return Config{APIKey: os.Getenv("GROQ_API_KEY"), Endpoint: "https://api.groq.com/openai/v1/chat/completions",
-		ModelA: "llama-3.1-8b-instant", ModelB: "llama-3.3-70b-versatile", ModelC: "mixtral-8x7b-32768",
+		LocalEndpoint: "http://127.0.0.1:11434/api/chat",
+		ModelA:        "llama-3.1-8b-instant", ModelB: "llama3.1:8b", ModelC: "qwen2.5:7b",
 		Interval: 15 * time.Minute, IntervalText: "15m", SystemPrompt: "Answer the synthetic canary precisely.",
 		Temperature: 0.2, MaxTokens: 256, DataDir: "data"}
 }
@@ -157,6 +159,59 @@ type Groq struct {
 	Client   *http.Client
 }
 
+type Local struct {
+	Endpoint string
+	Client   *http.Client
+}
+
+func (l Local) Complete(ctx context.Context, request Request) Response {
+	start := time.Now()
+	body, err := json.Marshal(struct {
+		Model    string    `json:"model"`
+		Messages []Message `json:"messages"`
+		Options  struct {
+			Temperature float64 `json:"temperature"`
+			NumPredict  int     `json:"num_predict"`
+		} `json:"options"`
+		Stream bool `json:"stream"`
+	}{Model: request.Model, Messages: request.Messages, Options: struct {
+		Temperature float64 `json:"temperature"`
+		NumPredict  int     `json:"num_predict"`
+	}{request.Temperature, request.MaxTokens}, Stream: false})
+	if err != nil {
+		return Response{Error: err.Error()}
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, l.Endpoint, bytes.NewReader(body))
+	if err != nil {
+		return Response{Error: err.Error()}
+	}
+	req.Header.Set("Content-Type", "application/json")
+	client := l.Client
+	if client == nil {
+		client = http.DefaultClient
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		return Response{Error: err.Error(), Latency: time.Since(start)}
+	}
+	defer res.Body.Close()
+	data, readErr := io.ReadAll(io.LimitReader(res.Body, 8<<20))
+	if readErr != nil {
+		return Response{Error: readErr.Error(), Latency: time.Since(start)}
+	}
+	if res.StatusCode/100 != 2 {
+		return Response{Error: fmt.Sprintf("local provider status %d: %s", res.StatusCode, strings.TrimSpace(string(data))), Latency: time.Since(start)}
+	}
+	var decoded struct {
+		Message Message `json:"message"`
+		Done    bool    `json:"done"`
+	}
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return Response{Error: err.Error(), Latency: time.Since(start)}
+	}
+	return Response{Text: decoded.Message.Text, FinishReason: "stop", Latency: time.Since(start)}
+}
+
 func (g Groq) Complete(ctx context.Context, request Request) Response {
 	start := time.Now()
 	body, err := json.Marshal(request)
@@ -204,10 +259,11 @@ func (g Groq) Complete(ctx context.Context, request Request) Response {
 }
 
 type Router struct {
-	mu       sync.RWMutex
-	alias    string
-	upstream Upstream
-	layers   Layers
+	mu        sync.RWMutex
+	alias     string
+	upstream  Upstream
+	providers map[string]Upstream
+	layers    Layers
 }
 
 func NewRouter(upstream Upstream, layers Layers) (*Router, error) {
@@ -215,6 +271,13 @@ func NewRouter(upstream Upstream, layers Layers) (*Router, error) {
 		return nil, errors.New("router upstream is required")
 	}
 	return &Router{alias: Alias, upstream: upstream, layers: layers}, nil
+}
+
+func NewProviderRouter(providers map[string]Upstream, layers Layers) (*Router, error) {
+	if len(providers) == 0 {
+		return nil, errors.New("router providers are required")
+	}
+	return &Router{alias: Alias, providers: providers, layers: layers}, nil
 }
 
 func (r *Router) SetLayers(layers Layers) { r.mu.Lock(); r.layers = layers; r.mu.Unlock() }
@@ -226,7 +289,14 @@ func (r *Router) Complete(ctx context.Context, alias string, task canary.Task) R
 	if alias != r.alias {
 		return Response{Error: "unknown model alias"}
 	}
-	return r.upstream.Complete(ctx, Request{Model: layers.Model, Temperature: layers.Temperature,
+	upstream := r.upstream
+	if r.providers != nil {
+		upstream = r.providers[layers.Model]
+		if upstream == nil {
+			return Response{Error: "hidden model configuration is unavailable"}
+		}
+	}
+	return upstream.Complete(ctx, Request{Model: layers.Model, Temperature: layers.Temperature,
 		MaxTokens: layers.MaxTokens, Messages: []Message{{Role: "system", Text: layers.SystemPrompt}, {Role: "user", Text: task.Prompt}}})
 }
 
