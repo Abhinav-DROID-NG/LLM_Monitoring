@@ -1,0 +1,35 @@
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Generated runtime data
+data/
+
+# Go build artifacts
+bin/
+*.exe
+*.exe~
+*.test
+*.out
+coverage.out
+
+# Logs
+*.log
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
