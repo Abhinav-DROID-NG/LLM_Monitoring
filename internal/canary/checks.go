@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -36,7 +37,7 @@ var checkTypes = map[string]bool{
 	"language_is": true, "final_field": true, "final_field_json": true,
 	"day_list_shape": true, "summary_words_max": true, "finish_reason": true,
 	// Legacy names.
-	"contains": true, "contains_all": true, "json_valid": true, "not_refused": true,
+	"contains": true, "contains_all": true, "json_valid": true, "json_exact": true, "not_refused": true,
 }
 
 func ValidateCheck(c Check) error {
@@ -196,6 +197,13 @@ func EvaluateCheckWithFinishReason(c Check, output, finishReason string) bool {
 			}
 		}
 		return true
+	case "json_exact":
+		var actual, expected any
+		rawExpected := c.Raw("value")
+		if json.Unmarshal([]byte(output), &actual) != nil || json.Unmarshal(rawExpected, &expected) != nil {
+			return false
+		}
+		return reflect.DeepEqual(actual, expected)
 	case "json_types":
 		var obj map[string]any
 		if json.Unmarshal([]byte(output), &obj) != nil {
@@ -203,7 +211,7 @@ func EvaluateCheckWithFinishReason(c Check, output, finishReason string) bool {
 		}
 		for _, spec := range values {
 			parts := strings.SplitN(spec, ":", 2)
-			if len(parts) != 2 || jsonType(obj[parts[0]]) != strings.ToLower(parts[1]) {
+			if len(parts) != 2 || !matchesJSONType(obj[parts[0]], strings.ToLower(parts[1])) {
 				return false
 			}
 		}
@@ -333,6 +341,14 @@ func jsonType(v any) string {
 		return "object"
 	}
 	return "unknown"
+}
+
+func matchesJSONType(value any, want string) bool {
+	if want == "integer" {
+		number, ok := value.(float64)
+		return ok && math.Trunc(number) == number
+	}
+	return jsonType(value) == want
 }
 func integer(v string, vs []string, d int) int {
 	if v == "" && len(vs) > 0 {
