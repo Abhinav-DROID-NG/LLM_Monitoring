@@ -296,7 +296,7 @@ func evaluateModel(modelName string, baseline []monitor.Observation, library can
 	return res
 }
 
-func evaluate(cfg monitor.Config) error {
+func legacyEvaluate(cfg monitor.Config) error {
 	spec, err := evalspec.Load("problem3_test_cases.json")
 	if err != nil {
 		return err
@@ -478,12 +478,11 @@ func score(results []map[string]any) map[string]float64 {
 
 func newRouter(cfg monitor.Config) (*monitor.Router, error) {
 	if cfg.Mock {
-		mock := monitor.NewMockProvider(1)
 		return monitor.NewProviderRouter(map[string]monitor.Upstream{
-			cfg.ModelA: mock, cfg.ModelB: mock, cfg.ModelC: mock,
-			cfg.ModelA + "|local-a": mock, cfg.ModelA + "|local-b": mock, cfg.ModelA + "|local-c": mock,
-			cfg.ModelB + "|local-a": mock, cfg.ModelB + "|local-b": mock, cfg.ModelB + "|local-c": mock,
-			cfg.ModelC + "|local-a": mock, cfg.ModelC + "|local-b": mock, cfg.ModelC + "|local-c": mock,
+			cfg.ModelA: monitor.NewMockProvider(1), cfg.ModelB: monitor.NewMockProvider(2), cfg.ModelC: monitor.NewMockProvider(3),
+			cfg.ModelA + "|local-a": monitor.NewMockProvider(11), cfg.ModelA + "|local-b": monitor.NewMockProvider(12), cfg.ModelA + "|local-c": monitor.NewMockProvider(13),
+			cfg.ModelB + "|local-a": monitor.NewMockProvider(21), cfg.ModelB + "|local-b": monitor.NewMockProvider(22), cfg.ModelB + "|local-c": monitor.NewMockProvider(23),
+			cfg.ModelC + "|local-a": monitor.NewMockProvider(31), cfg.ModelC + "|local-b": monitor.NewMockProvider(32), cfg.ModelC + "|local-c": monitor.NewMockProvider(33),
 		}, healthy(cfg))
 	}
 	client := &http.Client{Timeout: 60 * time.Second}
