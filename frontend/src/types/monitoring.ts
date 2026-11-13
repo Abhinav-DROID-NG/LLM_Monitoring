@@ -1,4 +1,11 @@
-export type NavigationTab = 'dashboard' | 'canary-testing' | 'change-detection' | 'attribution';
+export type NavigationTab =
+  | 'overview'
+  | 'evaluations'
+  | 'comparison'
+  | 'drift'
+  | 'canary-testing'
+  | 'history'
+  | 'settings';
 
 export interface ExperimentConfig {
   temperature: number;
