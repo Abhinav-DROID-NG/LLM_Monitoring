@@ -257,47 +257,29 @@ func evaluateModel(modelName string, baseline []monitor.Observation, library can
 		}
 		totalLatency += comp.EvalLatency
 
-		basePassed := 0
-		for _, c := range base.Checks {
-			if c.Passed {
-				basePassed++
-			}
-		}
-		curPassed := 0
-		for _, c := range cur.Checks {
-			if c.Passed {
-				curPassed++
-				totalChecksPassed++
-			}
-			totalChecks++
-		}
-		comp.BaselineChecks = basePassed
-		comp.EvalChecks = curPassed
-
 		if !exists {
 			comp.Status = "NEW"
 			res.Comparisons = append(res.Comparisons, comp)
 			continue
 		}
 
+		basePassed, curPassed, comparable, regressions := comparableCheckCounts(base.Checks, cur.Checks)
+		comp.TotalChecks = comparable
+		comp.BaselineChecks = basePassed
+		comp.EvalChecks = curPassed
+		totalChecks += comparable
+		totalChecksPassed += curPassed
+
 		if cur.Error != "" && base.Error == "" {
 			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Execution error: %s", cur.Error))
 		}
 
-		for i, curChk := range cur.Checks {
-			if i < len(base.Checks) {
-				if base.Checks[i].Passed && !curChk.Passed {
-					comp.Reasons = append(comp.Reasons, fmt.Sprintf("Check '%s' failed", curChk.Type))
-				}
-			}
+		for _, regression := range regressions {
+			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Check '%s' failed", regression))
 		}
 
 		if base.FinishReason == "stop" && cur.FinishReason != "stop" && cur.FinishReason != "" {
 			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Finish reason changed from stop to %s", cur.FinishReason))
-		}
-
-		if base.LatencyMS > 0 && cur.LatencyMS > base.LatencyMS*5/2 {
-			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Latency degraded (%.2fs vs base %.2fs)", comp.EvalLatency, comp.BaselineLatency))
 		}
 
 		if len(comp.Reasons) > 0 || curPassed < basePassed {
@@ -330,6 +312,46 @@ func evaluateModel(modelName string, baseline []monitor.Observation, library can
 	}
 	res.Analysis = monitor.Analyze(baseline, current)
 	return res
+}
+
+func comparableCheckCounts(base, current []monitor.CheckObservation) (basePassed, currentPassed, comparable int, regressions []string) {
+	baseMap, baseInvalid := indexChecksForEvaluation(base)
+	currentMap, currentInvalid := indexChecksForEvaluation(current)
+	if baseInvalid || currentInvalid {
+		return 0, 0, 0, nil
+	}
+	for key, before := range baseMap {
+		after, ok := currentMap[key]
+		if !ok || before.Type != after.Type || before.Unavailable || after.Unavailable {
+			continue
+		}
+		comparable++
+		if before.Passed {
+			basePassed++
+		}
+		if after.Passed {
+			currentPassed++
+		}
+		if before.Passed && !after.Passed {
+			regressions = append(regressions, after.Type)
+		}
+	}
+	return
+}
+
+func indexChecksForEvaluation(checks []monitor.CheckObservation) (map[string]monitor.CheckObservation, bool) {
+	result := make(map[string]monitor.CheckObservation, len(checks))
+	for _, check := range checks {
+		key := check.CheckID
+		if key == "" {
+			key = "legacy:" + check.Type + ":" + check.Expected
+		}
+		if _, exists := result[key]; exists {
+			return nil, true
+		}
+		result[key] = check
+	}
+	return result, false
 }
 
 func legacyEvaluate(cfg monitor.Config) error {

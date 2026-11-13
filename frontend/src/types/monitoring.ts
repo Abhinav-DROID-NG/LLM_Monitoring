@@ -158,6 +158,27 @@ export interface DriftAnalysis {
   evidence: string[];
 }
 
+export interface BehavioralReport {
+  behavioral_drift_detected: boolean;
+  latency_drift_detected: boolean;
+  regression_count: number;
+  improvement_count: number;
+  comparable_check_count: number;
+  unavailable_check_count: number;
+  regression_rate: number;
+  effect_size: number;
+  statistical_p_value: number;
+  statistical_significance: string;
+  attributed_layer: string;
+  attribution_confidence: string;
+  evidence: string[];
+  limitations: string[];
+  stable_failure_count: number;
+  missing_check_count: number;
+  missing_canary_count: number;
+  invalid_check_count: number;
+}
+
 export interface ThresholdsConfig {
   fdr_q: number;
   min_effect: Record<string, number>;
@@ -171,6 +192,7 @@ export interface DetectionResponse {
   thresholds?: ThresholdsConfig;
   detection?: DetectionResult;
   analysis?: DriftAnalysis;
+  behavioral?: BehavioralReport;
   baseline_stats?: Record<string, FeatureStats>;
   baseline_metrics?: Record<string, number>;
   current_metrics?: Record<string, number>;
@@ -220,6 +242,7 @@ export interface AttributionResponse {
   detection?: DetectionResult;
   attribution?: AttributionResult;
   analysis?: DriftAnalysis;
+  behavioral?: BehavioralReport;
   report?: CheckReport;
 }
 

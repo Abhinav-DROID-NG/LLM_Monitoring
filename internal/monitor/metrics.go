@@ -40,10 +40,15 @@ func ExtractMetrics(library canary.Library, observations []Observation) Features
 		outputTokens += float64(observation.OutputTokens)
 		latency += float64(observation.LatencyMS)
 		for _, check := range observation.Checks {
+			if check.Unavailable {
+				continue
+			}
 			checks++
 			if check.Passed {
 				passed++
 			}
+		}
+		for _, check := range observation.Checks {
 			if check.Unavailable {
 				ambiguous++
 			}

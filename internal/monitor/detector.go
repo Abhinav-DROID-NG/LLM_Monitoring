@@ -134,6 +134,9 @@ func observationFeatures(observations []Observation) map[string]float64 {
 			validJSON++
 		}
 		for _, check := range observation.Checks {
+			if check.Unavailable {
+				continue
+			}
 			checks++
 			if check.Passed {
 				passed++

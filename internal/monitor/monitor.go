@@ -540,6 +540,7 @@ type Observation struct {
 }
 
 type CheckObservation struct {
+	CheckID     string `json:"check_id,omitempty"`
 	Type        string `json:"type"`
 	Expected    string `json:"expected"`
 	Passed      bool   `json:"passed"`
@@ -705,7 +706,8 @@ func checkTask(task canary.Task, response Response) []CheckObservation {
 			expected = check.Type
 		}
 		results = append(results, CheckObservation{Type: check.Type, Expected: expected,
-			Passed: result.Passed, Unavailable: result.Unavailable, Detail: result.Detail})
+			CheckID: stableCheckID(check),
+			Passed:  result.Passed, Unavailable: result.Unavailable, Detail: result.Detail})
 	}
 	return results
 }

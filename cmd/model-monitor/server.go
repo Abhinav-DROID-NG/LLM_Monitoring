@@ -294,19 +294,35 @@ func (s *apiServer) handleDetection(w http.ResponseWriter, r *http.Request) {
 	}
 	baseline := monitor.BuildBaseline(baseRuns)
 	detection := monitor.DetectWithThresholds(baseline, latestObs, s.thresholds)
-	analysis := monitor.Analyze(baseRuns[len(baseRuns)-1], latestObs)
+	behavior := s.behavioralComparison(baseRuns[len(baseRuns)-1], latestObs)
+	analysis := monitor.Analysis{Detected: behavior.BehavioralDriftDetected,
+		Confidence: behavior.EffectSize, PredictedLayer: behavior.AttributedLayer, Evidence: behavior.Evidence}
 	currentMetrics := monitor.ExtractMetrics(s.library, latestObs)
 	baselineMetrics := monitor.ExtractMetrics(s.library, baseRuns[len(baseRuns)-1])
 
 	writeJSON(w, http.StatusOK, map[string]any{
-		"available":        true,
-		"run_file":         filepath.Base(runFile),
-		"thresholds":       s.thresholds,
-		"detection":        detection,
-		"analysis":         analysis,
-		"baseline_stats":   baseline.Features,
-		"baseline_metrics": baselineMetrics,
-		"current_metrics":  currentMetrics,
+		"available":                 true,
+		"run_file":                  filepath.Base(runFile),
+		"thresholds":                s.thresholds,
+		"detection":                 detection,
+		"behavioral":                behavior,
+		"behavioral_drift_detected": behavior.BehavioralDriftDetected,
+		"latency_drift_detected":    behavior.LatencyDriftDetected,
+		"regression_count":          behavior.RegressionCount,
+		"improvement_count":         behavior.ImprovementCount,
+		"comparable_check_count":    behavior.ComparableCheckCount,
+		"unavailable_check_count":   behavior.UnavailableCheckCount,
+		"regression_rate":           behavior.RegressionRate,
+		"effect_size":               behavior.EffectSize,
+		"statistical_significance":  behavior.StatisticalSignificance,
+		"attributed_layer":          behavior.AttributedLayer,
+		"attribution_confidence":    behavior.AttributionConfidence,
+		"evidence":                  behavior.Evidence,
+		"limitations":               behavior.Limitations,
+		"analysis":                  analysis,
+		"baseline_stats":            baseline.Features,
+		"baseline_metrics":          baselineMetrics,
+		"current_metrics":           currentMetrics,
 	})
 }
 
@@ -323,8 +339,11 @@ func (s *apiServer) handleAttribution(w http.ResponseWriter, r *http.Request) {
 	}
 	baseline := monitor.BuildBaseline(baseRuns)
 	detection := monitor.DetectWithThresholds(baseline, latestObs, s.thresholds)
-	attr := monitor.Attribute(detection)
-	analysis := monitor.Analyze(baseRuns[len(baseRuns)-1], latestObs)
+	behavior := s.behavioralComparison(baseRuns[len(baseRuns)-1], latestObs)
+	attr := monitor.Attribution{Layers: []string{behavior.AttributedLayer}, Confidence: behavior.AttributionConfidence,
+		Inconclusive: behavior.AttributedLayer == "unknown", Reasons: behavior.Evidence}
+	analysis := monitor.Analysis{Detected: behavior.BehavioralDriftDetected,
+		Confidence: behavior.EffectSize, PredictedLayer: behavior.AttributedLayer, Evidence: behavior.Evidence}
 
 	var inTok, outTok int
 	var totalSec float64
@@ -339,10 +358,19 @@ func (s *apiServer) handleAttribution(w http.ResponseWriter, r *http.Request) {
 		"available":   true,
 		"run_file":    filepath.Base(runFile),
 		"detection":   detection,
+		"behavioral":  behavior,
 		"attribution": attr,
 		"analysis":    analysis,
 		"report":      checkReport,
 	})
+}
+
+func (s *apiServer) behavioralComparison(reference, current []monitor.Observation) monitor.BehavioralReport {
+	report := monitor.CompareBehavioral(reference, current, &monitor.BehaviorThresholds{LatencyRelative: s.thresholds.MinEffect["latency_relative"]})
+	layer, confidence, evidence := monitor.AttributeBehavioral(reference, current, report)
+	report.AttributedLayer, report.AttributionConfidence = layer, confidence
+	report.Evidence = append(report.Evidence, evidence...)
+	return report
 }
 
 func loadLatestRun(dataDir string) ([]monitor.Observation, string, error) {
