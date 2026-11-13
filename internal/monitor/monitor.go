@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/canary"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/features"
 )
 
 const Alias = "support-bot-v1"
@@ -509,6 +510,10 @@ func canaryPromptHash(prompt string) string {
 	return hex.EncodeToString(sum[:])
 }
 
+func styleSlice(vector [9]float64) []float64 {
+	return append([]float64(nil), vector[:]...)
+}
+
 type Observation struct {
 	CanaryID          string             `json:"canary_id"`
 	RunID             string             `json:"run_id"`
@@ -527,6 +532,7 @@ type Observation struct {
 	RetryCount        int                `json:"retry_count"`
 	Error             string             `json:"error,omitempty"`
 	Checks            []CheckObservation `json:"checks"`
+	Style             []float64          `json:"style,omitempty"`
 }
 
 type CheckObservation struct {
@@ -558,7 +564,7 @@ func Run(ctx context.Context, library canary.Library, router *Router, concurrenc
 					ReturnedModel:     response.ReturnedModel, SystemFingerprint: response.SystemFingerprint,
 					LatencyMS: response.Latency.Milliseconds(), InputTokens: response.InputTokens,
 					OutputTokens: response.OutputTokens, FinishReason: response.FinishReason, Error: response.Error,
-					Checks: checkTask(task, response)}
+					Checks: checkTask(task, response), Style: styleSlice(features.StyleVectorV1(response.Text))}
 			}
 		}()
 	}
@@ -611,6 +617,7 @@ func RunViaAlias(ctx context.Context, library canary.Library, endpoint string, c
 					FinishReason: response.FinishReason,
 					Error:        response.Error,
 					Checks:       checkTask(task, response),
+					Style:        styleSlice(features.StyleVectorV1(response.Text)),
 				}
 				idx := completed.Add(1)
 				elapsedSec := float64(obs.LatencyMS) / 1000.0
