@@ -40,19 +40,19 @@
     "models": [
       {
         "role": "reference",
-        "name": "qwen2.5:3b-instruct-fp16",
+        "name": "qwen25-fp16-ctx8k:latest",
         "ollama_model_id": "de47f806df14",
         "reported_size_gb": 6.2
       },
       {
         "role": "quantized_comparison",
-        "name": "qwen2.5:3b-instruct-q8_0",
+        "name": "qwen25-q8-ctx8k:latest",
         "ollama_model_id": "cd6aa8b25d7a",
         "reported_size_gb": 3.3
       },
       {
         "role": "quantized_comparison",
-        "name": "qwen2.5:3b-instruct-q4_K_M",
+        "name": "qwen25-q4-ctx8k:latest",
         "ollama_model_id": "357c53fb659c",
         "reported_size_gb": 1.9
       }
@@ -3457,10 +3457,10 @@
     "QZ-LONG": "long-context reasoning"
   },
   "comparison_protocol": {
-    "reference_model": "qwen2.5:3b-instruct-fp16",
+    "reference_model": "qwen25-fp16-ctx8k:latest",
     "comparison_models": [
-      "qwen2.5:3b-instruct-q8_0",
-      "qwen2.5:3b-instruct-q4_K_M"
+      "qwen25-q8-ctx8k:latest",
+      "qwen25-q4-ctx8k:latest"
     ],
     "paired_unit": "same task ID + same serialized prompt + same generation controls + same provider/runtime route where possible",
     "primary_score": "A task passes only when all its checks pass.",

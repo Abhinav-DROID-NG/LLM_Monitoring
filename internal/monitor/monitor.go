@@ -46,7 +46,7 @@ type Config struct {
 
 func DefaultConfig() Config {
 	return Config{LocalEndpoint: "http://127.0.0.1:11434/api/chat",
-		ModelA: "qwen2.5:3b-instruct-fp16", ModelB: "qwen2.5:3b-instruct-q8_0", ModelC: "qwen2.5:3b-instruct-q4_K_M",
+		ModelA: "qwen25-fp16-ctx8k:latest", ModelB: "qwen25-q8-ctx8k:latest", ModelC: "qwen25-q4-ctx8k:latest",
 		Interval: 15 * time.Minute, IntervalText: "15m", SystemPrompt: "Answer the synthetic canary precisely.",
 		Temperature: 0.2, MaxTokens: 256, DataDir: "data", Concurrency: 1}
 }

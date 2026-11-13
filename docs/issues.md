@@ -119,7 +119,7 @@ This makes it difficult for developers to use different models or endpoints with
 Developers can customize models and endpoints without editing Go code:
 ```bash
 export OLLAMA_ENDPOINT="http://localhost:11434/api/chat"
-export MONITOR_MODEL_A="qwen2.5:1.5b-instruct"
+export MONITOR_MODEL_A="qwen25-fp16-ctx8k:latest"
 go run ./cmd/model-monitor baseline
 ```
 

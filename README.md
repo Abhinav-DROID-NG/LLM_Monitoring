@@ -13,17 +13,17 @@ accepting real user prompts.
 The default Ollama models are:
 
 ```text
-qwen2.5:3b-instruct-fp16
-qwen2.5:3b-instruct-q8_0
-qwen2.5:3b-instruct-q4_K_M
+qwen25-fp16-ctx8k:latest
+qwen25-q8-ctx8k:latest
+qwen25-q4-ctx8k:latest
 ```
 
 Pull them before running live checks:
 
 ```bash
-ollama pull qwen2.5:3b-instruct-fp16
-ollama pull qwen2.5:3b-instruct-q8_0
-ollama pull qwen2.5:3b-instruct-q4_K_M
+ollama pull qwen25-fp16-ctx8k:latest
+ollama pull qwen25-q8-ctx8k:latest
+ollama pull qwen25-q4-ctx8k:latest
 ```
 
 ## Validate and test
