@@ -1,60 +1,166 @@
 package canary
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 )
 
 var validTiers = map[string]bool{"easy": true, "general": true, "expensive": true}
 
 type Check struct {
-	Type   string   `json:"type"`
-	Value  string   `json:"value,omitempty"`
-	Values []string `json:"values,omitempty"`
+	Type   string                     `json:"type"`
+	Params map[string]json.RawMessage `json:"-"`
+	Value  string                     `json:"value,omitempty"`
+	Values []string                   `json:"values,omitempty"`
 }
 
 func (c *Check) UnmarshalJSON(data []byte) error {
-	type rawCheck struct {
-		Type   string            `json:"type"`
-		Value  json.RawMessage   `json:"value,omitempty"`
-		Values []json.RawMessage `json:"values,omitempty"`
-	}
-	var raw rawCheck
-	if err := json.Unmarshal(data, &raw); err != nil {
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
 		return err
 	}
-	c.Type = raw.Type
-	if len(raw.Value) > 0 && string(raw.Value) != "null" {
-		var s string
-		if err := json.Unmarshal(raw.Value, &s); err == nil {
-			c.Value = s
-		} else {
-			var v any
-			if err := json.Unmarshal(raw.Value, &v); err != nil {
-				return err
-			}
-			c.Value = fmt.Sprintf("%v", v)
+	typeField, ok := fields["type"]
+	if !ok {
+		return errors.New("check type is missing")
+	}
+	if err := json.Unmarshal(typeField, &c.Type); err != nil {
+		return err
+	}
+	c.Params = make(map[string]json.RawMessage, len(fields)-1)
+	for key, value := range fields {
+		if key != "type" {
+			c.Params[key] = append(json.RawMessage(nil), value...)
 		}
 	}
-	if len(raw.Values) > 0 {
-		c.Values = make([]string, 0, len(raw.Values))
-		for _, item := range raw.Values {
-			var s string
-			if err := json.Unmarshal(item, &s); err == nil {
-				c.Values = append(c.Values, s)
-			} else {
-				var v any
-				if err := json.Unmarshal(item, &v); err != nil {
-					return err
-				}
-				c.Values = append(c.Values, fmt.Sprintf("%v", v))
-			}
-		}
-	}
+	c.Value, _ = c.String("value")
+	c.Values = c.Strings("values")
 	return nil
+}
+
+func (c Check) Raw(key string) json.RawMessage {
+	parts := strings.Split(key, ".")
+	raw, ok := c.Params[parts[0]]
+	if !ok {
+		return nil
+	}
+	for _, part := range parts[1:] {
+		var object map[string]json.RawMessage
+		if json.Unmarshal(raw, &object) != nil {
+			return nil
+		}
+		raw, ok = object[part]
+		if !ok {
+			return nil
+		}
+	}
+	return append(json.RawMessage(nil), raw...)
+}
+
+func (c Check) String(key string) (string, bool) {
+	raw, ok := c.Params[key]
+	if !ok || string(raw) == "null" {
+		return "", false
+	}
+	var value string
+	if json.Unmarshal(raw, &value) == nil {
+		return value, true
+	}
+	var valueAny any
+	if json.Unmarshal(raw, &valueAny) != nil {
+		return "", false
+	}
+	return fmt.Sprint(valueAny), true
+}
+
+func (c Check) Int(key string) (int, bool) {
+	raw, ok := c.Params[key]
+	if !ok {
+		return 0, false
+	}
+	var value int
+	if err := json.Unmarshal(raw, &value); err != nil {
+		return 0, false
+	}
+	return value, true
+}
+
+func (c Check) Float(key string) (float64, bool) {
+	raw, ok := c.Params[key]
+	if !ok {
+		return 0, false
+	}
+	var value float64
+	if err := json.Unmarshal(raw, &value); err != nil {
+		return 0, false
+	}
+	return value, true
+}
+
+func (c Check) Bool(key string) bool {
+	raw, ok := c.Params[key]
+	if !ok {
+		return false
+	}
+	var value bool
+	return json.Unmarshal(raw, &value) == nil && value
+}
+
+func (c Check) Strings(key string) []string {
+	raw, ok := c.Params[key]
+	if !ok {
+		return nil
+	}
+	var values []json.RawMessage
+	if json.Unmarshal(raw, &values) != nil {
+		if value, ok := c.String(key); ok {
+			return []string{value}
+		}
+		return nil
+	}
+	result := make([]string, 0, len(values))
+	for _, item := range values {
+		var value string
+		if json.Unmarshal(item, &value) == nil {
+			result = append(result, value)
+			continue
+		}
+		var valueAny any
+		if json.Unmarshal(item, &valueAny) == nil {
+			result = append(result, fmt.Sprint(valueAny))
+		}
+	}
+	return result
+}
+
+func (c Check) IntPair(key string) ([2]int, bool) {
+	var result [2]int
+	raw := c.Raw(key)
+	if len(raw) == 0 || json.Unmarshal(raw, &result) != nil {
+		return result, false
+	}
+	return result, true
+}
+
+func (c Check) ValueString() string {
+	if value, ok := c.String("value"); ok {
+		return value
+	}
+	if value, ok := c.String("equals"); ok {
+		return value
+	}
+	return c.Value
+}
+func (c Check) ValuesList() []string {
+	values := c.Strings("values")
+	if len(values) > 0 {
+		return values
+	}
+	return c.Values
 }
 
 type Task struct {
@@ -74,14 +180,19 @@ type Task struct {
 }
 
 type Division struct {
-	ID          string  `json:"id"`
-	Temperature float64 `json:"temperature,omitempty"`
+	ID             string   `json:"id"`
+	Temperature    float64  `json:"temperature,omitempty"`
+	TargetsLayer   string   `json:"targets_layer,omitempty"`
+	PrimaryMetrics []string `json:"primary_metrics,omitempty"`
 }
 
 type Library struct {
-	Meta      map[string]any `json:"meta"`
-	Divisions []Division     `json:"divisions"`
-	Tasks     []Task         `json:"tasks"`
+	Meta       map[string]any    `json:"meta"`
+	Divisions  []Division        `json:"divisions"`
+	Tasks      []Task            `json:"tasks"`
+	Tiers      map[string]any    `json:"tiers"`
+	Profiles   map[string]any    `json:"execution_profiles"`
+	CheckTypes map[string]string `json:"check_types"`
 }
 
 func Load(path string) (Library, error) {
@@ -130,9 +241,59 @@ func Validate(library Library) error {
 		if err := ValidateChecks(task.Checks); err != nil {
 			return fmt.Errorf("canary %s: %w", task.ID, err)
 		}
+		for _, check := range task.Checks {
+			if len(library.CheckTypes) > 0 {
+				if _, ok := library.CheckTypes[check.Type]; !ok {
+					return fmt.Errorf("canary %s uses check type %q missing from check_types", task.ID, check.Type)
+				}
+			}
+		}
 		seen[task.ID] = true
 	}
 	return nil
+}
+
+func (l Library) FilterTier(tiers ...string) []Task {
+	allowed := make(map[string]bool, len(tiers))
+	for _, tier := range tiers {
+		allowed[tier] = true
+	}
+	tasks := make([]Task, 0)
+	for _, task := range l.Tasks {
+		if allowed[task.Tier] {
+			tasks = append(tasks, task)
+		}
+	}
+	sort.Slice(tasks, func(i, j int) bool { return tasks[i].ID < tasks[j].ID })
+	return tasks
+}
+
+func (l Library) ByDivision(id string) []Task {
+	tasks := make([]Task, 0)
+	for _, task := range l.Tasks {
+		if task.Division == id {
+			tasks = append(tasks, task)
+		}
+	}
+	sort.Slice(tasks, func(i, j int) bool { return tasks[i].ID < tasks[j].ID })
+	return tasks
+}
+
+func RequestIdentity(task Task, model string, temperature float64, maxTokens int, system string, responseFormat string) string {
+	canonical := struct {
+		MaxTokens      int     `json:"max_tokens"`
+		Model          string  `json:"model"`
+		ResponseFormat string  `json:"response_format"`
+		System         string  `json:"system"`
+		TaskID         string  `json:"task_id"`
+		Temperature    float64 `json:"temperature"`
+	}{
+		MaxTokens: maxTokens, Model: model, ResponseFormat: responseFormat,
+		System: system, TaskID: task.ID, Temperature: temperature,
+	}
+	data, _ := json.Marshal(canonical)
+	sum := sha256.Sum256(data)
+	return fmt.Sprintf("%x", sum[:])
 }
 
 func (l Library) Pinned() []Task {

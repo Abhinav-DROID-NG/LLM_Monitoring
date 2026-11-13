@@ -46,7 +46,7 @@ func ValidateCheck(c Check) error {
 		return fmt.Errorf("unknown check type %q", c.Type)
 	}
 	if c.Type == "regex_full" {
-		if _, err := regexp.Compile(c.Value); err != nil {
+		if _, err := regexp.Compile(c.ValueString()); err != nil {
 			return fmt.Errorf("invalid regex: %w", err)
 		}
 	}
@@ -76,8 +76,8 @@ func EvaluateCheckWithFinishReason(c Check, output, finishReason string) bool {
 	if aggregateCheckTypes[c.Type] {
 		return false
 	}
-	value := strings.TrimSpace(c.Value)
-	values := c.Values
+	value := strings.TrimSpace(c.ValueString())
+	values := c.ValuesList()
 	if len(values) == 0 && value != "" {
 		values = []string{value}
 	}

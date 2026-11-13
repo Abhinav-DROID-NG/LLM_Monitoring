@@ -485,6 +485,7 @@ func Run(ctx context.Context, library canary.Library, router *Router, concurrenc
 			for task := range work {
 				response := router.Complete(ctx, Alias, task)
 				out <- Observation{CanaryID: task.ID, Timestamp: time.Now().UTC(), Response: response.Text,
+					ReturnedModel: response.ReturnedModel, SystemFingerprint: response.SystemFingerprint,
 					LatencyMS: response.Latency.Milliseconds(), InputTokens: response.InputTokens,
 					OutputTokens: response.OutputTokens, FinishReason: response.FinishReason, Error: response.Error,
 					Checks: checkTask(task, response)}
@@ -618,13 +619,13 @@ func checkTask(task canary.Task, response Response) []CheckObservation {
 			passed = passed && !isRefusal(text)
 			expected = "non-refusal"
 		case "contains_all":
-			for _, value := range check.Values {
+			for _, value := range check.ValuesList() {
 				passed = passed && strings.Contains(text, strings.ToLower(value))
 			}
-			expected = strings.Join(check.Values, ",")
+			expected = strings.Join(check.ValuesList(), ",")
 		case "contains":
-			passed = passed && strings.Contains(text, strings.ToLower(check.Value))
-			expected = check.Value
+			passed = passed && strings.Contains(text, strings.ToLower(check.ValueString()))
+			expected = check.ValueString()
 		case "json_valid":
 			var value any
 			passed = passed && json.Unmarshal([]byte(response.Text), &value) == nil
