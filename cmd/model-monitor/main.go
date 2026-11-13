@@ -58,6 +58,8 @@ func run() error {
 	switch command {
 	case "run", "baseline", "start":
 		return execute(command, cfg)
+	case "serve":
+		return serve(cfg)
 	case "evaluate":
 		return evaluate(cfg)
 	case "compare":

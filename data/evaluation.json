@@ -1,23 +1,25 @@
 {
-  "baseline_file": "data\\baseline-20261112T232408Z.json",
+  "baseline_file": "data\\baseline-20261113T034638Z.json",
   "baseline_model": "qwen2.5:3b-instruct-fp16",
+  "evaluation_spec": {
+    "combined": 5,
+    "failure_cases": 7,
+    "single_layer": 9
+  },
   "experiment_id": "eval-B(qwen2.5:3b-instruct-q8_0)-and-C(qwen2.5:3b-instruct-q4_K_M)-vs-A(qwen2.5:3b-instruct-fp16)",
   "model_b": {
-    "avg_latency_sec": 3.2542962962962956,
-    "below_baseline": 1,
-    "check_pass_rate": 98.78787878787878,
+    "avg_latency_sec": 4.889975308641975,
+    "below_baseline": 55,
+    "check_pass_rate": 47.27272727272727,
     "comparisons": [
       {
         "canary_id": "CAP-E1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Latency degraded (8.37s vs base 1.24s)"
-        ],
+        "status": "WITH_BASELINE",
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 1.235,
-        "eval_latency_sec": 8.366
+        "baseline_latency_sec": 17.387,
+        "eval_latency_sec": 8.99
       },
       {
         "canary_id": "CAP-E2",
@@ -25,8 +27,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 0.778,
-        "eval_latency_sec": 0.114
+        "baseline_latency_sec": 0.664,
+        "eval_latency_sec": 0.117
       },
       {
         "canary_id": "CAP-E3",
@@ -34,8 +36,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 0.726,
-        "eval_latency_sec": 0.137
+        "baseline_latency_sec": 0.629,
+        "eval_latency_sec": 0.144
       },
       {
         "canary_id": "CAP-G1",
@@ -43,8 +45,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 33.201,
-        "eval_latency_sec": 5.87
+        "baseline_latency_sec": 31.168,
+        "eval_latency_sec": 6.436
       },
       {
         "canary_id": "CAP-G2",
@@ -52,17 +54,22 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 6.208,
-        "eval_latency_sec": 1.187
+        "baseline_latency_sec": 5.583,
+        "eval_latency_sec": 1.157
       },
       {
         "canary_id": "CAP-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'final_field' failed",
+          "Check 'final_field' failed",
+          "Check 'final_field' failed"
+        ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 0,
         "total_checks": 3,
-        "baseline_latency_sec": 31.718,
-        "eval_latency_sec": 5.971
+        "baseline_latency_sec": 31.333,
+        "eval_latency_sec": 6.168
       },
       {
         "canary_id": "CAP-X1",
@@ -70,107 +77,146 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 31.779,
-        "eval_latency_sec": 5.956
+        "baseline_latency_sec": 31.143,
+        "eval_latency_sec": 9.566
       },
       {
         "canary_id": "CAP-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'final_field_json' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 32.003,
-        "eval_latency_sec": 5.951
+        "baseline_latency_sec": 31.413,
+        "eval_latency_sec": 13.501
       },
       {
         "canary_id": "CAP-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'final_field' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 31.991,
-        "eval_latency_sec": 5.893
+        "baseline_latency_sec": 31.021,
+        "eval_latency_sec": 21.859
       },
       {
         "canary_id": "DET-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 1.284,
-        "eval_latency_sec": 0.141
+        "baseline_latency_sec": 1.072,
+        "eval_latency_sec": 0.175
       },
       {
         "canary_id": "DET-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 1.013,
-        "eval_latency_sec": 0.136
+        "baseline_latency_sec": 1.024,
+        "eval_latency_sec": 0.134
       },
       {
         "canary_id": "DET-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.639,
-        "eval_latency_sec": 0.084
+        "baseline_latency_sec": 0.628,
+        "eval_latency_sec": 0.096
       },
       {
         "canary_id": "DET-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 11.035,
-        "eval_latency_sec": 1.797
+        "baseline_latency_sec": 11.576,
+        "eval_latency_sec": 2.335
       },
       {
         "canary_id": "DET-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 13.39,
-        "eval_latency_sec": 2.564
+        "baseline_latency_sec": 16.524,
+        "eval_latency_sec": 1.095
       },
       {
         "canary_id": "DET-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 19.859,
-        "eval_latency_sec": 4.485
+        "baseline_latency_sec": 20.524,
+        "eval_latency_sec": 4.187
       },
       {
         "canary_id": "DET-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.078,
-        "eval_latency_sec": 5.885
+        "baseline_latency_sec": 32.082,
+        "eval_latency_sec": 14.777
       },
       {
         "canary_id": "DET-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.158,
-        "eval_latency_sec": 5.866
+        "baseline_latency_sec": 31.774,
+        "eval_latency_sec": 11.086
       },
       {
         "canary_id": "DET-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.262,
-        "eval_latency_sec": 5.883
+        "baseline_latency_sec": 31.842,
+        "eval_latency_sec": 14.714
       },
       {
         "canary_id": "FMT-E1",
@@ -178,8 +224,8 @@
         "baseline_checks_passed": 3,
         "eval_checks_passed": 3,
         "total_checks": 3,
-        "baseline_latency_sec": 1.695,
-        "eval_latency_sec": 0.371
+        "baseline_latency_sec": 1.705,
+        "eval_latency_sec": 0.445
       },
       {
         "canary_id": "FMT-E2",
@@ -187,8 +233,8 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 1.05,
-        "eval_latency_sec": 0.245
+        "baseline_latency_sec": 1.668,
+        "eval_latency_sec": 0.264
       },
       {
         "canary_id": "FMT-E3",
@@ -196,8 +242,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 0.279,
-        "eval_latency_sec": 0.088
+        "baseline_latency_sec": 0.766,
+        "eval_latency_sec": 0.1
       },
       {
         "canary_id": "FMT-G1",
@@ -205,53 +251,69 @@
         "baseline_checks_passed": 4,
         "eval_checks_passed": 4,
         "total_checks": 4,
-        "baseline_latency_sec": 10.42,
-        "eval_latency_sec": 2.123
+        "baseline_latency_sec": 10.442,
+        "eval_latency_sec": 2.32
       },
       {
         "canary_id": "FMT-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'markdown_table' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 12.925,
-        "eval_latency_sec": 2.629
+        "baseline_latency_sec": 12.509,
+        "eval_latency_sec": 2.858
       },
       {
         "canary_id": "FMT-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'paragraph_count' failed",
+          "Check 'sentences_per_paragraph' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 15.834,
-        "eval_latency_sec": 4.425
+        "baseline_latency_sec": 17.344,
+        "eval_latency_sec": 2.304
       },
       {
         "canary_id": "FMT-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'json_types' failed"
+        ],
         "baseline_checks_passed": 3,
         "eval_checks_passed": 3,
         "total_checks": 4,
-        "baseline_latency_sec": 31.104,
-        "eval_latency_sec": 6.182
+        "baseline_latency_sec": 31.119,
+        "eval_latency_sec": 16.761
       },
       {
         "canary_id": "FMT-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'csv_shape' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.199,
-        "eval_latency_sec": 5.984
+        "baseline_latency_sec": 30.982,
+        "eval_latency_sec": 20.537
       },
       {
         "canary_id": "FMT-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'outline_shape' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 26.913,
-        "eval_latency_sec": 5.927
+        "baseline_latency_sec": 30.842,
+        "eval_latency_sec": 5.256
       },
       {
         "canary_id": "INS-E1",
@@ -259,8 +321,8 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 1.509,
-        "eval_latency_sec": 0.253
+        "baseline_latency_sec": 1.39,
+        "eval_latency_sec": 0.303
       },
       {
         "canary_id": "INS-E2",
@@ -268,8 +330,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 2.623,
-        "eval_latency_sec": 0.475
+        "baseline_latency_sec": 2.527,
+        "eval_latency_sec": 0.14
       },
       {
         "canary_id": "INS-E3",
@@ -277,8 +339,8 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 1.231,
-        "eval_latency_sec": 0.233
+        "baseline_latency_sec": 1.286,
+        "eval_latency_sec": 0.275
       },
       {
         "canary_id": "INS-G1",
@@ -286,134 +348,183 @@
         "baseline_checks_passed": 3,
         "eval_checks_passed": 3,
         "total_checks": 3,
-        "baseline_latency_sec": 34.479,
-        "eval_latency_sec": 5.966
+        "baseline_latency_sec": 32.976,
+        "eval_latency_sec": 0.772
       },
       {
         "canary_id": "INS-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'sentence_count' failed"
+        ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 2,
         "total_checks": 3,
-        "baseline_latency_sec": 35.446,
-        "eval_latency_sec": 5.877
+        "baseline_latency_sec": 36.08,
+        "eval_latency_sec": 0.722
       },
       {
         "canary_id": "INS-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'first_line_equals' failed"
+        ],
         "baseline_checks_passed": 4,
-        "eval_checks_passed": 4,
+        "eval_checks_passed": 3,
         "total_checks": 4,
-        "baseline_latency_sec": 35.274,
-        "eval_latency_sec": 5.87
+        "baseline_latency_sec": 34.372,
+        "eval_latency_sec": 0.586
       },
       {
         "canary_id": "INS-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'summary_words_max' failed"
+        ],
         "baseline_checks_passed": 5,
-        "eval_checks_passed": 5,
+        "eval_checks_passed": 4,
         "total_checks": 5,
-        "baseline_latency_sec": 37.619,
-        "eval_latency_sec": 5.871
+        "baseline_latency_sec": 32.276,
+        "eval_latency_sec": 3.462
       },
       {
         "canary_id": "INS-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'day_list_shape' failed",
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 40.633,
-        "eval_latency_sec": 5.87
+        "baseline_latency_sec": 31.775,
+        "eval_latency_sec": 2.997
       },
       {
         "canary_id": "INS-X3",
-        "status": "WITH_BASELINE",
+        "status": "ABOVE_BASELINE",
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 3,
         "total_checks": 3,
-        "baseline_latency_sec": 37.083,
-        "eval_latency_sec": 5.875
+        "baseline_latency_sec": 32.061,
+        "eval_latency_sec": 3.864
       },
       {
         "canary_id": "LAT-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.463,
-        "eval_latency_sec": 0.091
+        "baseline_latency_sec": 0.502,
+        "eval_latency_sec": 0.092
       },
       {
         "canary_id": "LAT-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 3.554,
-        "eval_latency_sec": 0.521
+        "baseline_latency_sec": 3.747,
+        "eval_latency_sec": 0.529
       },
       {
         "canary_id": "LAT-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 1.656,
-        "eval_latency_sec": 0.294
+        "baseline_latency_sec": 2.01,
+        "eval_latency_sec": 0.301
       },
       {
         "canary_id": "LAT-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 37.723,
-        "eval_latency_sec": 5.862
+        "baseline_latency_sec": 32.24,
+        "eval_latency_sec": 11.353
       },
       {
         "canary_id": "LAT-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 16.613,
-        "eval_latency_sec": 2.504
+        "baseline_latency_sec": 10.52,
+        "eval_latency_sec": 1.874
       },
       {
         "canary_id": "LAT-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 34.606,
-        "eval_latency_sec": 5.876
+        "baseline_latency_sec": 32.171,
+        "eval_latency_sec": 8.332
       },
       {
         "canary_id": "LAT-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed",
+          "Finish reason changed from stop to length"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 33.922,
-        "eval_latency_sec": 5.867
+        "baseline_latency_sec": 31.888,
+        "eval_latency_sec": 23.64
       },
       {
         "canary_id": "LAT-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 35.382,
-        "eval_latency_sec": 5.887
+        "baseline_latency_sec": 32.25,
+        "eval_latency_sec": 17.419
       },
       {
         "canary_id": "LAT-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":2400458000,\"error\":\"local provider status 500: {\\\"error\\\":\\\"prediction aborted, token repeat limit reached\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 37.134,
-        "eval_latency_sec": 5.881
+        "baseline_latency_sec": 31.878,
+        "eval_latency_sec": 2.401
       },
       {
         "canary_id": "REF-E1",
@@ -421,17 +532,20 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 3.669,
-        "eval_latency_sec": 0.571
+        "baseline_latency_sec": 3.389,
+        "eval_latency_sec": 0.6
       },
       {
         "canary_id": "REF-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Finish reason changed from stop to length"
+        ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 33.778,
-        "eval_latency_sec": 5.872
+        "baseline_latency_sec": 31.78,
+        "eval_latency_sec": 1.888
       },
       {
         "canary_id": "REF-E3",
@@ -439,260 +553,334 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 7.056,
-        "eval_latency_sec": 0.915
+        "baseline_latency_sec": 5.404,
+        "eval_latency_sec": 0.758
       },
       {
         "canary_id": "REF-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 17.446,
-        "eval_latency_sec": 2.258
+        "baseline_latency_sec": 11.776,
+        "eval_latency_sec": 1.313
       },
       {
         "canary_id": "REF-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 21.487,
-        "eval_latency_sec": 3.766
+        "baseline_latency_sec": 15.559,
+        "eval_latency_sec": 3.454
       },
       {
         "canary_id": "REF-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 15.224,
-        "eval_latency_sec": 2.188
+        "baseline_latency_sec": 12.648,
+        "eval_latency_sec": 2.295
       },
       {
         "canary_id": "REF-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 40.824,
-        "eval_latency_sec": 5.873
+        "baseline_latency_sec": 32.58,
+        "eval_latency_sec": 12.348
       },
       {
         "canary_id": "REF-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 38.963,
-        "eval_latency_sec": 5.879
+        "baseline_latency_sec": 31.299,
+        "eval_latency_sec": 12.089
       },
       {
         "canary_id": "REF-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 40.563,
-        "eval_latency_sec": 5.873
+        "baseline_latency_sec": 34.59,
+        "eval_latency_sec": 13.679
       },
       {
         "canary_id": "STY-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 7.784,
-        "eval_latency_sec": 1.193
+        "baseline_latency_sec": 7.089,
+        "eval_latency_sec": 1.12
       },
       {
         "canary_id": "STY-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 6.376,
-        "eval_latency_sec": 0.684
+        "baseline_latency_sec": 3.625,
+        "eval_latency_sec": 0.668
       },
       {
         "canary_id": "STY-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 2.873,
-        "eval_latency_sec": 0.341
+        "baseline_latency_sec": 2.192,
+        "eval_latency_sec": 0.298
       },
       {
         "canary_id": "STY-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 19.49,
-        "eval_latency_sec": 2.257
+        "baseline_latency_sec": 15.356,
+        "eval_latency_sec": 2.234
       },
       {
         "canary_id": "STY-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 27.363,
-        "eval_latency_sec": 3.092
+        "baseline_latency_sec": 21.416,
+        "eval_latency_sec": 3.188
       },
       {
         "canary_id": "STY-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 17.471,
-        "eval_latency_sec": 3.069
+        "baseline_latency_sec": 13.866,
+        "eval_latency_sec": 2.439
       },
       {
         "canary_id": "STY-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 39.251,
-        "eval_latency_sec": 5.88
+        "baseline_latency_sec": 32.971,
+        "eval_latency_sec": 11.202
       },
       {
         "canary_id": "STY-X2",
         "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 34.42,
-        "eval_latency_sec": 5.887
+        "baseline_latency_sec": 87.409,
+        "eval_latency_sec": 13.463
       },
       {
         "canary_id": "STY-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 37.348,
-        "eval_latency_sec": 5.881
+        "baseline_latency_sec": 40.837,
+        "eval_latency_sec": 10.446
       },
       {
         "canary_id": "TOK-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'input_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.855,
-        "eval_latency_sec": 0.094
+        "baseline_latency_sec": 1.014,
+        "eval_latency_sec": 0.101
       },
       {
         "canary_id": "TOK-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'input_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.502,
-        "eval_latency_sec": 0.091
+        "baseline_latency_sec": 0.553,
+        "eval_latency_sec": 0.09
       },
       {
         "canary_id": "TOK-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'input_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.565,
-        "eval_latency_sec": 0.089
+        "baseline_latency_sec": 0.611,
+        "eval_latency_sec": 0.087
       },
       {
         "canary_id": "TOK-G1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.325,
-        "eval_latency_sec": 0.081
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.092
       },
       {
         "canary_id": "TOK-G2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Latency degraded (0.10s vs base 0.00s)"
+        ],
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.278,
-        "eval_latency_sec": 0.069
+        "baseline_latency_sec": 0.001,
+        "eval_latency_sec": 0.101
       },
       {
         "canary_id": "TOK-G3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.261,
-        "eval_latency_sec": 0.066
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.104
       },
       {
         "canary_id": "TOK-X1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.251,
-        "eval_latency_sec": 0.065
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.089
       },
       {
         "canary_id": "TOK-X2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.269,
-        "eval_latency_sec": 0.066
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.102
       },
       {
         "canary_id": "TOK-X3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.264,
-        "eval_latency_sec": 0.067
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.123
       },
       {
         "canary_id": "TRN-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 2.595,
-        "eval_latency_sec": 0.404
+        "baseline_latency_sec": 2.821,
+        "eval_latency_sec": 0.414
       },
       {
         "canary_id": "TRN-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 3.678,
-        "eval_latency_sec": 0.658
+        "baseline_latency_sec": 4.085,
+        "eval_latency_sec": 0.65
       },
       {
         "canary_id": "TRN-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 7.46,
-        "eval_latency_sec": 1.75
+        "baseline_latency_sec": 8.016,
+        "eval_latency_sec": 1.261
       },
       {
         "canary_id": "TRN-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 36.921,
-        "eval_latency_sec": 5.877
+        "baseline_latency_sec": 34.298,
+        "eval_latency_sec": 5.601
       },
       {
         "canary_id": "TRN-G2",
@@ -700,26 +888,29 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 32.82,
-        "eval_latency_sec": 5.872
+        "baseline_latency_sec": 32.134,
+        "eval_latency_sec": 8.605
       },
       {
         "canary_id": "TRN-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.603,
-        "eval_latency_sec": 5.892
+        "baseline_latency_sec": 18.168,
+        "eval_latency_sec": 3.205
       },
       {
         "canary_id": "TRN-X1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.544,
-        "eval_latency_sec": 5.875
+        "baseline_latency_sec": 147.002,
+        "eval_latency_sec": 14.379
       },
       {
         "canary_id": "TRN-X2",
@@ -727,103 +918,190 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 31.494,
-        "eval_latency_sec": 5.884
+        "baseline_latency_sec": 37.555,
+        "eval_latency_sec": 7.581
       },
       {
         "canary_id": "TRN-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.138,
-        "eval_latency_sec": 5.886
+        "baseline_latency_sec": 31.816,
+        "eval_latency_sec": 13.577
       }
     ],
     "drift_analysis": {
-      "detected": false,
-      "confidence": 0.16049382716049382,
+      "detected": true,
+      "confidence": 2.388888888888889,
       "predicted_layer": "request_config",
       "evidence": [
-        "CAP-E1: latency increased",
         "CAP-G1: response changed",
         "CAP-G3: response changed",
+        "CAP-G3: expected 3, 5, 7, 14, 19, 28, 37, 42, 50, 56, 63, 71, 81, 88, 95 check changed",
+        "CAP-G3: expected 659 check changed",
+        "CAP-G3: expected 42 check changed",
         "CAP-X1: response changed",
         "CAP-X2: response changed",
+        "CAP-X2: expected final_field_json check changed",
         "CAP-X3: response changed",
+        "CAP-X3: expected x=1, y=2, z=3 check changed",
+        "DET-E1: expected identical_across_runs check changed",
+        "DET-E2: response changed",
+        "DET-E2: expected identical_across_runs check changed",
+        "DET-E3: expected identical_across_runs check changed",
         "DET-G1: response changed",
+        "DET-G1: expected identical_across_runs check changed",
+        "DET-G1: expected mean_edit_distance check changed",
         "DET-G2: response changed",
+        "DET-G2: expected identical_across_runs check changed",
+        "DET-G2: expected mean_edit_distance check changed",
         "DET-G3: response changed",
+        "DET-G3: expected identical_across_runs check changed",
+        "DET-G3: expected mean_edit_distance check changed",
         "DET-X1: response changed",
+        "DET-X1: expected identical_across_runs check changed",
+        "DET-X1: expected mean_edit_distance check changed",
         "DET-X2: response changed",
+        "DET-X2: expected identical_across_runs check changed",
+        "DET-X2: expected mean_edit_distance check changed",
         "DET-X3: response changed",
+        "DET-X3: expected identical_across_runs check changed",
+        "DET-X3: expected mean_edit_distance check changed",
         "FMT-G1: response changed",
         "FMT-G2: response changed",
+        "FMT-G2: expected markdown_table check changed",
         "FMT-G3: response changed",
+        "FMT-G3: expected 2 check changed",
+        "FMT-G3: expected 3 check changed",
         "FMT-X1: response changed",
+        "FMT-X1: expected json_valid check changed",
+        "FMT-X1: expected json_types check changed",
         "FMT-X2: response changed",
+        "FMT-X2: expected csv_shape check changed",
         "FMT-X3: response changed",
+        "FMT-X3: expected outline_shape check changed",
+        "INS-E1: response changed",
         "INS-E2: response changed",
+        "INS-E3: response changed",
         "INS-G1: response changed",
         "INS-G2: response changed",
+        "INS-G2: expected 2 check changed",
         "INS-G3: response changed",
+        "INS-G3: expected [BOT] check changed",
         "INS-X1: response changed",
+        "INS-X1: expected 20 check changed",
         "INS-X2: response changed",
+        "INS-X2: expected day_list_shape check changed",
+        "INS-X2: expected Safe travels. check changed",
         "INS-X3: response changed",
+        "INS-X3: expected json_valid check changed",
+        "LAT-E1: expected latency check changed",
+        "LAT-E2: expected latency check changed",
+        "LAT-E2: expected output_tokens_stable check changed",
+        "LAT-E3: expected latency check changed",
+        "LAT-G1: response changed",
+        "LAT-G1: expected latency check changed",
+        "LAT-G1: expected output_tokens_stable check changed",
+        "LAT-G2: response changed",
+        "LAT-G2: expected latency check changed",
+        "LAT-G2: expected output_tokens_stable check changed",
+        "LAT-G3: response changed",
+        "LAT-G3: expected latency check changed",
+        "LAT-G3: expected output_tokens_stable check changed",
+        "LAT-X1: response changed",
+        "LAT-X1: finish reason changed",
+        "LAT-X1: expected latency check changed",
+        "LAT-X1: expected output_tokens_stable check changed",
+        "LAT-X2: response changed",
+        "LAT-X2: expected latency check changed",
+        "LAT-X2: expected output_tokens_stable check changed",
+        "REF-E1: response changed",
         "REF-E2: response changed",
+        "REF-E2: finish reason changed",
         "REF-E3: response changed",
         "REF-G1: response changed",
+        "REF-G1: expected word_count_between check changed",
         "REF-G2: response changed",
+        "REF-G2: expected word_count_between check changed",
         "REF-G3: response changed",
+        "REF-G3: expected word_count_between check changed",
         "REF-X1: response changed",
+        "REF-X1: expected word_count_between check changed",
         "REF-X2: response changed",
+        "REF-X2: expected word_count_between check changed",
         "REF-X3: response changed",
+        "REF-X3: expected word_count_between check changed",
         "STY-E1: response changed",
+        "STY-E1: expected style_feature_distance check changed",
+        "STY-E1: expected output_length_stats check changed",
         "STY-E2: response changed",
+        "STY-E2: expected style_feature_distance check changed",
+        "STY-E2: expected output_length_stats check changed",
         "STY-E3: response changed",
+        "STY-E3: expected style_feature_distance check changed",
+        "STY-E3: expected output_length_stats check changed",
         "STY-G1: response changed",
+        "STY-G1: expected style_feature_distance check changed",
+        "STY-G1: expected output_length_stats check changed",
         "STY-G2: response changed",
+        "STY-G2: expected style_feature_distance check changed",
+        "STY-G2: expected output_length_stats check changed",
         "STY-G3: response changed",
+        "STY-G3: expected style_feature_distance check changed",
+        "STY-G3: expected output_length_stats check changed",
         "STY-X1: response changed",
-        "STY-X2: response changed",
+        "STY-X1: expected style_feature_distance check changed",
+        "STY-X1: expected output_length_stats check changed",
         "STY-X3: response changed",
-        "TRN-E3: response changed",
+        "STY-X3: expected style_feature_distance check changed",
+        "STY-X3: expected output_length_stats check changed",
+        "TOK-E1: expected input_tokens_stable check changed",
+        "TOK-E2: expected input_tokens_stable check changed",
+        "TOK-E3: expected input_tokens_stable check changed",
+        "TRN-E1: response changed",
+        "TRN-E1: expected \u003c\u003cEND\u003e\u003e check changed",
+        "TRN-E2: response changed",
+        "TRN-E2: expected \u003c\u003cEND\u003e\u003e check changed",
+        "TRN-E3: expected \u003c\u003cEND\u003e\u003e check changed",
         "TRN-G1: response changed",
+        "TRN-G1: expected \u003c\u003cEND\u003e\u003e check changed",
         "TRN-G2: response changed",
         "TRN-G3: response changed",
-        "TRN-X1: response changed",
+        "TRN-G3: expected \u003c\u003cEND\u003e\u003e check changed",
         "TRN-X2: response changed",
-        "TRN-X3: response changed"
+        "TRN-X3: response changed",
+        "TRN-X3: expected \u003c\u003cEND\u003e\u003e check changed"
       ]
     },
-    "duration": "4m23.6626706s",
+    "duration": "6m36.1725699s",
     "metrics": {
-      "detection_accuracy": 0.5,
-      "false_negative_rate": 1,
+      "detection_accuracy": 1,
+      "false_negative_rate": 0,
       "false_positive_rate": 0,
-      "layer_attribution_accuracy": 0.5,
-      "precision": 0,
-      "recall": 0
+      "layer_attribution_accuracy": 0,
+      "precision": 1,
+      "recall": 1
     },
     "model": "qwen2.5:3b-instruct-q8_0",
-    "with_baseline": 80
+    "with_baseline": 26
   },
   "model_c": {
-    "avg_latency_sec": 2.089296296296296,
-    "below_baseline": 1,
-    "check_pass_rate": 98.78787878787878,
+    "avg_latency_sec": 3.2451358024691372,
+    "below_baseline": 58,
+    "check_pass_rate": 45.45454545454545,
     "comparisons": [
       {
         "canary_id": "CAP-E1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Latency degraded (7.32s vs base 1.24s)"
-        ],
+        "status": "WITH_BASELINE",
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 1.235,
-        "eval_latency_sec": 7.32
+        "baseline_latency_sec": 17.387,
+        "eval_latency_sec": 8.719
       },
       {
         "canary_id": "CAP-E2",
@@ -831,8 +1109,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 0.778,
-        "eval_latency_sec": 0.089
+        "baseline_latency_sec": 0.664,
+        "eval_latency_sec": 0.128
       },
       {
         "canary_id": "CAP-E3",
@@ -840,8 +1118,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 0.726,
-        "eval_latency_sec": 0.107
+        "baseline_latency_sec": 0.629,
+        "eval_latency_sec": 0.118
       },
       {
         "canary_id": "CAP-G1",
@@ -849,8 +1127,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 33.201,
-        "eval_latency_sec": 3.802
+        "baseline_latency_sec": 31.168,
+        "eval_latency_sec": 5.805
       },
       {
         "canary_id": "CAP-G2",
@@ -858,125 +1136,173 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 6.208,
-        "eval_latency_sec": 0.769
+        "baseline_latency_sec": 5.583,
+        "eval_latency_sec": 0.812
       },
       {
         "canary_id": "CAP-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'final_field' failed",
+          "Check 'final_field' failed"
+        ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 1,
         "total_checks": 3,
-        "baseline_latency_sec": 31.718,
-        "eval_latency_sec": 3.782
+        "baseline_latency_sec": 31.333,
+        "eval_latency_sec": 4.987
       },
       {
         "canary_id": "CAP-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'final_field' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 31.779,
-        "eval_latency_sec": 3.82
+        "baseline_latency_sec": 31.143,
+        "eval_latency_sec": 5.87
       },
       {
         "canary_id": "CAP-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'final_field_json' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 32.003,
-        "eval_latency_sec": 3.98
+        "baseline_latency_sec": 31.413,
+        "eval_latency_sec": 6.766
       },
       {
         "canary_id": "CAP-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'final_field' failed",
+          "Finish reason changed from stop to length"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 31.991,
-        "eval_latency_sec": 3.91
+        "baseline_latency_sec": 31.021,
+        "eval_latency_sec": 14.944
       },
       {
         "canary_id": "DET-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 1.284,
-        "eval_latency_sec": 0.122
+        "baseline_latency_sec": 1.072,
+        "eval_latency_sec": 0.124
       },
       {
         "canary_id": "DET-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 1.013,
-        "eval_latency_sec": 0.096
+        "baseline_latency_sec": 1.024,
+        "eval_latency_sec": 0.098
       },
       {
         "canary_id": "DET-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'contains_any' failed",
+          "Check 'identical_across_runs' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0.639,
-        "eval_latency_sec": 0.072
+        "baseline_latency_sec": 0.628,
+        "eval_latency_sec": 0.068
       },
       {
         "canary_id": "DET-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 11.035,
-        "eval_latency_sec": 1.354
+        "baseline_latency_sec": 11.576,
+        "eval_latency_sec": 1.41
       },
       {
         "canary_id": "DET-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 13.39,
-        "eval_latency_sec": 1.755
+        "baseline_latency_sec": 16.524,
+        "eval_latency_sec": 0.485
       },
       {
         "canary_id": "DET-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 19.859,
-        "eval_latency_sec": 2.441
+        "baseline_latency_sec": 20.524,
+        "eval_latency_sec": 2.801
       },
       {
         "canary_id": "DET-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.078,
-        "eval_latency_sec": 3.985
+        "baseline_latency_sec": 32.082,
+        "eval_latency_sec": 9.769
       },
       {
         "canary_id": "DET-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.158,
-        "eval_latency_sec": 3.853
+        "baseline_latency_sec": 31.774,
+        "eval_latency_sec": 6.717
       },
       {
         "canary_id": "DET-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.262,
-        "eval_latency_sec": 3.848
+        "baseline_latency_sec": 31.842,
+        "eval_latency_sec": 9.109
       },
       {
         "canary_id": "FMT-E1",
@@ -984,8 +1310,8 @@
         "baseline_checks_passed": 3,
         "eval_checks_passed": 3,
         "total_checks": 3,
-        "baseline_latency_sec": 1.695,
-        "eval_latency_sec": 0.344
+        "baseline_latency_sec": 1.705,
+        "eval_latency_sec": 0.274
       },
       {
         "canary_id": "FMT-E2",
@@ -993,8 +1319,8 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 1.05,
-        "eval_latency_sec": 0.184
+        "baseline_latency_sec": 1.668,
+        "eval_latency_sec": 0.201
       },
       {
         "canary_id": "FMT-E3",
@@ -1002,8 +1328,8 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 0.279,
-        "eval_latency_sec": 0.078
+        "baseline_latency_sec": 0.766,
+        "eval_latency_sec": 0.079
       },
       {
         "canary_id": "FMT-G1",
@@ -1011,8 +1337,8 @@
         "baseline_checks_passed": 4,
         "eval_checks_passed": 4,
         "total_checks": 4,
-        "baseline_latency_sec": 10.42,
-        "eval_latency_sec": 1.488
+        "baseline_latency_sec": 10.442,
+        "eval_latency_sec": 1.429
       },
       {
         "canary_id": "FMT-G2",
@@ -1020,44 +1346,57 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 12.925,
-        "eval_latency_sec": 1.765
+        "baseline_latency_sec": 12.509,
+        "eval_latency_sec": 1.696
       },
       {
         "canary_id": "FMT-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'paragraph_count' failed",
+          "Check 'sentences_per_paragraph' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 15.834,
-        "eval_latency_sec": 1.958
+        "baseline_latency_sec": 17.344,
+        "eval_latency_sec": 1.424
       },
       {
         "canary_id": "FMT-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'json_types' failed"
+        ],
         "baseline_checks_passed": 3,
         "eval_checks_passed": 3,
         "total_checks": 4,
-        "baseline_latency_sec": 31.104,
-        "eval_latency_sec": 3.966
+        "baseline_latency_sec": 31.119,
+        "eval_latency_sec": 10.268
       },
       {
         "canary_id": "FMT-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'csv_shape' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.199,
-        "eval_latency_sec": 3.948
+        "baseline_latency_sec": 30.982,
+        "eval_latency_sec": 12.504
       },
       {
         "canary_id": "FMT-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'outline_shape' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 26.913,
-        "eval_latency_sec": 3.852
+        "baseline_latency_sec": 30.842,
+        "eval_latency_sec": 3.753
       },
       {
         "canary_id": "INS-E1",
@@ -1065,8 +1404,8 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 1.509,
-        "eval_latency_sec": 0.191
+        "baseline_latency_sec": 1.39,
+        "eval_latency_sec": 0.214
       },
       {
         "canary_id": "INS-E2",
@@ -1074,152 +1413,207 @@
         "baseline_checks_passed": 1,
         "eval_checks_passed": 1,
         "total_checks": 1,
-        "baseline_latency_sec": 2.623,
-        "eval_latency_sec": 0.321
+        "baseline_latency_sec": 2.527,
+        "eval_latency_sec": 0.108
       },
       {
         "canary_id": "INS-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'contains_all' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 1.231,
-        "eval_latency_sec": 0.16
+        "baseline_latency_sec": 1.286,
+        "eval_latency_sec": 0.19
       },
       {
         "canary_id": "INS-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'contains_none' failed"
+        ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 2,
         "total_checks": 3,
-        "baseline_latency_sec": 34.479,
-        "eval_latency_sec": 3.854
+        "baseline_latency_sec": 32.976,
+        "eval_latency_sec": 0.53
       },
       {
         "canary_id": "INS-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'sentence_count' failed"
+        ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 2,
         "total_checks": 3,
-        "baseline_latency_sec": 35.446,
-        "eval_latency_sec": 3.833
+        "baseline_latency_sec": 36.08,
+        "eval_latency_sec": 0.436
       },
       {
         "canary_id": "INS-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'first_line_equals' failed"
+        ],
         "baseline_checks_passed": 4,
-        "eval_checks_passed": 4,
+        "eval_checks_passed": 3,
         "total_checks": 4,
-        "baseline_latency_sec": 35.274,
-        "eval_latency_sec": 3.862
+        "baseline_latency_sec": 34.372,
+        "eval_latency_sec": 0.489
       },
       {
         "canary_id": "INS-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'starts_with' failed",
+          "Check 'summary_words_max' failed"
+        ],
         "baseline_checks_passed": 5,
-        "eval_checks_passed": 5,
+        "eval_checks_passed": 3,
         "total_checks": 5,
-        "baseline_latency_sec": 37.619,
-        "eval_latency_sec": 3.923
+        "baseline_latency_sec": 32.276,
+        "eval_latency_sec": 2.339
       },
       {
         "canary_id": "INS-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'day_list_shape' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 40.633,
-        "eval_latency_sec": 3.932
+        "baseline_latency_sec": 31.775,
+        "eval_latency_sec": 2.652
       },
       {
         "canary_id": "INS-X3",
-        "status": "WITH_BASELINE",
+        "status": "ABOVE_BASELINE",
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 3,
         "total_checks": 3,
-        "baseline_latency_sec": 37.083,
-        "eval_latency_sec": 3.789
+        "baseline_latency_sec": 32.061,
+        "eval_latency_sec": 2.317
       },
       {
         "canary_id": "LAT-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.463,
+        "baseline_latency_sec": 0.502,
         "eval_latency_sec": 0.08
       },
       {
         "canary_id": "LAT-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 3.554,
-        "eval_latency_sec": 0.352
+        "baseline_latency_sec": 3.747,
+        "eval_latency_sec": 0.35
       },
       {
         "canary_id": "LAT-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 1.656,
-        "eval_latency_sec": 0.217
+        "baseline_latency_sec": 2.01,
+        "eval_latency_sec": 0.214
       },
       {
         "canary_id": "LAT-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 37.723,
-        "eval_latency_sec": 3.782
+        "baseline_latency_sec": 32.24,
+        "eval_latency_sec": 7.238
       },
       {
         "canary_id": "LAT-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 16.613,
-        "eval_latency_sec": 0.843
+        "baseline_latency_sec": 10.52,
+        "eval_latency_sec": 1.221
       },
       {
         "canary_id": "LAT-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 34.606,
-        "eval_latency_sec": 3.798
+        "baseline_latency_sec": 32.171,
+        "eval_latency_sec": 5.306
       },
       {
         "canary_id": "LAT-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed",
+          "Finish reason changed from stop to length"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 33.922,
-        "eval_latency_sec": 3.785
+        "baseline_latency_sec": 31.888,
+        "eval_latency_sec": 14.768
       },
       {
         "canary_id": "LAT-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 35.382,
-        "eval_latency_sec": 3.799
+        "baseline_latency_sec": 32.25,
+        "eval_latency_sec": 0.278
       },
       {
         "canary_id": "LAT-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":1529204400,\"error\":\"local provider status 500: {\\\"error\\\":\\\"prediction aborted, token repeat limit reached\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 37.134,
-        "eval_latency_sec": 3.775
+        "baseline_latency_sec": 31.878,
+        "eval_latency_sec": 1.53
       },
       {
         "canary_id": "REF-E1",
@@ -1227,17 +1621,20 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 3.669,
-        "eval_latency_sec": 0.398
+        "baseline_latency_sec": 3.389,
+        "eval_latency_sec": 0.37
       },
       {
         "canary_id": "REF-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Finish reason changed from stop to length"
+        ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 33.778,
-        "eval_latency_sec": 3.794
+        "baseline_latency_sec": 31.78,
+        "eval_latency_sec": 1.221
       },
       {
         "canary_id": "REF-E3",
@@ -1245,260 +1642,334 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 7.056,
-        "eval_latency_sec": 0.782
+        "baseline_latency_sec": 5.404,
+        "eval_latency_sec": 0.496
       },
       {
         "canary_id": "REF-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 17.446,
-        "eval_latency_sec": 1.235
+        "baseline_latency_sec": 11.776,
+        "eval_latency_sec": 0.788
       },
       {
         "canary_id": "REF-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 21.487,
-        "eval_latency_sec": 1.624
+        "baseline_latency_sec": 15.559,
+        "eval_latency_sec": 1.713
       },
       {
         "canary_id": "REF-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 15.224,
-        "eval_latency_sec": 1.373
+        "baseline_latency_sec": 12.648,
+        "eval_latency_sec": 1.541
       },
       {
         "canary_id": "REF-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 40.824,
-        "eval_latency_sec": 3.783
+        "baseline_latency_sec": 32.58,
+        "eval_latency_sec": 8.742
       },
       {
         "canary_id": "REF-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 38.963,
-        "eval_latency_sec": 3.794
+        "baseline_latency_sec": 31.299,
+        "eval_latency_sec": 10.342
       },
       {
         "canary_id": "REF-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'word_count_between' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 40.563,
-        "eval_latency_sec": 3.777
+        "baseline_latency_sec": 34.59,
+        "eval_latency_sec": 8.896
       },
       {
         "canary_id": "STY-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 7.784,
-        "eval_latency_sec": 0.647
+        "baseline_latency_sec": 7.089,
+        "eval_latency_sec": 0.719
       },
       {
         "canary_id": "STY-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 6.376,
-        "eval_latency_sec": 0.506
+        "baseline_latency_sec": 3.625,
+        "eval_latency_sec": 0.441
       },
       {
         "canary_id": "STY-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 2.873,
-        "eval_latency_sec": 0.309
+        "baseline_latency_sec": 2.192,
+        "eval_latency_sec": 0.328
       },
       {
         "canary_id": "STY-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 19.49,
-        "eval_latency_sec": 1.672
+        "baseline_latency_sec": 15.356,
+        "eval_latency_sec": 1.281
       },
       {
         "canary_id": "STY-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 27.363,
-        "eval_latency_sec": 2.195
+        "baseline_latency_sec": 21.416,
+        "eval_latency_sec": 2.103
       },
       {
         "canary_id": "STY-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 17.471,
-        "eval_latency_sec": 1.424
+        "baseline_latency_sec": 13.866,
+        "eval_latency_sec": 1.946
       },
       {
         "canary_id": "STY-X1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 39.251,
-        "eval_latency_sec": 3.786
+        "baseline_latency_sec": 32.971,
+        "eval_latency_sec": 8.211
       },
       {
         "canary_id": "STY-X2",
         "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 34.42,
-        "eval_latency_sec": 3.819
+        "baseline_latency_sec": 87.409,
+        "eval_latency_sec": 8.485
       },
       {
         "canary_id": "STY-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 37.348,
-        "eval_latency_sec": 3.838
+        "baseline_latency_sec": 40.837,
+        "eval_latency_sec": 9.025
       },
       {
         "canary_id": "TOK-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'input_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.855,
+        "baseline_latency_sec": 1.014,
         "eval_latency_sec": 0.082
       },
       {
         "canary_id": "TOK-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'input_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.502,
+        "baseline_latency_sec": 0.553,
         "eval_latency_sec": 0.073
       },
       {
         "canary_id": "TOK-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'input_tokens_stable' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.565,
-        "eval_latency_sec": 0.071
+        "baseline_latency_sec": 0.611,
+        "eval_latency_sec": 0.077
       },
       {
         "canary_id": "TOK-G1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.325,
-        "eval_latency_sec": 0.069
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.072
       },
       {
         "canary_id": "TOK-G2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Latency degraded (0.07s vs base 0.00s)"
+        ],
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.278,
-        "eval_latency_sec": 0.053
+        "baseline_latency_sec": 0.001,
+        "eval_latency_sec": 0.072
       },
       {
         "canary_id": "TOK-G3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.261,
-        "eval_latency_sec": 0.049
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.086
       },
       {
         "canary_id": "TOK-X1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.251,
-        "eval_latency_sec": 0.048
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.078
       },
       {
         "canary_id": "TOK-X2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.269,
-        "eval_latency_sec": 0.051
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.078
       },
       {
         "canary_id": "TOK-X3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 0.264,
-        "eval_latency_sec": 0.049
+        "baseline_latency_sec": 0,
+        "eval_latency_sec": 0.079
       },
       {
         "canary_id": "TRN-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 2.595,
-        "eval_latency_sec": 0.294
+        "baseline_latency_sec": 2.821,
+        "eval_latency_sec": 0.287
       },
       {
         "canary_id": "TRN-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 3.678,
-        "eval_latency_sec": 0.456
+        "baseline_latency_sec": 4.085,
+        "eval_latency_sec": 0.424
       },
       {
         "canary_id": "TRN-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 7.46,
-        "eval_latency_sec": 0.828
+        "baseline_latency_sec": 8.016,
+        "eval_latency_sec": 0.82
       },
       {
         "canary_id": "TRN-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 36.921,
-        "eval_latency_sec": 3.803
+        "baseline_latency_sec": 34.298,
+        "eval_latency_sec": 5.235
       },
       {
         "canary_id": "TRN-G2",
@@ -1506,121 +1977,215 @@
         "baseline_checks_passed": 2,
         "eval_checks_passed": 2,
         "total_checks": 2,
-        "baseline_latency_sec": 32.82,
-        "eval_latency_sec": 3.813
+        "baseline_latency_sec": 32.134,
+        "eval_latency_sec": 5.752
       },
       {
         "canary_id": "TRN-G3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.603,
-        "eval_latency_sec": 2.546
+        "baseline_latency_sec": 18.168,
+        "eval_latency_sec": 1.805
       },
       {
         "canary_id": "TRN-X1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "status": "ABOVE_BASELINE",
+        "baseline_checks_passed": 0,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.544,
-        "eval_latency_sec": 3.781
+        "baseline_latency_sec": 147.002,
+        "eval_latency_sec": 7.994
       },
       {
         "canary_id": "TRN-X2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.494,
-        "eval_latency_sec": 3.627
+        "baseline_latency_sec": 37.555,
+        "eval_latency_sec": 8.295
       },
       {
         "canary_id": "TRN-X3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.138,
-        "eval_latency_sec": 3.8
+        "baseline_latency_sec": 31.816,
+        "eval_latency_sec": 14.281
       }
     ],
     "drift_analysis": {
-      "detected": false,
-      "confidence": 0.18518518518518517,
+      "detected": true,
+      "confidence": 2.4930555555555554,
       "predicted_layer": "request_config",
       "evidence": [
-        "CAP-E1: latency increased",
         "CAP-G1: response changed",
         "CAP-G3: response changed",
+        "CAP-G3: expected 3, 5, 7, 14, 19, 28, 37, 42, 50, 56, 63, 71, 81, 88, 95 check changed",
+        "CAP-G3: expected 659 check changed",
         "CAP-X1: response changed",
+        "CAP-X1: expected $19.23 check changed",
         "CAP-X2: response changed",
+        "CAP-X2: expected final_field_json check changed",
         "CAP-X3: response changed",
+        "CAP-X3: finish reason changed",
+        "CAP-X3: expected x=1, y=2, z=3 check changed",
+        "DET-E1: expected identical_across_runs check changed",
         "DET-E2: response changed",
+        "DET-E2: expected identical_across_runs check changed",
         "DET-E3: response changed",
+        "DET-E3: expected contains_any check changed",
+        "DET-E3: expected identical_across_runs check changed",
         "DET-G1: response changed",
+        "DET-G1: expected identical_across_runs check changed",
+        "DET-G1: expected mean_edit_distance check changed",
         "DET-G2: response changed",
+        "DET-G2: expected identical_across_runs check changed",
+        "DET-G2: expected mean_edit_distance check changed",
         "DET-G3: response changed",
+        "DET-G3: expected identical_across_runs check changed",
+        "DET-G3: expected mean_edit_distance check changed",
         "DET-X1: response changed",
+        "DET-X1: expected identical_across_runs check changed",
+        "DET-X1: expected mean_edit_distance check changed",
         "DET-X2: response changed",
+        "DET-X2: expected identical_across_runs check changed",
+        "DET-X2: expected mean_edit_distance check changed",
         "DET-X3: response changed",
-        "FMT-E1: response changed",
+        "DET-X3: expected identical_across_runs check changed",
+        "DET-X3: expected mean_edit_distance check changed",
         "FMT-E2: response changed",
         "FMT-G1: response changed",
         "FMT-G2: response changed",
         "FMT-G3: response changed",
+        "FMT-G3: expected 2 check changed",
+        "FMT-G3: expected 3 check changed",
         "FMT-X1: response changed",
+        "FMT-X1: expected json_valid check changed",
+        "FMT-X1: expected json_types check changed",
         "FMT-X2: response changed",
+        "FMT-X2: expected csv_shape check changed",
         "FMT-X3: response changed",
+        "FMT-X3: expected outline_shape check changed",
+        "INS-E1: response changed",
         "INS-E2: response changed",
+        "INS-E3: response changed",
+        "INS-E3: expected contains_all check changed",
         "INS-G1: response changed",
+        "INS-G1: expected contains_none check changed",
         "INS-G2: response changed",
+        "INS-G2: expected 2 check changed",
         "INS-G3: response changed",
+        "INS-G3: expected [BOT] check changed",
         "INS-X1: response changed",
+        "INS-X1: expected Summary: check changed",
+        "INS-X1: expected 20 check changed",
         "INS-X2: response changed",
+        "INS-X2: expected day_list_shape check changed",
         "INS-X3: response changed",
+        "INS-X3: expected json_valid check changed",
+        "LAT-E1: expected latency check changed",
+        "LAT-E2: expected latency check changed",
+        "LAT-E2: expected output_tokens_stable check changed",
+        "LAT-E3: expected latency check changed",
+        "LAT-G1: response changed",
+        "LAT-G1: expected latency check changed",
+        "LAT-G1: expected output_tokens_stable check changed",
         "LAT-G2: response changed",
-        "LAT-X3: response changed",
+        "LAT-G2: expected latency check changed",
+        "LAT-G2: expected output_tokens_stable check changed",
+        "LAT-G3: response changed",
+        "LAT-G3: expected latency check changed",
+        "LAT-G3: expected output_tokens_stable check changed",
+        "LAT-X1: response changed",
+        "LAT-X1: finish reason changed",
+        "LAT-X1: expected latency check changed",
+        "LAT-X1: expected output_tokens_stable check changed",
+        "LAT-X2: response changed",
+        "LAT-X2: expected latency check changed",
+        "LAT-X2: expected output_tokens_stable check changed",
         "REF-E1: response changed",
         "REF-E2: response changed",
+        "REF-E2: finish reason changed",
         "REF-E3: response changed",
         "REF-G1: response changed",
+        "REF-G1: expected word_count_between check changed",
         "REF-G2: response changed",
+        "REF-G2: expected word_count_between check changed",
         "REF-G3: response changed",
+        "REF-G3: expected word_count_between check changed",
         "REF-X1: response changed",
+        "REF-X1: expected word_count_between check changed",
         "REF-X2: response changed",
+        "REF-X2: expected word_count_between check changed",
         "REF-X3: response changed",
+        "REF-X3: expected word_count_between check changed",
         "STY-E1: response changed",
+        "STY-E1: expected style_feature_distance check changed",
+        "STY-E1: expected output_length_stats check changed",
         "STY-E2: response changed",
+        "STY-E2: expected style_feature_distance check changed",
+        "STY-E2: expected output_length_stats check changed",
         "STY-E3: response changed",
+        "STY-E3: expected style_feature_distance check changed",
+        "STY-E3: expected output_length_stats check changed",
         "STY-G1: response changed",
+        "STY-G1: expected style_feature_distance check changed",
+        "STY-G1: expected output_length_stats check changed",
         "STY-G2: response changed",
+        "STY-G2: expected style_feature_distance check changed",
+        "STY-G2: expected output_length_stats check changed",
         "STY-G3: response changed",
+        "STY-G3: expected style_feature_distance check changed",
+        "STY-G3: expected output_length_stats check changed",
         "STY-X1: response changed",
-        "STY-X2: response changed",
+        "STY-X1: expected style_feature_distance check changed",
+        "STY-X1: expected output_length_stats check changed",
         "STY-X3: response changed",
+        "STY-X3: expected style_feature_distance check changed",
+        "STY-X3: expected output_length_stats check changed",
+        "TOK-E1: expected input_tokens_stable check changed",
+        "TOK-E2: expected input_tokens_stable check changed",
+        "TOK-E3: expected input_tokens_stable check changed",
         "TRN-E1: response changed",
+        "TRN-E1: expected \u003c\u003cEND\u003e\u003e check changed",
         "TRN-E2: response changed",
+        "TRN-E2: expected \u003c\u003cEND\u003e\u003e check changed",
+        "TRN-E3: expected \u003c\u003cEND\u003e\u003e check changed",
         "TRN-G1: response changed",
+        "TRN-G1: expected \u003c\u003cEND\u003e\u003e check changed",
         "TRN-G2: response changed",
         "TRN-G3: response changed",
-        "TRN-X1: response changed",
+        "TRN-G3: expected \u003c\u003cEND\u003e\u003e check changed",
         "TRN-X2: response changed",
-        "TRN-X3: response changed"
+        "TRN-X2: expected \u003c\u003cEND\u003e\u003e check changed",
+        "TRN-X3: response changed",
+        "TRN-X3: expected \u003c\u003cEND\u003e\u003e check changed"
       ]
     },
-    "duration": "2m49.2902835s",
+    "duration": "4m22.9330168s",
     "metrics": {
-      "detection_accuracy": 0.5,
-      "false_negative_rate": 1,
+      "detection_accuracy": 1,
+      "false_negative_rate": 0,
       "false_positive_rate": 0,
-      "layer_attribution_accuracy": 0.5,
-      "precision": 0,
-      "recall": 0
+      "layer_attribution_accuracy": 0,
+      "precision": 1,
+      "recall": 1
     },
     "model": "qwen2.5:3b-instruct-q4_K_M",
-    "with_baseline": 80
+    "with_baseline": 23
   },
-  "timestamp": "2026-11-13T00:10:29.1361797Z"
+  "timestamp": "2026-11-13T04:21:46.972557Z"
 }
