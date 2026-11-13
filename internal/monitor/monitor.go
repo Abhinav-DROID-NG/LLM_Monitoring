@@ -76,18 +76,32 @@ func (c *Config) Normalize() error {
 }
 
 type Layers struct {
-	Model          string  `json:"model"`
-	Safety         string  `json:"safety"`
-	RequestConfig  string  `json:"request_config"`
-	Serving        string  `json:"serving"`
-	Temperature    float64 `json:"temperature"`
-	MaxTokens      int     `json:"max_tokens"`
-	SystemPrompt   string  `json:"system_prompt"`
-	ResponseFormat string  `json:"response_format,omitempty"`
-	LatencyMS      int     `json:"latency_ms,omitempty"`
-	JitterMS       int     `json:"jitter_ms,omitempty"`
-	Noise          float64 `json:"noise,omitempty"`
-	Quantization   string  `json:"quantization,omitempty"`
+	Model          string        `json:"model"`
+	Safety         string        `json:"safety"`
+	RequestConfig  string        `json:"request_config"`
+	Serving        string        `json:"serving"`
+	Temperature    float64       `json:"temperature"`
+	MaxTokens      int           `json:"max_tokens"`
+	SystemPrompt   string        `json:"system_prompt"`
+	ResponseFormat string        `json:"response_format,omitempty"`
+	LatencyMS      int           `json:"latency_ms,omitempty"`
+	JitterMS       int           `json:"jitter_ms,omitempty"`
+	Noise          float64       `json:"noise,omitempty"`
+	Quantization   string        `json:"quantization,omitempty"`
+	App            RequestConfig `json:"app,omitempty"`
+}
+
+type RequestConfig struct {
+	Temperature    *float64 `json:"temperature,omitempty"`
+	MaxTokens      *int     `json:"max_tokens,omitempty"`
+	SystemPrompt   *string  `json:"system_prompt,omitempty"`
+	ResponseFormat string   `json:"response_format,omitempty"`
+}
+
+func (r RequestConfig) Hash() string {
+	data, _ := json.Marshal(r)
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:])
 }
 
 func healthyLayers(c Config) Layers {
@@ -146,6 +160,7 @@ type Request struct {
 	Temperature    float64   `json:"temperature"`
 	MaxTokens      int       `json:"max_tokens"`
 	ResponseFormat string    `json:"response_format,omitempty"`
+	System         string    `json:"system,omitempty"`
 	Safety         string    `json:"-"`
 	Serving        string    `json:"-"`
 }
@@ -164,6 +179,10 @@ type Response struct {
 	ReturnedModel     string        `json:"returned_model,omitempty"`
 	SystemFingerprint *string       `json:"system_fingerprint,omitempty"`
 	RetryCount        int           `json:"retry_count"`
+	RunID             string        `json:"run_id,omitempty"`
+	ProbeExecutionID  string        `json:"probe_execution_id,omitempty"`
+	RequestConfigHash string        `json:"request_config_hash,omitempty"`
+	Route             string        `json:"route,omitempty"`
 }
 
 type Upstream interface {
@@ -190,11 +209,12 @@ func (l Local) Complete(ctx context.Context, request Request) Response {
 			Temperature float64 `json:"temperature"`
 			NumPredict  int     `json:"num_predict"`
 		} `json:"options"`
-		Stream bool `json:"stream"`
+		Format string `json:"format,omitempty"`
+		Stream bool   `json:"stream"`
 	}{Model: request.Model, Messages: request.Messages, Options: struct {
 		Temperature float64 `json:"temperature"`
 		NumPredict  int     `json:"num_predict"`
-	}{request.Temperature, request.MaxTokens}, Stream: false})
+	}{request.Temperature, request.MaxTokens}, Format: map[bool]string{true: "json", false: ""}[request.ResponseFormat == "json_object"], Stream: false})
 	if err != nil {
 		return Response{Error: err.Error()}
 	}
@@ -220,15 +240,18 @@ func (l Local) Complete(ctx context.Context, request Request) Response {
 		return Response{Error: fmt.Sprintf("local provider status %d: %s", res.StatusCode, strings.TrimSpace(string(data))), Latency: time.Since(start)}
 	}
 	var decoded struct {
-		Message Message `json:"message"`
-		Done    bool    `json:"done"`
-		Prompt  int     `json:"prompt_eval_count"`
-		Output  int     `json:"eval_count"`
+		Message    Message `json:"message"`
+		Done       bool    `json:"done"`
+		DoneReason string  `json:"done_reason"`
+		Model      string  `json:"model"`
+		Prompt     int     `json:"prompt_eval_count"`
+		Output     int     `json:"eval_count"`
 	}
 	if err := json.Unmarshal(data, &decoded); err != nil {
 		return Response{Error: err.Error(), Latency: time.Since(start)}
 	}
-	return Response{Text: decoded.Message.Text, FinishReason: "stop", Latency: time.Since(start),
+	finish := normalizeFinishReason(decoded.DoneReason)
+	return Response{Text: decoded.Message.Text, FinishReason: finish, ReturnedModel: decoded.Model, HTTPStatus: res.StatusCode, Latency: time.Since(start),
 		InputTokens: decoded.Prompt, OutputTokens: decoded.Output}
 }
 
@@ -333,19 +356,33 @@ func (r *Router) Complete(ctx context.Context, alias string, task canary.Task) R
 		return Response{Text: "I can't help with that request.", FinishReason: "content_filter"}
 	}
 	system := task.System
-	if system == "" {
+	if layers.App.SystemPrompt != nil {
+		system = *layers.App.SystemPrompt
+	} else if system == "" {
 		system = layers.SystemPrompt
 	}
 	temp := task.Temperature
 	if temp == 0 {
+		temp = divisionTemperature(task.Division)
+	}
+	if layers.App.Temperature != nil {
+		temp = *layers.App.Temperature
+	} else if temp == 0 {
 		temp = layers.Temperature
 	}
 	maxTokens := task.MaxTokens
+	if layers.App.MaxTokens != nil {
+		maxTokens = *layers.App.MaxTokens
+	}
 	if maxTokens <= 0 {
 		maxTokens = layers.MaxTokens
 	}
+	responseFormat := task.ResponseFormat
+	if layers.App.ResponseFormat != "" {
+		responseFormat = layers.App.ResponseFormat
+	}
 	return upstream.Complete(ctx, Request{Model: layers.Model, Safety: layers.Safety, Serving: layers.Serving,
-		Temperature: temp, MaxTokens: maxTokens, ResponseFormat: task.ResponseFormat,
+		Temperature: temp, MaxTokens: maxTokens, ResponseFormat: responseFormat, System: system,
 		Messages: []Message{{Role: "system", Text: system}, {Role: "user", Text: fillerText(task.Filler) + task.Prompt}}})
 }
 
@@ -355,11 +392,14 @@ func (r *Router) Handler() http.Handler {
 			http.NotFound(w, req)
 			return
 		}
+
 		var payload struct {
-			Model       string    `json:"model"`
-			Messages    []Message `json:"messages"`
-			Temperature float64   `json:"temperature"`
-			MaxTokens   int       `json:"max_tokens"`
+			Model          string    `json:"model"`
+			Messages       []Message `json:"messages"`
+			Temperature    float64   `json:"temperature"`
+			MaxTokens      int       `json:"max_tokens"`
+			System         string    `json:"system"`
+			ResponseFormat string    `json:"response_format"`
 		}
 		if err := json.NewDecoder(io.LimitReader(req.Body, 4<<20)).Decode(&payload); err != nil {
 			http.Error(w, "invalid request: "+err.Error(), http.StatusBadRequest)
@@ -396,7 +436,8 @@ func (r *Router) Handler() http.Handler {
 			return
 		}
 		response := upstream.Complete(req.Context(), Request{Model: layers.Model, Messages: payload.Messages,
-			Temperature: layers.Temperature, MaxTokens: layers.MaxTokens, Safety: layers.Safety, Serving: layers.Serving})
+			Temperature: payload.Temperature, MaxTokens: payload.MaxTokens, System: payload.System,
+			ResponseFormat: payload.ResponseFormat, Safety: layers.Safety, Serving: layers.Serving})
 		status := http.StatusOK
 		if response.Error != "" {
 			status = http.StatusBadGateway
@@ -405,6 +446,30 @@ func (r *Router) Handler() http.Handler {
 		w.WriteHeader(status)
 		_ = json.NewEncoder(w).Encode(response)
 	})
+}
+
+func normalizeFinishReason(reason string) string {
+	switch strings.ToLower(strings.TrimSpace(reason)) {
+	case "stop", "done":
+		return "stop"
+	case "length", "max_tokens":
+		return "length"
+	case "content_filter", "content_filtered":
+		return "content_filter"
+	default:
+		return "unknown"
+	}
+}
+
+func divisionTemperature(division string) float64 {
+	switch division {
+	case "refusal":
+		return 0.5
+	case "style":
+		return 0.7
+	default:
+		return 0
+	}
 }
 
 func unsafeRequest(prompt string) bool {
@@ -474,6 +539,7 @@ type CheckObservation struct {
 
 func Run(ctx context.Context, library canary.Library, router *Router, concurrency int) []Observation {
 	tasks := library.Pinned()
+	runID := newID()
 	if concurrency < 1 {
 		concurrency = 1
 	}
@@ -487,7 +553,9 @@ func Run(ctx context.Context, library canary.Library, router *Router, concurrenc
 			for task := range work {
 				response := router.Complete(ctx, Alias, task)
 				out <- Observation{CanaryID: task.ID, Timestamp: time.Now().UTC(), Response: response.Text,
-					ReturnedModel: response.ReturnedModel, SystemFingerprint: response.SystemFingerprint,
+					RunID: runID, ProbeExecutionID: newID(), RequestedModel: Alias,
+					RequestConfigHash: router.Layers().App.Hash(),
+					ReturnedModel:     response.ReturnedModel, SystemFingerprint: response.SystemFingerprint,
 					LatencyMS: response.Latency.Milliseconds(), InputTokens: response.InputTokens,
 					OutputTokens: response.OutputTokens, FinishReason: response.FinishReason, Error: response.Error,
 					Checks: checkTask(task, response)}
@@ -511,6 +579,7 @@ func Run(ctx context.Context, library canary.Library, router *Router, concurrenc
 
 func RunViaAlias(ctx context.Context, library canary.Library, endpoint string, client *http.Client, concurrency int) []Observation {
 	tasks := library.Pinned()
+	runID := newID()
 	if concurrency < 1 {
 		concurrency = 1
 	}
@@ -532,7 +601,8 @@ func RunViaAlias(ctx context.Context, library canary.Library, endpoint string, c
 			for task := range work {
 				response := callAlias(ctx, endpoint, client, task)
 				obs := Observation{
-					CanaryID:     task.ID,
+					CanaryID: task.ID,
+					RunID:    runID, ProbeExecutionID: newID(), RequestedModel: Alias,
 					Timestamp:    time.Now().UTC(),
 					Response:     response.Text,
 					LatencyMS:    response.Latency.Milliseconds(),
@@ -579,11 +649,14 @@ func RunViaAlias(ctx context.Context, library canary.Library, endpoint string, c
 func callAlias(ctx context.Context, endpoint string, client *http.Client, task canary.Task) Response {
 	start := time.Now()
 	payload := struct {
-		Model       string    `json:"model"`
-		Messages    []Message `json:"messages"`
-		Temperature float64   `json:"temperature"`
-		MaxTokens   int       `json:"max_tokens"`
-	}{Model: Alias, Messages: []Message{{Role: "user", Text: task.Prompt}}, MaxTokens: task.MaxTokens}
+		Model          string    `json:"model"`
+		Messages       []Message `json:"messages"`
+		Temperature    float64   `json:"temperature"`
+		MaxTokens      int       `json:"max_tokens"`
+		System         string    `json:"system"`
+		ResponseFormat string    `json:"response_format,omitempty"`
+	}{Model: Alias, Messages: []Message{{Role: "system", Text: task.System}, {Role: "user", Text: fillerText(task.Filler) + task.Prompt}},
+		Temperature: task.Temperature, MaxTokens: task.MaxTokens, System: task.System, ResponseFormat: task.ResponseFormat}
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return Response{Error: err.Error()}
