@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "scenarios": [
+    {"id":"S0","name":"no change","category":"control","trials":200,"mutations":[],"truth_layers":[],"expect_detected":false},
+    {"id":"S1","name":"alias update","category":"single","trials":60,"mutations":[{"layer":"model","op":"set_alias_target","params":{"model":"v2"}}],"truth_layers":["model"],"expect_detected":true},
+    {"id":"S2","name":"safety strict","category":"single","trials":60,"mutations":[{"layer":"safety","op":"set_level","params":{"level":"strict"}}],"truth_layers":["safety"],"expect_detected":true},
+    {"id":"S3","name":"serving slowdown","category":"single","trials":60,"mutations":[{"layer":"serving","op":"set_serving","params":{"latency_ms_add":250,"jitter_pct":30,"nondeterminism":0.35}}],"truth_layers":["serving"],"expect_detected":true},
+    {"id":"S4","name":"max tokens cut","category":"single","trials":60,"mutations":[{"layer":"request_config","op":"set","params":{"max_tokens":40}}],"truth_layers":["request_config"],"expect_detected":true},
+    {"id":"S5","name":"temperature increase","category":"single","trials":60,"mutations":[{"layer":"request_config","op":"set","params":{"temperature":0.9}}],"truth_layers":["request_config"],"expect_detected":true},
+    {"id":"S6","name":"response format off","category":"single","trials":60,"mutations":[{"layer":"request_config","op":"set","params":{"response_format":""}}],"truth_layers":["request_config"],"expect_detected":true},
+    {"id":"S7","name":"longer system prompt","category":"single","trials":60,"mutations":[{"layer":"request_config","op":"set","params":{"system_prompt":"Answer with additional detail."}}],"truth_layers":["request_config"],"expect_detected":true},
+    {"id":"S8","name":"quantized route","category":"single","trials":60,"mutations":[{"layer":"serving","op":"set_serving","params":{"route":"q4"}}],"truth_layers":["serving"],"expect_detected":true}
+  ]
+}
