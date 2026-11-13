@@ -15,6 +15,8 @@ type evaluationClient struct {
 	model    string
 }
 
+const overallEvaluationTimeout = 45 * time.Minute
+
 func (c evaluationClient) Complete(ctx context.Context, request evaluation.Request) (evaluation.Response, error) {
 	response := c.provider.Complete(ctx, monitor.Request{Model: c.model, Messages: []monitor.Message{{Role: "system", Text: request.SystemPrompt}, {Role: "user", Text: request.Prompt}}, Temperature: request.Temperature, MaxTokens: request.MaxTokens})
 	if response.Error != "" {
@@ -59,11 +61,13 @@ func runEvaluation(cfg monitor.Config, objective evaluation.Objective) (evaluati
 	settings.Timeout = 10 * time.Minute
 	meta := evaluation.Metadata{Model: cfg.ModelA, Provider: map[bool]string{true: "offline-mock", false: "ollama"}[cfg.Mock], Runtime: "monitor", DatasetVersion: dataset.Version}
 	runner := evaluation.Runner{Client: client}
+	ctx, cancel := context.WithTimeout(context.Background(), overallEvaluationTimeout)
+	defer cancel()
 	var result evaluation.Evaluation
 	if objective == evaluation.Behavioural {
-		result, err = runner.Run(context.Background(), dataset, objective, meta, settings, nil)
+		result, err = runner.Run(ctx, dataset, objective, meta, settings, nil)
 	} else {
-		result, err = runner.RunPerformance(context.Background(), dataset, meta, settings, nil)
+		result, err = runner.RunPerformance(ctx, dataset, meta, settings, nil)
 	}
 	if err != nil {
 		return evaluation.Evaluation{}, err
