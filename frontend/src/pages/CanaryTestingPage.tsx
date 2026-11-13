@@ -122,7 +122,7 @@ export const CanaryTestingPage: React.FC<CanaryTestingPageProps> = ({ store }) =
             Synthetic Canary Execution Pipeline
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Executes {tierFilter === 'all' ? 'all 81' : filteredTasks.length} synthetic probes via{' '}
+            Executes {tierFilter === 'all' ? 'all 51' : filteredTasks.length} performance probes via{' '}
             <code className="text-sky-300">support-bot-v1</code> with fixed parameters (temp=0, seed=42, max_tokens=512)
           </p>
         </div>
@@ -222,7 +222,7 @@ export const CanaryTestingPage: React.FC<CanaryTestingPageProps> = ({ store }) =
           {filteredTasks.length === 0 ? (
             <EmptyView
               title="No Canaries Match Your Filter"
-              description="Reset division, tier, or check category filters to inspect the 81 synthetic probes."
+              description="Reset division, tier, or check category filters to inspect the 51 performance probes."
             />
           ) : (
             <div className="overflow-x-auto max-h-[640px]">

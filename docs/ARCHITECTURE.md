@@ -1,14 +1,14 @@
 # Architecture
 
-Canaries are loaded from `canaries_fixed.json`, sent only through the stable
-alias, routed through model/safety/serving/request-configuration layers, and
-then evaluated by checks and statistical detectors.
+Performance probes are loaded from `precision_reasoning_benchmark.json`, sent
+only through the stable alias, and evaluated by exact-answer checks and
+statistical detectors.
 
 ```text
-canaries -> alias proxy -> provider layers -> upstream
+benchmark items -> alias proxy -> provider -> upstream
                     \-> observations -> detector -> pinned rerun -> attribution -> report
 ```
 
-The proxy allowlist rejects content that is not one of the synthetic canary
-prompts. Ground-truth mutations are sealed separately from detector input.
+The proxy allowlist rejects content that is not one of the benchmark prompts.
+Ground-truth mutations are sealed separately from detector input.
 

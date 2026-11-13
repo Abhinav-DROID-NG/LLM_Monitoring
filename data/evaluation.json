@@ -1,5 +1,5 @@
 {
-  "baseline_file": "data\\baseline-20261113T034638Z.json",
+  "baseline_file": "data/baseline-20261112T232408Z.json",
   "baseline_model": "qwen2.5:3b-instruct-fp16",
   "evaluation_spec": {
     "combined": 5,
@@ -8,59 +8,81 @@
   },
   "experiment_id": "eval-B(qwen2.5:3b-instruct-q8_0)-and-C(qwen2.5:3b-instruct-q4_K_M)-vs-A(qwen2.5:3b-instruct-fp16)",
   "model_b": {
-    "avg_latency_sec": 4.889975308641975,
-    "below_baseline": 55,
-    "check_pass_rate": 47.27272727272727,
+    "avg_latency_sec": 0.00007407407407407407,
+    "below_baseline": 81,
+    "check_pass_rate": 5.454545454545454,
     "comparisons": [
       {
         "canary_id": "CAP-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":3921066,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'number_equals' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 17.387,
-        "eval_latency_sec": 8.99
+        "baseline_latency_sec": 1.235,
+        "eval_latency_sec": 0.004
       },
       {
         "canary_id": "CAP-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":511952,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'regex_full' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 0.664,
-        "eval_latency_sec": 0.117
+        "baseline_latency_sec": 0.778,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "CAP-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":409987,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'number_equals' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 0.629,
-        "eval_latency_sec": 0.144
+        "baseline_latency_sec": 0.726,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "CAP-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":406986,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'final_field' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 31.168,
-        "eval_latency_sec": 6.436
+        "baseline_latency_sec": 33.201,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "CAP-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":380923,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'json_valid' failed",
+          "Check 'json_fields' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 5.583,
-        "eval_latency_sec": 1.157
+        "baseline_latency_sec": 6.208,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "CAP-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":429300,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'final_field' failed",
           "Check 'final_field' failed",
           "Check 'final_field' failed"
@@ -68,2124 +90,2226 @@
         "baseline_checks_passed": 3,
         "eval_checks_passed": 0,
         "total_checks": 3,
-        "baseline_latency_sec": 31.333,
-        "eval_latency_sec": 6.168
-      },
-      {
-        "canary_id": "CAP-X1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
-        "total_checks": 1,
-        "baseline_latency_sec": 31.143,
-        "eval_latency_sec": 9.566
-      },
-      {
-        "canary_id": "CAP-X2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'final_field_json' failed"
-        ],
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 0,
-        "total_checks": 1,
-        "baseline_latency_sec": 31.413,
-        "eval_latency_sec": 13.501
-      },
-      {
-        "canary_id": "CAP-X3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'final_field' failed"
-        ],
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 0,
-        "total_checks": 1,
-        "baseline_latency_sec": 31.021,
-        "eval_latency_sec": 21.859
-      },
-      {
-        "canary_id": "DET-E1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 1.072,
-        "eval_latency_sec": 0.175
-      },
-      {
-        "canary_id": "DET-E2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed"
-        ],
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 0,
-        "total_checks": 1,
-        "baseline_latency_sec": 1.024,
-        "eval_latency_sec": 0.134
-      },
-      {
-        "canary_id": "DET-E3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0.628,
-        "eval_latency_sec": 0.096
-      },
-      {
-        "canary_id": "DET-G1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed",
-          "Check 'mean_edit_distance' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 11.576,
-        "eval_latency_sec": 2.335
-      },
-      {
-        "canary_id": "DET-G2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed",
-          "Check 'mean_edit_distance' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 16.524,
-        "eval_latency_sec": 1.095
-      },
-      {
-        "canary_id": "DET-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed",
-          "Check 'mean_edit_distance' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 20.524,
-        "eval_latency_sec": 4.187
-      },
-      {
-        "canary_id": "DET-X1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed",
-          "Check 'mean_edit_distance' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 32.082,
-        "eval_latency_sec": 14.777
-      },
-      {
-        "canary_id": "DET-X2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed",
-          "Check 'mean_edit_distance' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.774,
-        "eval_latency_sec": 11.086
-      },
-      {
-        "canary_id": "DET-X3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'identical_across_runs' failed",
-          "Check 'mean_edit_distance' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.842,
-        "eval_latency_sec": 14.714
-      },
-      {
-        "canary_id": "FMT-E1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
-        "total_checks": 3,
-        "baseline_latency_sec": 1.705,
-        "eval_latency_sec": 0.445
-      },
-      {
-        "canary_id": "FMT-E2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 1.668,
-        "eval_latency_sec": 0.264
-      },
-      {
-        "canary_id": "FMT-E3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
-        "total_checks": 1,
-        "baseline_latency_sec": 0.766,
-        "eval_latency_sec": 0.1
-      },
-      {
-        "canary_id": "FMT-G1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 4,
-        "eval_checks_passed": 4,
-        "total_checks": 4,
-        "baseline_latency_sec": 10.442,
-        "eval_latency_sec": 2.32
-      },
-      {
-        "canary_id": "FMT-G2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'markdown_table' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 12.509,
-        "eval_latency_sec": 2.858
-      },
-      {
-        "canary_id": "FMT-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'paragraph_count' failed",
-          "Check 'sentences_per_paragraph' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 17.344,
-        "eval_latency_sec": 2.304
-      },
-      {
-        "canary_id": "FMT-X1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'json_types' failed"
-        ],
-        "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
-        "total_checks": 4,
-        "baseline_latency_sec": 31.119,
-        "eval_latency_sec": 16.761
-      },
-      {
-        "canary_id": "FMT-X2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'csv_shape' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 30.982,
-        "eval_latency_sec": 20.537
-      },
-      {
-        "canary_id": "FMT-X3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'outline_shape' failed"
-        ],
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 0,
-        "total_checks": 1,
-        "baseline_latency_sec": 30.842,
-        "eval_latency_sec": 5.256
-      },
-      {
-        "canary_id": "INS-E1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 1.39,
-        "eval_latency_sec": 0.303
-      },
-      {
-        "canary_id": "INS-E2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
-        "total_checks": 1,
-        "baseline_latency_sec": 2.527,
-        "eval_latency_sec": 0.14
-      },
-      {
-        "canary_id": "INS-E3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 1.286,
-        "eval_latency_sec": 0.275
-      },
-      {
-        "canary_id": "INS-G1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
-        "total_checks": 3,
-        "baseline_latency_sec": 32.976,
-        "eval_latency_sec": 0.772
-      },
-      {
-        "canary_id": "INS-G2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'sentence_count' failed"
-        ],
-        "baseline_checks_passed": 3,
-        "eval_checks_passed": 2,
-        "total_checks": 3,
-        "baseline_latency_sec": 36.08,
-        "eval_latency_sec": 0.722
-      },
-      {
-        "canary_id": "INS-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'first_line_equals' failed"
-        ],
-        "baseline_checks_passed": 4,
-        "eval_checks_passed": 3,
-        "total_checks": 4,
-        "baseline_latency_sec": 34.372,
-        "eval_latency_sec": 0.586
-      },
-      {
-        "canary_id": "INS-X1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'summary_words_max' failed"
-        ],
-        "baseline_checks_passed": 5,
-        "eval_checks_passed": 4,
-        "total_checks": 5,
-        "baseline_latency_sec": 32.276,
-        "eval_latency_sec": 3.462
-      },
-      {
-        "canary_id": "INS-X2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'day_list_shape' failed",
-          "Check 'ends_with' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.775,
-        "eval_latency_sec": 2.997
-      },
-      {
-        "canary_id": "INS-X3",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 3,
-        "total_checks": 3,
-        "baseline_latency_sec": 32.061,
-        "eval_latency_sec": 3.864
-      },
-      {
-        "canary_id": "LAT-E1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0.502,
-        "eval_latency_sec": 0.092
-      },
-      {
-        "canary_id": "LAT-E2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 3.747,
-        "eval_latency_sec": 0.529
-      },
-      {
-        "canary_id": "LAT-E3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 2.01,
-        "eval_latency_sec": 0.301
-      },
-      {
-        "canary_id": "LAT-G1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 32.24,
-        "eval_latency_sec": 11.353
-      },
-      {
-        "canary_id": "LAT-G2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 10.52,
-        "eval_latency_sec": 1.874
-      },
-      {
-        "canary_id": "LAT-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 32.171,
-        "eval_latency_sec": 8.332
-      },
-      {
-        "canary_id": "LAT-X1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed",
-          "Finish reason changed from stop to length"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.888,
-        "eval_latency_sec": 23.64
-      },
-      {
-        "canary_id": "LAT-X2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 32.25,
-        "eval_latency_sec": 17.419
-      },
-      {
-        "canary_id": "LAT-X3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":2400458000,\"error\":\"local provider status 500: {\\\"error\\\":\\\"prediction aborted, token repeat limit reached\\\"}\",\"retry_count\":0}",
-          "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.878,
-        "eval_latency_sec": 2.401
-      },
-      {
-        "canary_id": "REF-E1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 3.389,
-        "eval_latency_sec": 0.6
-      },
-      {
-        "canary_id": "REF-E2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Finish reason changed from stop to length"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.78,
-        "eval_latency_sec": 1.888
-      },
-      {
-        "canary_id": "REF-E3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 5.404,
-        "eval_latency_sec": 0.758
-      },
-      {
-        "canary_id": "REF-G1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'word_count_between' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 11.776,
-        "eval_latency_sec": 1.313
-      },
-      {
-        "canary_id": "REF-G2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'word_count_between' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 15.559,
-        "eval_latency_sec": 3.454
-      },
-      {
-        "canary_id": "REF-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'word_count_between' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 12.648,
-        "eval_latency_sec": 2.295
-      },
-      {
-        "canary_id": "REF-X1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'word_count_between' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 32.58,
-        "eval_latency_sec": 12.348
-      },
-      {
-        "canary_id": "REF-X2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'word_count_between' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.299,
-        "eval_latency_sec": 12.089
-      },
-      {
-        "canary_id": "REF-X3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'word_count_between' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 34.59,
-        "eval_latency_sec": 13.679
-      },
-      {
-        "canary_id": "STY-E1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 7.089,
-        "eval_latency_sec": 1.12
-      },
-      {
-        "canary_id": "STY-E2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 3.625,
-        "eval_latency_sec": 0.668
-      },
-      {
-        "canary_id": "STY-E3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 2.192,
-        "eval_latency_sec": 0.298
-      },
-      {
-        "canary_id": "STY-G1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 15.356,
-        "eval_latency_sec": 2.234
-      },
-      {
-        "canary_id": "STY-G2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 21.416,
-        "eval_latency_sec": 3.188
-      },
-      {
-        "canary_id": "STY-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 13.866,
-        "eval_latency_sec": 2.439
-      },
-      {
-        "canary_id": "STY-X1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 32.971,
-        "eval_latency_sec": 11.202
-      },
-      {
-        "canary_id": "STY-X2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 87.409,
-        "eval_latency_sec": 13.463
-      },
-      {
-        "canary_id": "STY-X3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'style_feature_distance' failed",
-          "Check 'output_length_stats' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 0,
-        "total_checks": 2,
-        "baseline_latency_sec": 40.837,
-        "eval_latency_sec": 10.446
-      },
-      {
-        "canary_id": "TOK-E1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'input_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 1.014,
-        "eval_latency_sec": 0.101
-      },
-      {
-        "canary_id": "TOK-E2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'input_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0.553,
-        "eval_latency_sec": 0.09
-      },
-      {
-        "canary_id": "TOK-E3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'input_tokens_stable' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0.611,
-        "eval_latency_sec": 0.087
-      },
-      {
-        "canary_id": "TOK-G1",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.092
-      },
-      {
-        "canary_id": "TOK-G2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Latency degraded (0.10s vs base 0.00s)"
-        ],
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0.001,
-        "eval_latency_sec": 0.101
-      },
-      {
-        "canary_id": "TOK-G3",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.104
-      },
-      {
-        "canary_id": "TOK-X1",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.089
-      },
-      {
-        "canary_id": "TOK-X2",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.102
-      },
-      {
-        "canary_id": "TOK-X3",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.123
-      },
-      {
-        "canary_id": "TRN-E1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'ends_with' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 2.821,
-        "eval_latency_sec": 0.414
-      },
-      {
-        "canary_id": "TRN-E2",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'ends_with' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 4.085,
-        "eval_latency_sec": 0.65
-      },
-      {
-        "canary_id": "TRN-E3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'ends_with' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 8.016,
-        "eval_latency_sec": 1.261
-      },
-      {
-        "canary_id": "TRN-G1",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'ends_with' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 34.298,
-        "eval_latency_sec": 5.601
-      },
-      {
-        "canary_id": "TRN-G2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 32.134,
-        "eval_latency_sec": 8.605
-      },
-      {
-        "canary_id": "TRN-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'ends_with' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 18.168,
-        "eval_latency_sec": 3.205
-      },
-      {
-        "canary_id": "TRN-X1",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 147.002,
-        "eval_latency_sec": 14.379
-      },
-      {
-        "canary_id": "TRN-X2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 37.555,
-        "eval_latency_sec": 7.581
-      },
-      {
-        "canary_id": "TRN-X3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'ends_with' failed"
-        ],
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
-        "total_checks": 2,
-        "baseline_latency_sec": 31.816,
-        "eval_latency_sec": 13.577
-      }
-    ],
-    "drift_analysis": {
-      "detected": true,
-      "confidence": 2.388888888888889,
-      "predicted_layer": "request_config",
-      "evidence": [
-        "CAP-G1: response changed",
-        "CAP-G3: response changed",
-        "CAP-G3: expected 3, 5, 7, 14, 19, 28, 37, 42, 50, 56, 63, 71, 81, 88, 95 check changed",
-        "CAP-G3: expected 659 check changed",
-        "CAP-G3: expected 42 check changed",
-        "CAP-X1: response changed",
-        "CAP-X2: response changed",
-        "CAP-X2: expected final_field_json check changed",
-        "CAP-X3: response changed",
-        "CAP-X3: expected x=1, y=2, z=3 check changed",
-        "DET-E1: expected identical_across_runs check changed",
-        "DET-E2: response changed",
-        "DET-E2: expected identical_across_runs check changed",
-        "DET-E3: expected identical_across_runs check changed",
-        "DET-G1: response changed",
-        "DET-G1: expected identical_across_runs check changed",
-        "DET-G1: expected mean_edit_distance check changed",
-        "DET-G2: response changed",
-        "DET-G2: expected identical_across_runs check changed",
-        "DET-G2: expected mean_edit_distance check changed",
-        "DET-G3: response changed",
-        "DET-G3: expected identical_across_runs check changed",
-        "DET-G3: expected mean_edit_distance check changed",
-        "DET-X1: response changed",
-        "DET-X1: expected identical_across_runs check changed",
-        "DET-X1: expected mean_edit_distance check changed",
-        "DET-X2: response changed",
-        "DET-X2: expected identical_across_runs check changed",
-        "DET-X2: expected mean_edit_distance check changed",
-        "DET-X3: response changed",
-        "DET-X3: expected identical_across_runs check changed",
-        "DET-X3: expected mean_edit_distance check changed",
-        "FMT-G1: response changed",
-        "FMT-G2: response changed",
-        "FMT-G2: expected markdown_table check changed",
-        "FMT-G3: response changed",
-        "FMT-G3: expected 2 check changed",
-        "FMT-G3: expected 3 check changed",
-        "FMT-X1: response changed",
-        "FMT-X1: expected json_valid check changed",
-        "FMT-X1: expected json_types check changed",
-        "FMT-X2: response changed",
-        "FMT-X2: expected csv_shape check changed",
-        "FMT-X3: response changed",
-        "FMT-X3: expected outline_shape check changed",
-        "INS-E1: response changed",
-        "INS-E2: response changed",
-        "INS-E3: response changed",
-        "INS-G1: response changed",
-        "INS-G2: response changed",
-        "INS-G2: expected 2 check changed",
-        "INS-G3: response changed",
-        "INS-G3: expected [BOT] check changed",
-        "INS-X1: response changed",
-        "INS-X1: expected 20 check changed",
-        "INS-X2: response changed",
-        "INS-X2: expected day_list_shape check changed",
-        "INS-X2: expected Safe travels. check changed",
-        "INS-X3: response changed",
-        "INS-X3: expected json_valid check changed",
-        "LAT-E1: expected latency check changed",
-        "LAT-E2: expected latency check changed",
-        "LAT-E2: expected output_tokens_stable check changed",
-        "LAT-E3: expected latency check changed",
-        "LAT-G1: response changed",
-        "LAT-G1: expected latency check changed",
-        "LAT-G1: expected output_tokens_stable check changed",
-        "LAT-G2: response changed",
-        "LAT-G2: expected latency check changed",
-        "LAT-G2: expected output_tokens_stable check changed",
-        "LAT-G3: response changed",
-        "LAT-G3: expected latency check changed",
-        "LAT-G3: expected output_tokens_stable check changed",
-        "LAT-X1: response changed",
-        "LAT-X1: finish reason changed",
-        "LAT-X1: expected latency check changed",
-        "LAT-X1: expected output_tokens_stable check changed",
-        "LAT-X2: response changed",
-        "LAT-X2: expected latency check changed",
-        "LAT-X2: expected output_tokens_stable check changed",
-        "REF-E1: response changed",
-        "REF-E2: response changed",
-        "REF-E2: finish reason changed",
-        "REF-E3: response changed",
-        "REF-G1: response changed",
-        "REF-G1: expected word_count_between check changed",
-        "REF-G2: response changed",
-        "REF-G2: expected word_count_between check changed",
-        "REF-G3: response changed",
-        "REF-G3: expected word_count_between check changed",
-        "REF-X1: response changed",
-        "REF-X1: expected word_count_between check changed",
-        "REF-X2: response changed",
-        "REF-X2: expected word_count_between check changed",
-        "REF-X3: response changed",
-        "REF-X3: expected word_count_between check changed",
-        "STY-E1: response changed",
-        "STY-E1: expected style_feature_distance check changed",
-        "STY-E1: expected output_length_stats check changed",
-        "STY-E2: response changed",
-        "STY-E2: expected style_feature_distance check changed",
-        "STY-E2: expected output_length_stats check changed",
-        "STY-E3: response changed",
-        "STY-E3: expected style_feature_distance check changed",
-        "STY-E3: expected output_length_stats check changed",
-        "STY-G1: response changed",
-        "STY-G1: expected style_feature_distance check changed",
-        "STY-G1: expected output_length_stats check changed",
-        "STY-G2: response changed",
-        "STY-G2: expected style_feature_distance check changed",
-        "STY-G2: expected output_length_stats check changed",
-        "STY-G3: response changed",
-        "STY-G3: expected style_feature_distance check changed",
-        "STY-G3: expected output_length_stats check changed",
-        "STY-X1: response changed",
-        "STY-X1: expected style_feature_distance check changed",
-        "STY-X1: expected output_length_stats check changed",
-        "STY-X3: response changed",
-        "STY-X3: expected style_feature_distance check changed",
-        "STY-X3: expected output_length_stats check changed",
-        "TOK-E1: expected input_tokens_stable check changed",
-        "TOK-E2: expected input_tokens_stable check changed",
-        "TOK-E3: expected input_tokens_stable check changed",
-        "TRN-E1: response changed",
-        "TRN-E1: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-E2: response changed",
-        "TRN-E2: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-E3: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-G1: response changed",
-        "TRN-G1: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-G2: response changed",
-        "TRN-G3: response changed",
-        "TRN-G3: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-X2: response changed",
-        "TRN-X3: response changed",
-        "TRN-X3: expected \u003c\u003cEND\u003e\u003e check changed"
-      ]
-    },
-    "duration": "6m36.1725699s",
-    "metrics": {
-      "detection_accuracy": 1,
-      "false_negative_rate": 0,
-      "false_positive_rate": 0,
-      "layer_attribution_accuracy": 0,
-      "precision": 1,
-      "recall": 1
-    },
-    "model": "qwen2.5:3b-instruct-q8_0",
-    "with_baseline": 26
-  },
-  "model_c": {
-    "avg_latency_sec": 3.2451358024691372,
-    "below_baseline": 58,
-    "check_pass_rate": 45.45454545454545,
-    "comparisons": [
-      {
-        "canary_id": "CAP-E1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
-        "total_checks": 1,
-        "baseline_latency_sec": 17.387,
-        "eval_latency_sec": 8.719
-      },
-      {
-        "canary_id": "CAP-E2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
-        "total_checks": 1,
-        "baseline_latency_sec": 0.664,
-        "eval_latency_sec": 0.128
-      },
-      {
-        "canary_id": "CAP-E3",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
-        "total_checks": 1,
-        "baseline_latency_sec": 0.629,
-        "eval_latency_sec": 0.118
-      },
-      {
-        "canary_id": "CAP-G1",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
-        "total_checks": 1,
-        "baseline_latency_sec": 31.168,
-        "eval_latency_sec": 5.805
-      },
-      {
-        "canary_id": "CAP-G2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
-        "total_checks": 2,
-        "baseline_latency_sec": 5.583,
-        "eval_latency_sec": 0.812
-      },
-      {
-        "canary_id": "CAP-G3",
-        "status": "BELOW_BASELINE",
-        "reasons": [
-          "Check 'final_field' failed",
-          "Check 'final_field' failed"
-        ],
-        "baseline_checks_passed": 3,
-        "eval_checks_passed": 1,
-        "total_checks": 3,
-        "baseline_latency_sec": 31.333,
-        "eval_latency_sec": 4.987
+        "baseline_latency_sec": 31.718,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "CAP-X1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":383524,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'final_field' failed"
         ],
         "baseline_checks_passed": 1,
         "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 31.143,
-        "eval_latency_sec": 5.87
+        "baseline_latency_sec": 31.779,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "CAP-X2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":433915,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'final_field_json' failed"
         ],
         "baseline_checks_passed": 1,
         "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 31.413,
-        "eval_latency_sec": 6.766
+        "baseline_latency_sec": 32.003,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "CAP-X3",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Check 'final_field' failed",
-          "Finish reason changed from stop to length"
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":406824,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'final_field' failed"
         ],
         "baseline_checks_passed": 1,
         "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 31.021,
-        "eval_latency_sec": 14.944
+        "baseline_latency_sec": 31.991,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-E1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":474060,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'number_in_set' failed",
           "Check 'identical_across_runs' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 1.072,
-        "eval_latency_sec": 0.124
+        "baseline_latency_sec": 1.284,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-E2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":466268,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'identical_across_runs' failed"
         ],
         "baseline_checks_passed": 1,
         "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 1.024,
-        "eval_latency_sec": 0.098
+        "baseline_latency_sec": 1.013,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-E3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":476067,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'contains_any' failed",
           "Check 'identical_across_runs' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0.628,
-        "eval_latency_sec": 0.068
+        "baseline_latency_sec": 0.639,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-G1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":507014,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'identical_across_runs' failed",
           "Check 'mean_edit_distance' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 11.576,
-        "eval_latency_sec": 1.41
+        "baseline_latency_sec": 11.035,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-G2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":531847,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'identical_across_runs' failed",
           "Check 'mean_edit_distance' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 16.524,
-        "eval_latency_sec": 0.485
+        "baseline_latency_sec": 13.39,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":519060,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'identical_across_runs' failed",
           "Check 'mean_edit_distance' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 20.524,
-        "eval_latency_sec": 2.801
+        "baseline_latency_sec": 19.859,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-X1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":590592,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'identical_across_runs' failed",
           "Check 'mean_edit_distance' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 32.082,
-        "eval_latency_sec": 9.769
+        "baseline_latency_sec": 31.078,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-X2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":618070,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'identical_across_runs' failed",
           "Check 'mean_edit_distance' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.774,
-        "eval_latency_sec": 6.717
+        "baseline_latency_sec": 31.158,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "DET-X3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":545619,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'identical_across_runs' failed",
           "Check 'mean_edit_distance' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.842,
-        "eval_latency_sec": 9.109
+        "baseline_latency_sec": 31.262,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":641075,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'json_valid' failed",
+          "Check 'no_code_fence' failed",
+          "Check 'json_fields' failed"
+        ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 0,
         "total_checks": 3,
-        "baseline_latency_sec": 1.705,
-        "eval_latency_sec": 0.274
+        "baseline_latency_sec": 1.695,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":544590,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'bullet_count' failed",
+          "Check 'line_count' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 1.668,
-        "eval_latency_sec": 0.201
+        "baseline_latency_sec": 1.05,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":447233,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'regex_full' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 0.766,
-        "eval_latency_sec": 0.079
+        "baseline_latency_sec": 0.279,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-G1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":428463,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'json_valid' failed",
+          "Check 'no_code_fence' failed",
+          "Check 'json_fields' failed",
+          "Check 'json_types' failed"
+        ],
         "baseline_checks_passed": 4,
-        "eval_checks_passed": 4,
+        "eval_checks_passed": 0,
         "total_checks": 4,
-        "baseline_latency_sec": 10.442,
-        "eval_latency_sec": 1.429
+        "baseline_latency_sec": 10.42,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":672163,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'markdown_table' failed",
+          "Check 'table_cells' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 12.509,
-        "eval_latency_sec": 1.696
+        "baseline_latency_sec": 12.925,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":404935,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'paragraph_count' failed",
           "Check 'sentences_per_paragraph' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 17.344,
-        "eval_latency_sec": 1.424
+        "baseline_latency_sec": 15.834,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-X1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":329867,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'no_code_fence' failed",
+          "Check 'json_array' failed",
           "Check 'json_types' failed"
         ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 0,
         "total_checks": 4,
-        "baseline_latency_sec": 31.119,
-        "eval_latency_sec": 10.268
+        "baseline_latency_sec": 31.104,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-X2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":572095,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'no_code_fence' failed",
           "Check 'csv_shape' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 30.982,
-        "eval_latency_sec": 12.504
+        "baseline_latency_sec": 31.199,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "FMT-X3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":585279,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'outline_shape' failed"
         ],
         "baseline_checks_passed": 1,
         "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 30.842,
-        "eval_latency_sec": 3.753
+        "baseline_latency_sec": 26.913,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":553185,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'ends_with' failed",
+          "Check 'contains_all' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 1.39,
-        "eval_latency_sec": 0.214
+        "baseline_latency_sec": 1.509,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-E2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":509314,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'all_lowercase' failed"
+        ],
         "baseline_checks_passed": 1,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 1,
-        "baseline_latency_sec": 2.527,
-        "eval_latency_sec": 0.108
+        "baseline_latency_sec": 2.623,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-E3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":490622,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'language_is' failed",
           "Check 'contains_all' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 1.286,
-        "eval_latency_sec": 0.19
+        "baseline_latency_sec": 1.231,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-G1",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Check 'contains_none' failed"
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":559079,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_max' failed",
+          "Check 'contains_none' failed",
+          "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 3,
-        "baseline_latency_sec": 32.976,
-        "eval_latency_sec": 0.53
+        "baseline_latency_sec": 34.479,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-G2",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Check 'sentence_count' failed"
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":678952,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'sentence_count' failed",
+          "Check 'contains_none' failed",
+          "Check 'word_count_max' failed"
         ],
         "baseline_checks_passed": 3,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 3,
-        "baseline_latency_sec": 36.08,
-        "eval_latency_sec": 0.436
+        "baseline_latency_sec": 35.446,
+        "eval_latency_sec": 0.001
       },
       {
         "canary_id": "INS-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Check 'first_line_equals' failed"
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":570733,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'first_line_equals' failed",
+          "Check 'bullet_count' failed",
+          "Check 'contains_none' failed",
+          "Check 'bullet_words_max' failed"
         ],
         "baseline_checks_passed": 4,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 0,
         "total_checks": 4,
-        "baseline_latency_sec": 34.372,
-        "eval_latency_sec": 0.489
+        "baseline_latency_sec": 35.274,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-X1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":568302,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'starts_with' failed",
-          "Check 'summary_words_max' failed"
+          "Check 'summary_words_max' failed",
+          "Check 'paragraph_count_max' failed",
+          "Check 'contains_none' failed",
+          "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 5,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 0,
         "total_checks": 5,
-        "baseline_latency_sec": 32.276,
-        "eval_latency_sec": 2.339
+        "baseline_latency_sec": 37.619,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-X2",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Check 'day_list_shape' failed"
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":540334,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'day_list_shape' failed",
+          "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.775,
-        "eval_latency_sec": 2.652
+        "baseline_latency_sec": 40.633,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "INS-X3",
-        "status": "ABOVE_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":444856,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'no_code_fence' failed",
+          "Check 'json_types' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 3,
+        "eval_checks_passed": 0,
         "total_checks": 3,
-        "baseline_latency_sec": 32.061,
-        "eval_latency_sec": 2.317
+        "baseline_latency_sec": 37.083,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-E1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":502345,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
           "Check 'latency' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0.502,
-        "eval_latency_sec": 0.08
+        "baseline_latency_sec": 0.463,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-E2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":461773,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'latency' failed",
           "Check 'output_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 3.747,
-        "eval_latency_sec": 0.35
+        "baseline_latency_sec": 3.554,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-E3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":453156,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
           "Check 'latency' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 2.01,
-        "eval_latency_sec": 0.214
+        "baseline_latency_sec": 1.656,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-G1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":491386,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'latency' failed",
           "Check 'output_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 32.24,
-        "eval_latency_sec": 7.238
+        "baseline_latency_sec": 37.723,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-G2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":469899,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'latency' failed",
           "Check 'output_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 10.52,
-        "eval_latency_sec": 1.221
+        "baseline_latency_sec": 16.613,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":404714,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'latency' failed",
           "Check 'output_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 32.171,
-        "eval_latency_sec": 5.306
+        "baseline_latency_sec": 34.606,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-X1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":472064,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'latency' failed",
-          "Check 'output_tokens_stable' failed",
-          "Finish reason changed from stop to length"
+          "Check 'output_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.888,
-        "eval_latency_sec": 14.768
+        "baseline_latency_sec": 33.922,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-X2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":448103,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'latency' failed",
           "Check 'output_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 32.25,
-        "eval_latency_sec": 0.278
+        "baseline_latency_sec": 35.382,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "LAT-X3",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":1529204400,\"error\":\"local provider status 500: {\\\"error\\\":\\\"prediction aborted, token repeat limit reached\\\"}\",\"retry_count\":0}",
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":418971,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'latency' failed",
           "Check 'output_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 31.878,
-        "eval_latency_sec": 1.53
+        "baseline_latency_sec": 37.134,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-E1",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":428589,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'contains_all' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 3.389,
-        "eval_latency_sec": 0.37
+        "baseline_latency_sec": 3.669,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-E2",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Finish reason changed from stop to length"
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":386754,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'contains_any' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.78,
-        "eval_latency_sec": 1.221
+        "baseline_latency_sec": 33.778,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-E3",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":402256,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'contains_any' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 5.404,
-        "eval_latency_sec": 0.496
+        "baseline_latency_sec": 7.056,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-G1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":445632,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'word_count_between' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 11.776,
-        "eval_latency_sec": 0.788
+        "baseline_latency_sec": 17.446,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-G2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":447281,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'word_count_between' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 15.559,
-        "eval_latency_sec": 1.713
+        "baseline_latency_sec": 21.487,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":465770,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'word_count_between' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 12.648,
-        "eval_latency_sec": 1.541
+        "baseline_latency_sec": 15.224,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-X1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":479046,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'word_count_between' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 32.58,
-        "eval_latency_sec": 8.742
+        "baseline_latency_sec": 40.824,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-X2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":441201,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'word_count_between' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.299,
-        "eval_latency_sec": 10.342
+        "baseline_latency_sec": 38.963,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "REF-X3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":687639,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'word_count_between' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 34.59,
-        "eval_latency_sec": 8.896
+        "baseline_latency_sec": 40.563,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-E1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":546948,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 7.089,
-        "eval_latency_sec": 0.719
+        "baseline_latency_sec": 7.784,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-E2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":725024,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 3.625,
-        "eval_latency_sec": 0.441
+        "baseline_latency_sec": 6.376,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-E3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":472169,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 2.192,
-        "eval_latency_sec": 0.328
+        "baseline_latency_sec": 2.873,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-G1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":295580,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 15.356,
-        "eval_latency_sec": 1.281
+        "baseline_latency_sec": 19.49,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-G2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":427606,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 21.416,
-        "eval_latency_sec": 2.103
+        "baseline_latency_sec": 27.363,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":418741,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 13.866,
-        "eval_latency_sec": 1.946
+        "baseline_latency_sec": 17.471,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-X1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":431649,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 32.971,
-        "eval_latency_sec": 8.211
+        "baseline_latency_sec": 39.251,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-X2",
-        "status": "WITH_BASELINE",
-        "baseline_checks_passed": 0,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":446870,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 87.409,
-        "eval_latency_sec": 8.485
+        "baseline_latency_sec": 34.42,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "STY-X3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":409377,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
           "Check 'style_feature_distance' failed",
           "Check 'output_length_stats' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 40.837,
-        "eval_latency_sec": 9.025
+        "baseline_latency_sec": 37.348,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-E1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":415121,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
           "Check 'input_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 1.014,
-        "eval_latency_sec": 0.082
+        "baseline_latency_sec": 0.855,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-E2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":538184,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
           "Check 'input_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0.553,
-        "eval_latency_sec": 0.073
+        "baseline_latency_sec": 0.502,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-E3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":642398,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
           "Check 'input_tokens_stable' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0.611,
-        "eval_latency_sec": 0.077
+        "baseline_latency_sec": 0.565,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-G1",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":918127,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.072
+        "baseline_latency_sec": 0.325,
+        "eval_latency_sec": 0.001
       },
       {
         "canary_id": "TOK-G2",
         "status": "BELOW_BASELINE",
         "reasons": [
-          "Latency degraded (0.07s vs base 0.00s)"
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":668265,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
         ],
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0.001,
-        "eval_latency_sec": 0.072
+        "baseline_latency_sec": 0.278,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-G3",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":473841,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.086
+        "baseline_latency_sec": 0.261,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-X1",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":449228,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.078
+        "baseline_latency_sec": 0.251,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-X2",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":404760,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.078
+        "baseline_latency_sec": 0.269,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TOK-X3",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":428763,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 0,
-        "eval_latency_sec": 0.079
+        "baseline_latency_sec": 0.264,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-E1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":422504,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
           "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 2.821,
-        "eval_latency_sec": 0.287
+        "baseline_latency_sec": 2.595,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-E2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":455764,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
           "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 4.085,
-        "eval_latency_sec": 0.424
+        "baseline_latency_sec": 3.678,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-E3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":441762,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
           "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 8.016,
-        "eval_latency_sec": 0.82
+        "baseline_latency_sec": 7.46,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-G1",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":433474,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
           "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 34.298,
-        "eval_latency_sec": 5.235
+        "baseline_latency_sec": 36.921,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-G2",
-        "status": "WITH_BASELINE",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":471522,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 32.134,
-        "eval_latency_sec": 5.752
+        "baseline_latency_sec": 32.82,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-G3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":400924,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
           "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 18.168,
-        "eval_latency_sec": 1.805
+        "baseline_latency_sec": 31.603,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-X1",
-        "status": "ABOVE_BASELINE",
-        "baseline_checks_passed": 0,
-        "eval_checks_passed": 1,
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":484056,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 147.002,
-        "eval_latency_sec": 7.994
+        "baseline_latency_sec": 31.544,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-X2",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":289368,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
           "Check 'ends_with' failed"
         ],
         "baseline_checks_passed": 2,
-        "eval_checks_passed": 1,
+        "eval_checks_passed": 0,
         "total_checks": 2,
-        "baseline_latency_sec": 37.555,
-        "eval_latency_sec": 8.295
+        "baseline_latency_sec": 31.494,
+        "eval_latency_sec": 0
       },
       {
         "canary_id": "TRN-X3",
         "status": "BELOW_BASELINE",
         "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":435717,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q8_0' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
           "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.138,
+        "eval_latency_sec": 0
+      }
+    ],
+    "drift_analysis": {
+      "detected": false,
+      "confidence": 0,
+      "predicted_layer": "unknown",
+      "evidence": [
+        "no comparable successful responses"
+      ]
+    },
+    "duration": "57.234518ms",
+    "metrics": {
+      "detection_accuracy": 0,
+      "false_negative_rate": 1,
+      "false_positive_rate": 0,
+      "layer_attribution_accuracy": 0,
+      "precision": 0,
+      "recall": 0
+    },
+    "model": "qwen2.5:3b-instruct-q8_0",
+    "with_baseline": 0
+  },
+  "model_c": {
+    "avg_latency_sec": 0,
+    "below_baseline": 81,
+    "check_pass_rate": 5.454545454545454,
+    "comparisons": [
+      {
+        "canary_id": "CAP-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":400147,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'number_equals' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 1.235,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":464506,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'regex_full' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.778,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":426170,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'number_equals' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.726,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":437020,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'final_field' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 33.201,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":554154,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'json_valid' failed",
+          "Check 'json_fields' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 6.208,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":439970,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'final_field' failed",
+          "Check 'final_field' failed",
+          "Check 'final_field' failed"
+        ],
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 0,
+        "total_checks": 3,
+        "baseline_latency_sec": 31.718,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":456095,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'final_field' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 31.779,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":446809,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'final_field_json' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 32.003,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "CAP-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":426104,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'final_field' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 31.991,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":477924,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'number_in_set' failed",
+          "Check 'identical_across_runs' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.284,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":579359,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'identical_across_runs' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 1.013,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":525794,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'contains_any' failed",
+          "Check 'identical_across_runs' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.639,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":456332,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 11.035,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":465735,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 13.39,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":439215,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 19.859,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":420703,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.078,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":417465,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.158,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "DET-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":420047,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'identical_across_runs' failed",
+          "Check 'mean_edit_distance' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.262,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":425183,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'json_valid' failed",
+          "Check 'no_code_fence' failed",
+          "Check 'json_fields' failed"
+        ],
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 0,
+        "total_checks": 3,
+        "baseline_latency_sec": 1.695,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":435921,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'bullet_count' failed",
+          "Check 'line_count' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.05,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":420857,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'regex_full' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.279,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":455646,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'json_valid' failed",
+          "Check 'no_code_fence' failed",
+          "Check 'json_fields' failed",
+          "Check 'json_types' failed"
+        ],
+        "baseline_checks_passed": 4,
+        "eval_checks_passed": 0,
+        "total_checks": 4,
+        "baseline_latency_sec": 10.42,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":498315,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'markdown_table' failed",
+          "Check 'table_cells' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 12.925,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":469145,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'paragraph_count' failed",
+          "Check 'sentences_per_paragraph' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 15.834,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":455796,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'no_code_fence' failed",
+          "Check 'json_array' failed",
+          "Check 'json_types' failed"
+        ],
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 0,
+        "total_checks": 4,
+        "baseline_latency_sec": 31.104,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":438239,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'no_code_fence' failed",
+          "Check 'csv_shape' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.199,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "FMT-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":439690,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'outline_shape' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 26.913,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":439389,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'ends_with' failed",
+          "Check 'contains_all' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.509,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":431127,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'all_lowercase' failed"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 0,
+        "total_checks": 1,
+        "baseline_latency_sec": 2.623,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":466950,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'language_is' failed",
+          "Check 'contains_all' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.231,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":433611,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_max' failed",
+          "Check 'contains_none' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 0,
+        "total_checks": 3,
+        "baseline_latency_sec": 34.479,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":445049,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'sentence_count' failed",
+          "Check 'contains_none' failed",
+          "Check 'word_count_max' failed"
+        ],
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 0,
+        "total_checks": 3,
+        "baseline_latency_sec": 35.446,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":433248,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'first_line_equals' failed",
+          "Check 'bullet_count' failed",
+          "Check 'contains_none' failed",
+          "Check 'bullet_words_max' failed"
+        ],
+        "baseline_checks_passed": 4,
+        "eval_checks_passed": 0,
+        "total_checks": 4,
+        "baseline_latency_sec": 35.274,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":435846,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'starts_with' failed",
+          "Check 'summary_words_max' failed",
+          "Check 'paragraph_count_max' failed",
+          "Check 'contains_none' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 5,
+        "eval_checks_passed": 0,
+        "total_checks": 5,
+        "baseline_latency_sec": 37.619,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":479408,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'day_list_shape' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.633,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "INS-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":482371,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'no_code_fence' failed",
+          "Check 'json_types' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 3,
+        "baseline_latency_sec": 37.083,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":655618,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'latency' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.463,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":551085,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.554,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":457519,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'latency' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.656,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":336200,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.723,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":504178,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 16.613,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":483886,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 34.606,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":494604,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 33.922,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":411798,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 35.382,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "LAT-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":413427,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'latency' failed",
+          "Check 'output_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.134,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":453289,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'contains_all' failed"
         ],
         "baseline_checks_passed": 2,
         "eval_checks_passed": 1,
         "total_checks": 2,
-        "baseline_latency_sec": 31.816,
-        "eval_latency_sec": 14.281
+        "baseline_latency_sec": 3.669,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":424190,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'contains_any' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 33.778,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":409211,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'contains_any' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.056,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":411749,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_between' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 17.446,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":453495,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_between' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 21.487,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":468661,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_between' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 15.224,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":395528,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_between' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.824,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":470367,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_between' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 38.963,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "REF-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":405971,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'word_count_between' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 1,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.563,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":428593,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.784,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":411923,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 6.376,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":405360,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 2.873,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":402225,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 19.49,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":415017,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 27.363,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":503479,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 17.471,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":384573,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 39.251,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":413063,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 34.42,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "STY-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":431301,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'style_feature_distance' failed",
+          "Check 'output_length_stats' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.348,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":472876,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.855,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":457876,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.502,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":363336,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.565,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":497859,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.325,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":417756,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.278,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":411957,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.261,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":400502,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.251,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":412554,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.269,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TOK-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":409627,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'output_equals' failed",
+          "Check 'input_tokens_stable' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.264,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":387635,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 2.595,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-E2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":376198,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.678,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-E3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":464515,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.46,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-G1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":295104,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 36.921,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-G2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":434172,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 32.82,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-G3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":403933,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.603,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-X1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":397134,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.544,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-X2",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":405181,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.494,
+        "eval_latency_sec": 0
+      },
+      {
+        "canary_id": "TRN-X3",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Execution error: alias status 502: {\"text\":\"\",\"input_tokens\":0,\"output_tokens\":0,\"finish_reason\":\"\",\"latency\":392443,\"error\":\"local provider status 404: {\\\"error\\\":\\\"model 'qwen2.5:3b-instruct-q4_K_M' not found\\\"}\",\"retry_count\":0}",
+          "Check 'finish_reason' failed",
+          "Check 'ends_with' failed"
+        ],
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 0,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.138,
+        "eval_latency_sec": 0
       }
     ],
     "drift_analysis": {
-      "detected": true,
-      "confidence": 2.4930555555555554,
-      "predicted_layer": "request_config",
+      "detected": false,
+      "confidence": 0,
+      "predicted_layer": "unknown",
       "evidence": [
-        "CAP-G1: response changed",
-        "CAP-G3: response changed",
-        "CAP-G3: expected 3, 5, 7, 14, 19, 28, 37, 42, 50, 56, 63, 71, 81, 88, 95 check changed",
-        "CAP-G3: expected 659 check changed",
-        "CAP-X1: response changed",
-        "CAP-X1: expected $19.23 check changed",
-        "CAP-X2: response changed",
-        "CAP-X2: expected final_field_json check changed",
-        "CAP-X3: response changed",
-        "CAP-X3: finish reason changed",
-        "CAP-X3: expected x=1, y=2, z=3 check changed",
-        "DET-E1: expected identical_across_runs check changed",
-        "DET-E2: response changed",
-        "DET-E2: expected identical_across_runs check changed",
-        "DET-E3: response changed",
-        "DET-E3: expected contains_any check changed",
-        "DET-E3: expected identical_across_runs check changed",
-        "DET-G1: response changed",
-        "DET-G1: expected identical_across_runs check changed",
-        "DET-G1: expected mean_edit_distance check changed",
-        "DET-G2: response changed",
-        "DET-G2: expected identical_across_runs check changed",
-        "DET-G2: expected mean_edit_distance check changed",
-        "DET-G3: response changed",
-        "DET-G3: expected identical_across_runs check changed",
-        "DET-G3: expected mean_edit_distance check changed",
-        "DET-X1: response changed",
-        "DET-X1: expected identical_across_runs check changed",
-        "DET-X1: expected mean_edit_distance check changed",
-        "DET-X2: response changed",
-        "DET-X2: expected identical_across_runs check changed",
-        "DET-X2: expected mean_edit_distance check changed",
-        "DET-X3: response changed",
-        "DET-X3: expected identical_across_runs check changed",
-        "DET-X3: expected mean_edit_distance check changed",
-        "FMT-E2: response changed",
-        "FMT-G1: response changed",
-        "FMT-G2: response changed",
-        "FMT-G3: response changed",
-        "FMT-G3: expected 2 check changed",
-        "FMT-G3: expected 3 check changed",
-        "FMT-X1: response changed",
-        "FMT-X1: expected json_valid check changed",
-        "FMT-X1: expected json_types check changed",
-        "FMT-X2: response changed",
-        "FMT-X2: expected csv_shape check changed",
-        "FMT-X3: response changed",
-        "FMT-X3: expected outline_shape check changed",
-        "INS-E1: response changed",
-        "INS-E2: response changed",
-        "INS-E3: response changed",
-        "INS-E3: expected contains_all check changed",
-        "INS-G1: response changed",
-        "INS-G1: expected contains_none check changed",
-        "INS-G2: response changed",
-        "INS-G2: expected 2 check changed",
-        "INS-G3: response changed",
-        "INS-G3: expected [BOT] check changed",
-        "INS-X1: response changed",
-        "INS-X1: expected Summary: check changed",
-        "INS-X1: expected 20 check changed",
-        "INS-X2: response changed",
-        "INS-X2: expected day_list_shape check changed",
-        "INS-X3: response changed",
-        "INS-X3: expected json_valid check changed",
-        "LAT-E1: expected latency check changed",
-        "LAT-E2: expected latency check changed",
-        "LAT-E2: expected output_tokens_stable check changed",
-        "LAT-E3: expected latency check changed",
-        "LAT-G1: response changed",
-        "LAT-G1: expected latency check changed",
-        "LAT-G1: expected output_tokens_stable check changed",
-        "LAT-G2: response changed",
-        "LAT-G2: expected latency check changed",
-        "LAT-G2: expected output_tokens_stable check changed",
-        "LAT-G3: response changed",
-        "LAT-G3: expected latency check changed",
-        "LAT-G3: expected output_tokens_stable check changed",
-        "LAT-X1: response changed",
-        "LAT-X1: finish reason changed",
-        "LAT-X1: expected latency check changed",
-        "LAT-X1: expected output_tokens_stable check changed",
-        "LAT-X2: response changed",
-        "LAT-X2: expected latency check changed",
-        "LAT-X2: expected output_tokens_stable check changed",
-        "REF-E1: response changed",
-        "REF-E2: response changed",
-        "REF-E2: finish reason changed",
-        "REF-E3: response changed",
-        "REF-G1: response changed",
-        "REF-G1: expected word_count_between check changed",
-        "REF-G2: response changed",
-        "REF-G2: expected word_count_between check changed",
-        "REF-G3: response changed",
-        "REF-G3: expected word_count_between check changed",
-        "REF-X1: response changed",
-        "REF-X1: expected word_count_between check changed",
-        "REF-X2: response changed",
-        "REF-X2: expected word_count_between check changed",
-        "REF-X3: response changed",
-        "REF-X3: expected word_count_between check changed",
-        "STY-E1: response changed",
-        "STY-E1: expected style_feature_distance check changed",
-        "STY-E1: expected output_length_stats check changed",
-        "STY-E2: response changed",
-        "STY-E2: expected style_feature_distance check changed",
-        "STY-E2: expected output_length_stats check changed",
-        "STY-E3: response changed",
-        "STY-E3: expected style_feature_distance check changed",
-        "STY-E3: expected output_length_stats check changed",
-        "STY-G1: response changed",
-        "STY-G1: expected style_feature_distance check changed",
-        "STY-G1: expected output_length_stats check changed",
-        "STY-G2: response changed",
-        "STY-G2: expected style_feature_distance check changed",
-        "STY-G2: expected output_length_stats check changed",
-        "STY-G3: response changed",
-        "STY-G3: expected style_feature_distance check changed",
-        "STY-G3: expected output_length_stats check changed",
-        "STY-X1: response changed",
-        "STY-X1: expected style_feature_distance check changed",
-        "STY-X1: expected output_length_stats check changed",
-        "STY-X3: response changed",
-        "STY-X3: expected style_feature_distance check changed",
-        "STY-X3: expected output_length_stats check changed",
-        "TOK-E1: expected input_tokens_stable check changed",
-        "TOK-E2: expected input_tokens_stable check changed",
-        "TOK-E3: expected input_tokens_stable check changed",
-        "TRN-E1: response changed",
-        "TRN-E1: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-E2: response changed",
-        "TRN-E2: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-E3: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-G1: response changed",
-        "TRN-G1: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-G2: response changed",
-        "TRN-G3: response changed",
-        "TRN-G3: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-X2: response changed",
-        "TRN-X2: expected \u003c\u003cEND\u003e\u003e check changed",
-        "TRN-X3: response changed",
-        "TRN-X3: expected \u003c\u003cEND\u003e\u003e check changed"
+        "no comparable successful responses"
       ]
     },
-    "duration": "4m22.9330168s",
+    "duration": "48.274466ms",
     "metrics": {
-      "detection_accuracy": 1,
-      "false_negative_rate": 0,
+      "detection_accuracy": 0,
+      "false_negative_rate": 1,
       "false_positive_rate": 0,
       "layer_attribution_accuracy": 0,
-      "precision": 1,
-      "recall": 1
+      "precision": 0,
+      "recall": 0
     },
     "model": "qwen2.5:3b-instruct-q4_K_M",
-    "with_baseline": 23
+    "with_baseline": 0
   },
-  "timestamp": "2026-11-13T04:21:46.972557Z"
+  "timestamp": "2026-11-13T06:12:40.796342806Z"
 }

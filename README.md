@@ -1,8 +1,8 @@
 # LLM Monitoring
 
-LLM Monitoring runs synthetic canaries through the stable `support-bot-v1`
-alias. It detects changes in the configured model, safety behavior, request
-configuration, and serving route without accepting real user prompts.
+LLM Monitoring runs the precision-reasoning performance benchmark through the
+stable `support-bot-v1` alias. It measures exact-answer performance without
+accepting real user prompts.
 
 ## Requirements
 

@@ -36,7 +36,7 @@ type runRequestPayload struct {
 }
 
 func serve(cfg monitor.Config) error {
-	library, err := canary.Load("canaries_fixed.json")
+	library, err := canary.Load("precision_reasoning_benchmark.json")
 	if err != nil {
 		return err
 	}

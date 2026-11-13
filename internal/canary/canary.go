@@ -195,13 +195,43 @@ type Library struct {
 	CheckTypes map[string]string `json:"check_types"`
 }
 
+type performanceBenchmark struct {
+	Dataset struct {
+		Name        string `json:"name"`
+		Version     string `json:"version"`
+		Description string `json:"description"`
+	} `json:"dataset"`
+	Items []performanceItem `json:"items"`
+}
+
+type performanceItem struct {
+	ID              string `json:"id"`
+	Category        string `json:"category"`
+	Difficulty      string `json:"difficulty"`
+	Prompt          string `json:"prompt"`
+	Answer          string `json:"answer"`
+	EstimatedTokens int    `json:"estimated_prompt_tokens"`
+}
+
 func Load(path string) (Library, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return Library{}, fmt.Errorf("read canary library: %w", err)
 	}
+	var shape struct {
+		Items []json.RawMessage `json:"items"`
+	}
+	if err := json.Unmarshal(data, &shape); err != nil {
+		return Library{}, fmt.Errorf("decode canary library: %w", err)
+	}
 	var library Library
-	if err := json.Unmarshal(data, &library); err != nil {
+	if len(shape.Items) > 0 {
+		var benchmark performanceBenchmark
+		if err := json.Unmarshal(data, &benchmark); err != nil {
+			return Library{}, fmt.Errorf("decode performance benchmark: %w", err)
+		}
+		library = benchmarkLibrary(benchmark)
+	} else if err := json.Unmarshal(data, &library); err != nil {
 		return Library{}, fmt.Errorf("decode canary library: %w", err)
 	}
 	if err := Validate(library); err != nil {
@@ -211,11 +241,11 @@ func Load(path string) (Library, error) {
 }
 
 func Validate(library Library) error {
-	if len(library.Tasks) != 81 {
-		return fmt.Errorf("canary library contains %d tasks; want 81", len(library.Tasks))
+	if len(library.Tasks) == 0 {
+		return errors.New("canary library contains no tasks")
 	}
-	if len(library.Divisions) != 9 {
-		return fmt.Errorf("canary library contains %d divisions; want 9", len(library.Divisions))
+	if len(library.Divisions) == 0 {
+		return errors.New("canary library contains no divisions")
 	}
 	seen := make(map[string]bool, len(library.Tasks))
 	divisions := make(map[string]bool, len(library.Divisions))
@@ -251,6 +281,40 @@ func Validate(library Library) error {
 		seen[task.ID] = true
 	}
 	return nil
+}
+
+func benchmarkLibrary(benchmark performanceBenchmark) Library {
+	divisions := make(map[string]Division)
+	tasks := make([]Task, 0, len(benchmark.Items))
+	for _, item := range benchmark.Items {
+		if _, ok := divisions[item.Category]; !ok {
+			divisions[item.Category] = Division{ID: item.Category, TargetsLayer: "performance", PrimaryMetrics: []string{"accuracy"}}
+		}
+		tier := "general"
+		if item.Difficulty == "easy" {
+			tier = "easy"
+		} else if item.Difficulty == "hard" || item.Difficulty == "expert" {
+			tier = "expensive"
+		}
+		maxTokens := item.EstimatedTokens + 256
+		if maxTokens < 64 {
+			maxTokens = 64
+		}
+		tasks = append(tasks, Task{
+			ID: item.ID, Division: item.Category, Tier: tier, Prompt: item.Prompt,
+			MaxTokens: maxTokens, Checks: []Check{{Type: "output_equals", Value: item.Answer}},
+		})
+	}
+	divisionList := make([]Division, 0, len(divisions))
+	for _, division := range divisions {
+		divisionList = append(divisionList, division)
+	}
+	sort.Slice(divisionList, func(i, j int) bool { return divisionList[i].ID < divisionList[j].ID })
+	return Library{
+		Meta:      map[string]any{"name": benchmark.Dataset.Name, "version": benchmark.Dataset.Version, "description": benchmark.Dataset.Description, "mode": "performance"},
+		Divisions: divisionList, Tasks: tasks,
+		CheckTypes: map[string]string{"output_equals": "Exact trimmed output match against the benchmark answer."},
+	}
 }
 
 func (l Library) FilterTier(tiers ...string) []Task {

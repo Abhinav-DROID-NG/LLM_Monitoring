@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/benchmark"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/canary"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/evalspec"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/monitor"
@@ -66,13 +65,13 @@ func run() error {
 	case "compare":
 		return legacyEvaluate(cfg)
 	case "validate":
-		_, err := canary.Load("canaries_fixed.json")
+		_, err := canary.Load("precision_reasoning_benchmark.json")
 		if err == nil {
 			fmt.Println("canary library is valid")
 		}
 		return err
 	case "privacy-check":
-		library, err := canary.Load("canaries_fixed.json")
+		library, err := canary.Load("precision_reasoning_benchmark.json")
 		if err != nil {
 			return err
 		}
@@ -87,7 +86,7 @@ func run() error {
 }
 
 func execute(command string, cfg monitor.Config) error {
-	library, err := canary.Load("canaries_fixed.json")
+	library, err := canary.Load("precision_reasoning_benchmark.json")
 	if err != nil {
 		return err
 	}
@@ -218,74 +217,6 @@ type ModelEvalResult struct {
 	ChecksPassRate float64
 }
 
-type BenchmarkModelResult struct {
-	Model         string  `json:"model"`
-	Tasks         int     `json:"tasks"`
-	ChecksPassed  int     `json:"checks_passed"`
-	ChecksTotal   int     `json:"checks_total"`
-	PassRate      float64 `json:"pass_rate"`
-	AvgLatencySec float64 `json:"avg_latency_sec"`
-}
-
-type BenchmarkSuiteResult struct {
-	Name    string                 `json:"name"`
-	Version string                 `json:"version"`
-	Models  []BenchmarkModelResult `json:"models"`
-}
-
-func runBenchmarkComparisons(cfg monitor.Config, router *monitor.Router) ([]BenchmarkSuiteResult, error) {
-	paths := []string{"canary_suite.json", "smoke_benchmark.json"}
-	results := make([]BenchmarkSuiteResult, 0, len(paths))
-	for _, path := range paths {
-		suite, err := benchmark.Load(path)
-		if err != nil {
-			return nil, err
-		}
-		result := BenchmarkSuiteResult{Name: suite.Name, Version: suite.Version}
-		for _, model := range []string{cfg.ModelA, cfg.ModelB, cfg.ModelC} {
-			layers := healthy(cfg)
-			layers.Model = model
-			router.SetLayers(layers)
-			started := time.Now()
-			observations := monitor.Run(context.Background(), suite.Library, router, cfg.Concurrency)
-			var passed, total int
-			for _, observation := range observations {
-				for _, check := range observation.Checks {
-					total++
-					if check.Passed {
-						passed++
-					}
-				}
-			}
-			result.Models = append(result.Models, BenchmarkModelResult{Model: model, Tasks: len(observations), ChecksPassed: passed, ChecksTotal: total,
-				PassRate: safePercent(passed, total), AvgLatencySec: averageLatency(observations, started)})
-		}
-		results = append(results, result)
-	}
-	return results, nil
-}
-
-func safePercent(passed, total int) float64 {
-	if total == 0 {
-		return 0
-	}
-	return float64(passed) * 100 / float64(total)
-}
-
-func averageLatency(observations []monitor.Observation, started time.Time) float64 {
-	if len(observations) == 0 {
-		return 0
-	}
-	var total int64
-	for _, observation := range observations {
-		total += observation.LatencyMS
-	}
-	if total == 0 {
-		return time.Since(started).Seconds() / float64(len(observations))
-	}
-	return float64(total) / 1000 / float64(len(observations))
-}
-
 func evaluateModel(modelName string, baseline []monitor.Observation, library canary.Library, router *monitor.Router, endpoint string, cfg monitor.Config) ModelEvalResult {
 	layers := healthy(cfg)
 	layers.Model = modelName
@@ -412,7 +343,7 @@ func legacyEvaluate(cfg monitor.Config) error {
 	}
 	fmt.Printf("Loaded baseline from: %s (%d observations, Model A: %s)\n\n", baselinePath, len(baseline), cfg.ModelA)
 
-	library, err := canary.Load("canaries_fixed.json")
+	library, err := canary.Load("precision_reasoning_benchmark.json")
 	if err != nil {
 		return err
 	}
@@ -423,10 +354,6 @@ func legacyEvaluate(cfg monitor.Config) error {
 	aliasServer := httptest.NewServer(router.Handler())
 	defer aliasServer.Close()
 	router.SetCanaryAllowlist(library)
-	benchmarkResults, err := runBenchmarkComparisons(cfg, router)
-	if err != nil {
-		return err
-	}
 
 	// Evaluate Model B and Model C sequentially
 	resB := evaluateModel(cfg.ModelB, baseline, library, router, aliasServer.URL+"/v1/chat/completions", cfg)
@@ -492,7 +419,6 @@ func legacyEvaluate(cfg monitor.Config) error {
 			"metrics":         score(cEvalResults),
 			"comparisons":     resC.Comparisons,
 		},
-		"benchmarks": benchmarkResults,
 	}
 
 	fmt.Println("\n==========================================================================================")
@@ -512,13 +438,6 @@ func legacyEvaluate(cfg monitor.Config) error {
 	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Drift Detected", "No (Baseline)", fmt.Sprintf("%v (conf: %.2f)", resB.Analysis.Detected, resB.Analysis.Confidence), fmt.Sprintf("%v (conf: %.2f)", resC.Analysis.Detected, resC.Analysis.Confidence))
 	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Attributed Layer", "N/A", resB.Analysis.PredictedLayer, resC.Analysis.PredictedLayer)
 	fmt.Println("------------------------------------------------------------------------------------------")
-	fmt.Println("\nBenchmark suites")
-	for _, suite := range benchmarkResults {
-		fmt.Printf("%s (%s)\n", suite.Name, suite.Version)
-		for _, model := range suite.Models {
-			fmt.Printf("  %-32s %6.1f%% checks passed, %.3fs avg latency (%d tasks)\n", model.Model, model.PassRate, model.AvgLatencySec, model.Tasks)
-		}
-	}
 
 	if len(resB.BelowDetails) > 0 {
 		fmt.Printf("\n>>> MODEL B (%s) REGRESSIONS BELOW BASELINE (%d):\n", cfg.ModelB, len(resB.BelowDetails))

@@ -14,7 +14,7 @@ const PAGE_HEADERS: Record<NavigationTab, { title: string; subtitle: string }> =
   },
   'canary-testing': {
     title: 'Synthetic Canary Testing',
-    subtitle: 'Inspect and execute the 81-probe synthetic canary suite without storing user prompts',
+    subtitle: 'Inspect and execute the 51-item precision performance benchmark',
   },
   'change-detection': {
     title: 'Behaviour Change Detection',

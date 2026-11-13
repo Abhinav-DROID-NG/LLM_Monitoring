@@ -7,15 +7,15 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-	lib, err := Load(filepath.Join("..", "..", "canaries_fixed.json"))
+	lib, err := Load(filepath.Join("..", "..", "precision_reasoning_benchmark.json"))
 	if err != nil {
 		t.Fatalf("Load failed: %v", err)
 	}
-	if len(lib.Tasks) != 81 {
-		t.Fatalf("expected 81 tasks, got %d", len(lib.Tasks))
+	if len(lib.Tasks) != 51 {
+		t.Fatalf("expected 51 tasks, got %d", len(lib.Tasks))
 	}
-	if len(lib.Divisions) != 9 {
-		t.Fatalf("expected 9 divisions, got %d", len(lib.Divisions))
+	if len(lib.Divisions) != 5 {
+		t.Fatalf("expected 5 divisions, got %d", len(lib.Divisions))
 	}
 }
 
@@ -36,12 +36,12 @@ func TestCheckPreservesNestedParameters(t *testing.T) {
 }
 
 func TestFilterTierAndRequestIdentity(t *testing.T) {
-	lib, err := Load(filepath.Join("..", "..", "canaries_fixed.json"))
+	lib, err := Load(filepath.Join("..", "..", "precision_reasoning_benchmark.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := len(lib.FilterTier("easy")); got != 27 {
-		t.Fatalf("easy task count = %d, want 27", got)
+	if got := len(lib.FilterTier("easy")); got != 7 {
+		t.Fatalf("easy task count = %d, want 7", got)
 	}
 	task := lib.Tasks[0]
 	first := RequestIdentity(task, "model-a", 0.2, 128, "system", "")

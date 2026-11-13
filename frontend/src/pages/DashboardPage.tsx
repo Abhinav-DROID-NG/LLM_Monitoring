@@ -203,7 +203,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ store, onNavigate 
       {!baseline?.available && runHistory.length === 0 ? (
         <EmptyView
           title="No Baseline or Monitoring Runs Recorded"
-          description="Execute a baseline run first so ModelWatch can establish statistical distributions across all 81 synthetic canaries."
+              description="Execute a baseline run first so ModelWatch can establish performance baselines across all 51 benchmark items."
           action={
             <button
               onClick={() => onNavigate('canary-testing')}
