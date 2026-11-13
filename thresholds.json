@@ -1,0 +1,18 @@
+{
+  "fdr_q": 0.05,
+  "min_effect": {
+    "proportion_abs": 0.10,
+    "latency_relative": 0.25,
+    "output_tokens_relative": 0.15,
+    "style_distance_z": 3.0
+  },
+  "noise_floors": {
+    "proportion_abs": 0.04,
+    "latency_relative": 0.08
+  },
+  "min_samples": {
+    "proportion": 10,
+    "continuous": 8
+  },
+  "baseline_cycles": 10
+}

@@ -32,6 +32,51 @@ type Detection struct {
 	Changes  []FeatureChange `json:"changes"`
 }
 
+func DetectWithThresholds(base Baseline, current []Observation, thresholds Thresholds) Detection {
+	now := observationFeatures(current)
+	pValues := make([]float64, 0, len(base.Features))
+	keys := make([]string, 0, len(base.Features))
+	effects := make([]float64, 0, len(base.Features))
+	for key, stats := range base.Features {
+		value, ok := now[key]
+		if !ok {
+			continue
+		}
+		floor := noiseFloor(key, stats.Mean)
+		effect := value - stats.Mean
+		z := effect / math.Max(stats.SD, floor)
+		keys = append(keys, key)
+		effects = append(effects, z)
+		pValues = append(pValues, Normal2SidedP(z))
+	}
+	adjusted, rejected := BenjaminiHochberg(pValues, thresholds.FDRQ)
+	changes := make([]FeatureChange, 0)
+	for i, key := range keys {
+		stats := base.Features[key]
+		value := now[key]
+		minEffect := thresholds.MinEffect["proportion_abs"]
+		if strings.Contains(key, "latency") {
+			minEffect = thresholds.MinEffect["latency_relative"]
+		}
+		if minEffect == 0 {
+			minEffect = 0.1
+		}
+		effect := value - stats.Mean
+		if rejected[i] && math.Abs(effect) >= minEffect {
+			direction := "increased"
+			if effect < 0 {
+				direction = "decreased"
+			}
+			changes = append(changes, FeatureChange{Feature: key, Direction: direction,
+				EffectSize: effects[i], PValue: adjusted[i], Baseline: stats.Mean, Current: value})
+		}
+	}
+	sort.Slice(changes, func(i, j int) bool {
+		return math.Abs(changes[i].EffectSize) > math.Abs(changes[j].EffectSize)
+	})
+	return Detection{Detected: len(changes) > 0, Changes: changes}
+}
+
 func BuildBaseline(runs [][]Observation) Baseline {
 	values := make(map[string][]float64)
 	for _, run := range runs {
