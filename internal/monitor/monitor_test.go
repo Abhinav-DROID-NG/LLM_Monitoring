@@ -91,7 +91,7 @@ func TestAliasRejectsRealUserPrompt(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer response.Body.Close()
-	if response.StatusCode != http.StatusBadRequest {
+	if response.StatusCode != http.StatusForbidden {
 		t.Fatalf("real prompt was accepted with status %d", response.StatusCode)
 	}
 }

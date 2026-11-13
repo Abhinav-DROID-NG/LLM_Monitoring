@@ -24,7 +24,6 @@ import (
 const Alias = "support-bot-v1"
 
 type Config struct {
-	APIKey        string        `json:"api_key"`
 	Endpoint      string        `json:"endpoint"`
 	LocalEndpoint string        `json:"local_endpoint"`
 	ModelA        string        `json:"model_a"`
@@ -417,7 +416,7 @@ func (r *Router) Handler() http.Handler {
 		if len(allowed) > 0 {
 			prompt := payload.Messages[len(payload.Messages)-1].Text
 			if _, ok := allowed[canaryPromptHash(prompt)]; !ok {
-				http.Error(w, "prompt is not an allowed synthetic canary", http.StatusBadRequest)
+				http.Error(w, "prompt is not an allowed synthetic canary", http.StatusForbidden)
 				return
 			}
 		}
