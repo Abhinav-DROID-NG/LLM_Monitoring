@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/canary"
+	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/evalspec"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/monitor"
 )
 
@@ -296,6 +297,10 @@ func evaluateModel(modelName string, baseline []monitor.Observation, library can
 }
 
 func evaluate(cfg monitor.Config) error {
+	spec, err := evalspec.Load("problem3_test_cases.json")
+	if err != nil {
+		return err
+	}
 	baseline, baselinePath, err := loadLatestBaseline(cfg.DataDir)
 	if err != nil {
 		return err
@@ -353,6 +358,11 @@ func evaluate(cfg monitor.Config) error {
 		"timestamp":      time.Now().UTC(),
 		"baseline_file":  baselinePath,
 		"baseline_model": cfg.ModelA,
+		"evaluation_spec": map[string]int{
+			"single_layer":  len(spec.SingleLayer),
+			"combined":      len(spec.Combined),
+			"failure_cases": len(spec.FailureCases),
+		},
 		"model_b": map[string]any{
 			"model":           cfg.ModelB,
 			"duration":        resB.TotalDuration.String(),

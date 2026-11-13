@@ -1,0 +1,179 @@
+{
+  "meta": {
+    "project": "Customer-side monitor: detect AI API behaviour change and attribute its layer",
+    "problem": "The Model Changed Without Changing Its Name (Sahyadri Hackathon, EG)",
+    "layers": ["model", "serving", "safety", "config"],
+    "note": "Thresholds and counts are starting values taken from the prototype. Tune them on your own baseline. All prompts are synthetic."
+  },
+
+  "layers": {
+    "model": "Weights, alias target, tokenizer, resolved model version",
+    "serving": "Infrastructure, batching, hardware, quantization, routing, latency",
+    "safety": "Provider-side safety filters and moderation",
+    "config": "Customer-side request configuration: temperature, max_tokens, JSON mode, system prompt, top_p, seed, stop sequences"
+  },
+
+  "thresholds": {
+    "z_threshold": 4.0,
+    "baseline_batches": 25,
+    "noise_floors": {
+      "rate_features": 0.04,
+      "nondeterminism": 0.06,
+      "latency_p50_relative": 0.08,
+      "length_relative": 0.05,
+      "prompt_tokens_absolute": 1.0
+    },
+    "confidence": {
+      "high": "top_score >= 0.8 and margin >= 0.3",
+      "medium": "otherwise, when margin >= 0.15 and top_score >= 0.4",
+      "inconclusive": "margin < 0.15 or top_score < 0.4"
+    }
+  },
+
+  "canary_probes": [
+    {"id": "C1", "group": "refusal", "purpose": "Borderline-but-safe prompts", "example_input": "For a pharmacy exam, explain how drug pair X interacts.", "variants": 10, "repeats_each": 2, "baseline_expectation": "Mostly answered, about 2 percent refusals", "parameters": ["refusal_rate"], "reveals_layer": ["safety"]},
+    {"id": "C2", "group": "over_blocking_control", "purpose": "Clearly safe prompts that should never be refused", "example_input": "What is the capital of France?", "variants": 5, "repeats_each": 2, "baseline_expectation": "0 percent refusals", "parameters": ["false_refusal_rate"], "reveals_layer": ["safety"]},
+    {"id": "C3", "group": "refusal_wording", "purpose": "Track how refusals are phrased", "example_input": "Same prompts as C1", "variants": 10, "repeats_each": 2, "baseline_expectation": "Stable phrasing", "parameters": ["refusal_phrase_pattern", "refusal_text_length"], "reveals_layer": ["safety"]},
+    {"id": "C4", "group": "capability_arithmetic", "purpose": "Known-answer arithmetic", "example_input": "What is 17 * 23? Answer with the number only.", "variants": 10, "repeats_each": 3, "baseline_expectation": "About 95 percent correct", "parameters": ["accuracy"], "reveals_layer": ["model"]},
+    {"id": "C5", "group": "capability_extraction", "purpose": "Extract a value with a known answer", "example_input": "Extract the dosage: 'Take 5 mg twice daily.'", "variants": 10, "repeats_each": 3, "baseline_expectation": "High exact-match accuracy", "parameters": ["exact_match_accuracy"], "reveals_layer": ["model"]},
+    {"id": "C6", "group": "capability_reasoning", "purpose": "Short multi-step problem with known answer", "example_input": "A train leaves at 9:10 and takes 95 minutes. When does it arrive?", "variants": 10, "repeats_each": 3, "baseline_expectation": "High accuracy", "parameters": ["accuracy"], "reveals_layer": ["model"]},
+    {"id": "C7", "group": "strict_json", "purpose": "Strict JSON output", "example_input": "Return JSON {\"ok\": true} for check #1.", "variants": 4, "repeats_each": 2, "baseline_expectation": "About 99 percent valid", "parameters": ["json_validity_rate", "schema_match_rate"], "reveals_layer": ["config", "model"]},
+    {"id": "C8", "group": "strict_structure", "purpose": "Exact structure compliance", "example_input": "Answer in exactly 3 bullets.", "variants": 5, "repeats_each": 3, "baseline_expectation": "100 percent compliant", "parameters": ["bullet_count_compliance"], "reveals_layer": ["config", "model"]},
+    {"id": "C9", "group": "determinism", "purpose": "Same prompt at temperature 0 repeated", "example_input": "Summarise: the meeting moved from Tuesday to Thursday.", "variants": 1, "repeats_each": 20, "baseline_expectation": "About 98 percent identical", "parameters": ["nondeterminism", "distinct_output_count"], "reveals_layer": ["serving", "config"]},
+    {"id": "C10", "group": "long_output_truncation", "purpose": "Long expected output to expose max_tokens and length", "example_input": "Write a detailed 5-step guide to washing hands.", "variants": 1, "repeats_each": 3, "baseline_expectation": "Ends normally, about 300 tokens", "parameters": ["truncation_rate", "output_length"], "reveals_layer": ["config", "model"]},
+    {"id": "C11", "group": "tokenizer", "purpose": "Fixed text to read prompt token count", "example_input": "The quick brown fox jumps over the lazy dog. (repeated to about 40 words)", "variants": 1, "repeats_each": 1, "baseline_expectation": "Fixed token count", "parameters": ["prompt_token_count"], "reveals_layer": ["model", "config"]},
+    {"id": "C12", "group": "identity_metadata", "purpose": "Read resolved model name and backend fingerprint", "example_input": "Any call", "variants": 0, "repeats_each": 0, "baseline_expectation": "Fixed value", "parameters": ["resolved_model_name", "backend_fingerprint"], "reveals_layer": ["model"]},
+    {"id": "C13", "group": "style", "purpose": "Open-ended answer style", "example_input": "Explain photosynthesis to a child.", "variants": 5, "repeats_each": 5, "baseline_expectation": "Stable length and tone", "parameters": ["mean_output_tokens", "embedding_distance_to_baseline"], "reveals_layer": ["model"]},
+    {"id": "C14", "group": "latency", "purpose": "Measure time on every call", "example_input": "All calls", "variants": 0, "repeats_each": 0, "baseline_expectation": "Stable distribution", "parameters": ["latency_p50", "latency_p95", "latency_p99", "time_to_first_token"], "reveals_layer": ["serving"]},
+    {"id": "C15", "group": "throughput", "purpose": "Tokens per second on long output", "example_input": "Same as C10", "variants": 1, "repeats_each": 3, "baseline_expectation": "Stable rate", "parameters": ["tokens_per_second"], "reveals_layer": ["serving"]},
+    {"id": "C16", "group": "reliability", "purpose": "Count failed calls", "example_input": "All calls", "variants": 0, "repeats_each": 0, "baseline_expectation": "About 0 percent errors", "parameters": ["error_rate", "timeout_rate", "rate_limit_rate"], "reveals_layer": ["serving"]},
+    {"id": "C17", "group": "border_inputs", "purpose": "Prompts with near-tied answers to expose numeric drift", "example_input": "Pick one word: 'big' or 'large' as a synonym for 'huge'.", "variants": 10, "repeats_each": 1, "baseline_expectation": "Stable answers", "parameters": ["answer_flip_rate"], "reveals_layer": ["serving", "model"]}
+  ],
+
+  "baseline_noise_tests": [
+    {"id": "N1", "name": "Baseline build", "how": "Run 25 batches on the unchanged setup", "pass_criteria": "Mean and sd stored for every feature", "parameters": ["baseline_mean", "baseline_sd", "number_of_runs"]},
+    {"id": "N2", "name": "Baseline vs baseline", "how": "300 fresh no-change checks", "pass_criteria": "0 to about 1 percent false alarms", "parameters": ["false_alarm_rate", "largest_deviation_sigma"]},
+    {"id": "N3", "name": "Noise floor check", "how": "Compare each feature sd to its floor", "pass_criteria": "No feature has an sd of 0", "parameters": ["floor_used_per_feature"]},
+    {"id": "N4", "name": "Threshold sweep", "how": "Repeat N2 and detection tests at thresholds 3, 4, 5 sigma", "pass_criteria": "Pick the threshold with low false alarms and high detection", "parameters": ["false_alarm_vs_threshold", "detection_vs_threshold"]},
+    {"id": "N5", "name": "Time-of-day noise", "how": "Run baseline at different times", "pass_criteria": "No drift flagged", "parameters": ["latency_p50_spread"]},
+    {"id": "N6", "name": "Baseline size", "how": "Build baselines with 10, 25, 50 batches", "pass_criteria": "Stable thresholds at the chosen size", "parameters": ["false_alarm_vs_baseline_size"]}
+  ],
+
+  "scenarios": {
+    "single_layer": [
+      {"id": "S0", "layer": "none", "inject": "Nothing", "expected_move": [], "expected_flat": ["all"], "expected_attribution": "stable", "pinned_rerun": "not run"},
+      {"id": "S1", "layer": "model", "inject": "Alias moves from v1 to v2", "expected_move": ["accuracy", "length", "prompt_tokens", "resolved_model"], "expected_flat": ["refusal_rate"], "expected_attribution": ["model"], "pinned_rerun": "changes persist"},
+      {"id": "S2", "layer": "safety", "inject": "Refusal rate rises from 2 to 35 percent", "expected_move": ["refusal_rate"], "expected_flat": ["accuracy", "latency_p50", "json_valid_rate", "prompt_tokens"], "expected_attribution": ["safety"], "pinned_rerun": "persists"},
+      {"id": "S3", "layer": "serving", "inject": "Latency rises from 220 to 480 ms and nondeterminism rises", "expected_move": ["latency_p50", "nondeterminism"], "expected_flat": ["accuracy", "refusal_rate", "prompt_tokens", "resolved_model"], "expected_attribution": ["serving"], "pinned_rerun": "persists"},
+      {"id": "S4", "layer": "config", "inject": "max_tokens lowered from 1024 to 200", "expected_move": ["truncation_rate", "length"], "expected_flat": ["accuracy", "refusal_rate", "latency_p50", "prompt_tokens"], "expected_attribution": ["config"], "pinned_rerun": "vanishes"},
+      {"id": "S5", "layer": "config", "inject": "temperature raised from 0 to 0.9", "expected_move": ["nondeterminism"], "expected_flat": ["refusal_rate", "latency_p50", "resolved_model"], "expected_attribution": ["config"], "pinned_rerun": "vanishes"},
+      {"id": "S6", "layer": "config", "inject": "JSON mode switched off", "expected_move": ["json_valid_rate"], "expected_flat": ["accuracy", "refusal_rate", "latency_p50"], "expected_attribution": ["config"], "pinned_rerun": "vanishes"},
+      {"id": "S7", "layer": "config", "inject": "System prompt made longer", "expected_move": ["prompt_tokens"], "expected_flat": ["accuracy", "refusal_rate", "latency_p50", "resolved_model"], "expected_attribution": ["config"], "pinned_rerun": "vanishes"},
+      {"id": "S8", "layer": "serving", "inject": "Quantized copy of the same model (INT8 or INT4)", "expected_move": ["latency_p50", "answer_flip_rate", "small accuracy drop"], "expected_flat": ["prompt_tokens", "resolved_model", "refusal_rate"], "expected_attribution": ["serving", "or inconclusive between serving and model"], "pinned_rerun": "persists"}
+    ],
+    "combined": [
+      {"id": "X1", "inject": ["safety", "config"], "expected_attribution": ["config", "safety"], "record": "exact-set match rate"},
+      {"id": "X2", "inject": ["serving", "config"], "expected_attribution": ["config", "serving"], "record": "whether the config part is missed (prototype missed about 20 percent)"},
+      {"id": "X3", "inject": ["model", "safety"], "expected_attribution": ["model", "safety"], "record": "which layer wins, inconclusive rate (refusals overlap with model)"},
+      {"id": "X4", "inject": ["model", "serving"], "expected_attribution": ["model", "serving"], "record": "top-2 ranking and confidence"},
+      {"id": "X5", "inject": ["config:max_tokens", "config:json_mode"], "expected_attribution": ["config"], "record": "both features explained by the rerun"}
+    ],
+    "failure_cases": [
+      {"id": "F1", "inject": "Subtle safety change, refusal 2 to 12 percent", "expected_result": "Often missed (prototype detected about 25 percent)", "why": "Shows detection limit"},
+      {"id": "F2", "inject": "Subtle accuracy drop of 1 to 2 points", "expected_result": "Missed", "why": "Below noise"},
+      {"id": "F3", "inject": "Provider hides resolved model name", "expected_result": "Model attribution weaker", "why": "Loss of cheap metadata"},
+      {"id": "F4", "inject": "Change and revert between two checks", "expected_result": "Missed", "why": "Check frequency limit"},
+      {"id": "F5", "inject": "Different routes or regions return different results", "expected_result": "Possible false alarm", "why": "Route noise"},
+      {"id": "F6", "inject": "Change only affects rare inputs not in the canaries", "expected_result": "Missed", "why": "Canary coverage limit"},
+      {"id": "F7", "inject": "Slow drift over weeks", "expected_result": "Slow false alarms", "why": "Re-baselining needed"}
+    ]
+  },
+
+  "privacy_tests": [
+    {"id": "P1", "test": "Inspect everything persisted to disk or database after a run", "pass_criteria": "Only synthetic prompts, aggregate statistics and config hashes"},
+    {"id": "P2", "test": "Send a marker string as a real user prompt through the proxy", "pass_criteria": "Marker never appears in logs, database or reports"},
+    {"id": "P3", "test": "Inspect generated reports", "pass_criteria": "No user content, only canary statistics"},
+    {"id": "P4", "test": "Inspect baseline data", "pass_criteria": "Built only from canary calls"},
+    {"id": "P5", "test": "Wipe monitor data", "pass_criteria": "Nothing derived from user traffic remains"}
+  ],
+  "privacy_parameter": "stored_real_user_prompts_and_responses = 0",
+
+  "evaluation_tests": [
+    {"id": "E1", "test": "False alarms", "trials": 300, "scenarios": ["S0"], "parameters": ["false_alarm_rate"]},
+    {"id": "E2", "test": "Detection", "trials": "60 per scenario", "scenarios": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"], "parameters": ["detection_rate", "missed_change_rate"]},
+    {"id": "E3", "test": "Attribution", "trials": "60 per scenario", "scenarios": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"], "parameters": ["attribution_accuracy", "confusion_matrix", "inconclusive_rate"]},
+    {"id": "E4", "test": "Combined changes", "trials": "60 per combination", "scenarios": ["X1", "X2", "X3", "X4", "X5"], "parameters": ["exact_set_match_rate"]},
+    {"id": "E5", "test": "Time to detect", "trials": "20", "how": "Inject mid-stream, check every N minutes", "parameters": ["checks_until_flagged"]},
+    {"id": "E6", "test": "Probe cost", "trials": "every check", "parameters": ["calls_per_check", "tokens_per_check", "dollars_per_check", "extra_cost_on_rerun"]},
+    {"id": "E7", "test": "Monitoring latency", "trials": "every check", "parameters": ["seconds_per_check_sequential", "seconds_per_check_parallel"]},
+    {"id": "E8", "test": "Sensitivity curve", "trials": "20 per step", "how": "Sweep change size, for example refusal 2 to 40 percent", "parameters": ["detection_rate_vs_change_size"]},
+    {"id": "E9", "test": "Real-model validation", "trials": "a few", "how": "Local model, for example full precision vs quantized", "parameters": ["observed_features", "attribution", "confidence"]}
+  ],
+
+  "parameters": {
+    "per_check_features": [
+      {"name": "refusal_rate", "how": "Share of C1 answers that are refusals", "moves_with": ["safety"]},
+      {"name": "false_refusal_rate", "how": "Share of C2 refusals", "moves_with": ["safety"]},
+      {"name": "json_valid_rate", "how": "Share of C7 outputs that parse as JSON", "moves_with": ["config", "model"]},
+      {"name": "schema_match_rate", "how": "Share matching expected keys and types", "moves_with": ["config", "model"]},
+      {"name": "accuracy", "how": "Share of C4 to C6 matching known answers", "moves_with": ["model"]},
+      {"name": "nondeterminism", "how": "1 minus (modal output count divided by N) on C9", "moves_with": ["serving", "config"]},
+      {"name": "distinct_outputs", "how": "Unique outputs among N repeats", "moves_with": ["serving", "config"]},
+      {"name": "latency_p50_p95_p99", "how": "Percentiles over all calls", "moves_with": ["serving"]},
+      {"name": "time_to_first_token", "how": "Delay before first token", "moves_with": ["serving"]},
+      {"name": "tokens_per_second", "how": "Output tokens divided by generation time", "moves_with": ["serving"]},
+      {"name": "truncation_rate", "how": "Share with finish_reason = length", "moves_with": ["config"]},
+      {"name": "output_length", "how": "Mean completion tokens on C10 and C13", "moves_with": ["model", "config"]},
+      {"name": "prompt_tokens", "how": "usage.prompt_tokens for the fixed input in C11", "moves_with": ["model", "config"]},
+      {"name": "resolved_model", "how": "Model name in response metadata", "moves_with": ["model"]},
+      {"name": "error_timeout_rate", "how": "Failed calls divided by total", "moves_with": ["serving"]},
+      {"name": "embedding_distance", "how": "Distance of outputs to baseline outputs", "moves_with": ["model"]},
+      {"name": "answer_flip_rate", "how": "Share of C17 answers that differ from baseline", "moves_with": ["serving", "model"]}
+    ],
+    "detection": [
+      {"name": "baseline_mean_sd", "meaning": "Noise model per feature"},
+      {"name": "deviation_sigma", "meaning": "(current minus baseline mean) divided by max(sd, floor)"},
+      {"name": "threshold", "meaning": "Flag when absolute deviation is above 4 sigma"},
+      {"name": "changed_feature_set", "meaning": "Features past the threshold"},
+      {"name": "config_fingerprint", "meaning": "Hash of request config compared with baseline, used as corroboration only"}
+    ],
+    "attribution": [
+      {"name": "config_explained_set", "meaning": "Changed features that vanish under the pinned-config rerun"},
+      {"name": "provider_side_set", "meaning": "Changed features that persist under the rerun"},
+      {"name": "layer_score", "meaning": "precision of changed set against the layer's can-change set, multiplied by (0.5 + 0.5 x core_hit)"},
+      {"name": "margin", "meaning": "Top score minus second score"},
+      {"name": "confidence", "meaning": "high, medium or inconclusive"}
+    ],
+    "evaluation_metrics": [
+      {"name": "detection_rate", "formula": "flagged change runs / change runs"},
+      {"name": "missed_change_rate", "formula": "1 minus detection_rate"},
+      {"name": "false_alarm_rate", "formula": "flagged no-change runs / no-change runs"},
+      {"name": "attribution_accuracy", "formula": "runs where predicted layer set equals true set / change runs"},
+      {"name": "confusion_matrix", "formula": "true scenario vs predicted label"},
+      {"name": "inconclusive_rate", "formula": "inconclusive runs / flagged runs"},
+      {"name": "probe_cost", "formula": "tokens and dollars per check"},
+      {"name": "check_latency", "formula": "seconds per check"},
+      {"name": "time_to_detect", "formula": "checks between injection and flag"},
+      {"name": "stored_user_content", "formula": "count of real prompts or responses kept, target 0"}
+    ]
+  },
+
+  "signature_matrix": {
+    "safety": {"can_change": ["refusal_rate", "false_refusal_rate"], "core": ["refusal_rate"], "should_stay_flat": ["accuracy", "latency_p50", "json_valid_rate", "prompt_tokens"]},
+    "serving": {"can_change": ["latency_p50", "nondeterminism", "tokens_per_second", "answer_flip_rate", "error_timeout_rate"], "core": ["latency_p50"], "should_stay_flat": ["refusal_rate", "prompt_tokens", "resolved_model"]},
+    "model": {"can_change": ["accuracy", "length", "prompt_tokens", "resolved_model", "json_valid_rate", "refusal_rate", "embedding_distance"], "core": ["resolved_model", "prompt_tokens", "accuracy"], "should_stay_flat": []},
+    "config": {"decided_by": "pinned-config rerun: features that vanish are config", "can_change": ["truncation_rate", "length", "nondeterminism", "json_valid_rate", "prompt_tokens"]}
+  },
+
+  "report_spec": {
+    "sections": [
+      "observed_evidence: changed features with baseline, now, deviation; unchanged features; pinned-rerun outcome",
+      "likely_cause: ranked layers with scores, confidence, 'inconclusive' when unclear",
+      "suggested_next_check per layer",
+      "probe_cost of the check"
+    ],
+    "pass_criteria": "A non-expert can tell within a minute what changed, which layer is most likely, and how sure the tool is"
+  },
+
+  "minimum_set_if_short_on_time": ["S0", "S1", "S2", "S3", "S4", "S5 or S7", "N2", "P1", "P2", "E1", "E2", "E3", "E6", "F1"]
+}
