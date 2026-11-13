@@ -36,6 +36,7 @@ type Config struct {
 	MaxTokens     int           `json:"max_tokens"`
 	DataDir       string        `json:"data_dir"`
 	Concurrency   int           `json:"concurrency"`
+	Mock          bool          `json:"mock"`
 }
 
 func DefaultConfig() Config {
@@ -75,13 +76,18 @@ func (c *Config) Normalize() error {
 }
 
 type Layers struct {
-	Model         string  `json:"model"`
-	Safety        string  `json:"safety"`
-	RequestConfig string  `json:"request_config"`
-	Serving       string  `json:"serving"`
-	Temperature   float64 `json:"temperature"`
-	MaxTokens     int     `json:"max_tokens"`
-	SystemPrompt  string  `json:"system_prompt"`
+	Model          string  `json:"model"`
+	Safety         string  `json:"safety"`
+	RequestConfig  string  `json:"request_config"`
+	Serving        string  `json:"serving"`
+	Temperature    float64 `json:"temperature"`
+	MaxTokens      int     `json:"max_tokens"`
+	SystemPrompt   string  `json:"system_prompt"`
+	ResponseFormat string  `json:"response_format,omitempty"`
+	LatencyMS      int     `json:"latency_ms,omitempty"`
+	JitterMS       int     `json:"jitter_ms,omitempty"`
+	Noise          float64 `json:"noise,omitempty"`
+	Quantization   string  `json:"quantization,omitempty"`
 }
 
 func healthyLayers(c Config) Layers {
@@ -135,24 +141,29 @@ func (l SealedLog) Unseal(commitment string) ([]GroundTruthEntry, error) {
 }
 
 type Request struct {
-	Model       string    `json:"model"`
-	Messages    []Message `json:"messages"`
-	Temperature float64   `json:"temperature"`
-	MaxTokens   int       `json:"max_tokens"`
-	Safety      string    `json:"-"`
-	Serving     string    `json:"-"`
+	Model          string    `json:"model"`
+	Messages       []Message `json:"messages"`
+	Temperature    float64   `json:"temperature"`
+	MaxTokens      int       `json:"max_tokens"`
+	ResponseFormat string    `json:"response_format,omitempty"`
+	Safety         string    `json:"-"`
+	Serving        string    `json:"-"`
 }
 type Message struct {
 	Role string `json:"role"`
 	Text string `json:"content"`
 }
 type Response struct {
-	Text         string        `json:"text"`
-	InputTokens  int           `json:"input_tokens"`
-	OutputTokens int           `json:"output_tokens"`
-	FinishReason string        `json:"finish_reason"`
-	Latency      time.Duration `json:"latency"`
-	Error        string        `json:"error,omitempty"`
+	Text              string        `json:"text"`
+	InputTokens       int           `json:"input_tokens"`
+	OutputTokens      int           `json:"output_tokens"`
+	FinishReason      string        `json:"finish_reason"`
+	Latency           time.Duration `json:"latency"`
+	Error             string        `json:"error,omitempty"`
+	HTTPStatus        int           `json:"http_status,omitempty"`
+	ReturnedModel     string        `json:"returned_model,omitempty"`
+	SystemFingerprint *string       `json:"system_fingerprint,omitempty"`
+	RetryCount        int           `json:"retry_count"`
 }
 
 type Upstream interface {
@@ -273,6 +284,7 @@ type Router struct {
 	upstream  Upstream
 	providers map[string]Upstream
 	layers    Layers
+	allowed   map[string]struct{}
 }
 
 func NewRouter(upstream Upstream, layers Layers) (*Router, error) {
@@ -291,6 +303,15 @@ func NewProviderRouter(providers map[string]Upstream, layers Layers) (*Router, e
 
 func (r *Router) SetLayers(layers Layers) { r.mu.Lock(); r.layers = layers; r.mu.Unlock() }
 func (r *Router) Layers() Layers          { r.mu.RLock(); defer r.mu.RUnlock(); return r.layers }
+func (r *Router) SetCanaryAllowlist(library canary.Library) {
+	allowed := make(map[string]struct{}, len(library.Tasks))
+	for _, task := range library.Tasks {
+		allowed[canaryPromptHash(fillerText(task.Filler)+task.Prompt)] = struct{}{}
+	}
+	r.mu.Lock()
+	r.allowed = allowed
+	r.mu.Unlock()
+}
 func (r *Router) Complete(ctx context.Context, alias string, task canary.Task) Response {
 	r.mu.RLock()
 	layers := r.layers
@@ -308,12 +329,24 @@ func (r *Router) Complete(ctx context.Context, alias string, task canary.Task) R
 			return Response{Error: "hidden model configuration is unavailable"}
 		}
 	}
-	if layers.Safety == "strict" && unsafeRequest(task.Prompt) {
+	if shouldRefuse(layers.Safety, task.Prompt) {
 		return Response{Text: "I can't help with that request.", FinishReason: "content_filter"}
 	}
+	system := task.System
+	if system == "" {
+		system = layers.SystemPrompt
+	}
+	temp := task.Temperature
+	if temp == 0 {
+		temp = layers.Temperature
+	}
+	maxTokens := task.MaxTokens
+	if maxTokens <= 0 {
+		maxTokens = layers.MaxTokens
+	}
 	return upstream.Complete(ctx, Request{Model: layers.Model, Safety: layers.Safety, Serving: layers.Serving,
-		Temperature: layers.Temperature, MaxTokens: layers.MaxTokens,
-		Messages: []Message{{Role: "system", Text: layers.SystemPrompt}, {Role: "user", Text: task.Prompt}}})
+		Temperature: temp, MaxTokens: maxTokens, ResponseFormat: task.ResponseFormat,
+		Messages: []Message{{Role: "system", Text: system}, {Role: "user", Text: fillerText(task.Filler) + task.Prompt}}})
 }
 
 func (r *Router) Handler() http.Handler {
@@ -338,7 +371,15 @@ func (r *Router) Handler() http.Handler {
 		}
 		r.mu.RLock()
 		layers := r.layers
+		allowed := r.allowed
 		r.mu.RUnlock()
+		if len(allowed) > 0 {
+			prompt := payload.Messages[len(payload.Messages)-1].Text
+			if _, ok := allowed[canaryPromptHash(prompt)]; !ok {
+				http.Error(w, "prompt is not an allowed synthetic canary", http.StatusBadRequest)
+				return
+			}
+		}
 		upstream := r.upstream
 		if r.providers != nil {
 			upstream = r.providers[layers.Model]
@@ -376,16 +417,51 @@ func unsafeRequest(prompt string) bool {
 	return false
 }
 
+func shouldRefuse(level, prompt string) bool {
+	if !unsafeRequest(prompt) {
+		return false
+	}
+	return level != "loose"
+}
+
+func fillerText(filler any) string {
+	if filler == nil {
+		return ""
+	}
+
+	if text, ok := filler.(string); ok {
+		return text
+	}
+	raw, err := json.Marshal(filler)
+	if err != nil {
+		return ""
+	}
+	return string(raw)
+}
+
+func canaryPromptHash(prompt string) string {
+	sum := sha256.Sum256([]byte(prompt))
+	return hex.EncodeToString(sum[:])
+}
+
 type Observation struct {
-	CanaryID     string             `json:"canary_id"`
-	Timestamp    time.Time          `json:"timestamp"`
-	Response     string             `json:"response"`
-	LatencyMS    int64              `json:"latency_ms"`
-	InputTokens  int                `json:"input_tokens"`
-	OutputTokens int                `json:"output_tokens"`
-	FinishReason string             `json:"finish_reason"`
-	Error        string             `json:"error,omitempty"`
-	Checks       []CheckObservation `json:"checks"`
+	CanaryID          string             `json:"canary_id"`
+	RunID             string             `json:"run_id"`
+	ProbeExecutionID  string             `json:"probe_execution_id"`
+	RequestConfigHash string             `json:"request_config_hash"`
+	RequestedModel    string             `json:"requested_model,omitempty"`
+	ReturnedModel     string             `json:"returned_model,omitempty"`
+	SystemFingerprint *string            `json:"system_fingerprint,omitempty"`
+	Timestamp         time.Time          `json:"timestamp"`
+	Response          string             `json:"response"`
+	LatencyMS         int64              `json:"latency_ms"`
+	InputTokens       int                `json:"input_tokens"`
+	OutputTokens      int                `json:"output_tokens"`
+	FinishReason      string             `json:"finish_reason"`
+	HTTPStatus        int                `json:"http_status"`
+	RetryCount        int                `json:"retry_count"`
+	Error             string             `json:"error,omitempty"`
+	Checks            []CheckObservation `json:"checks"`
 }
 
 type CheckObservation struct {
@@ -655,9 +731,28 @@ func SaveJSON(path string, value any) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
 		return err
 	}
+
 	data, err := json.MarshalIndent(value, "", "  ")
 	if err != nil {
 		return err
 	}
 	return os.WriteFile(path, append(data, '\n'), 0600)
+}
+
+func RequestConfigHash(request Request) string {
+	raw, _ := json.Marshal(struct {
+		Model          string    `json:"model"`
+		Temperature    float64   `json:"temperature"`
+		MaxTokens      int       `json:"max_tokens"`
+		ResponseFormat string    `json:"response_format"`
+		Messages       []Message `json:"messages"`
+	}{request.Model, request.Temperature, request.MaxTokens, request.ResponseFormat, request.Messages})
+	sum := sha256.Sum256(raw)
+	return hex.EncodeToString(sum[:])
+}
+
+var idCounter atomic.Uint64
+
+func newID() string {
+	return fmt.Sprintf("%d-%d", time.Now().UnixNano(), idCounter.Add(1))
 }

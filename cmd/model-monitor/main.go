@@ -30,6 +30,11 @@ func run() error {
 		command = os.Args[1]
 	}
 	cfg := monitor.DefaultConfig()
+	for _, arg := range os.Args[2:] {
+		if arg == "--mock" {
+			cfg.Mock = true
+		}
+	}
 	if err := cfg.Normalize(); err != nil {
 		return err
 	}
@@ -54,6 +59,7 @@ func execute(command string, cfg monitor.Config) error {
 	}
 	aliasServer := httptest.NewServer(router.Handler())
 	defer aliasServer.Close()
+	router.SetCanaryAllowlist(library)
 	layers := healthy(cfg)
 	var entries []monitor.GroundTruthEntry
 	cycle := 0
@@ -306,6 +312,7 @@ func evaluate(cfg monitor.Config) error {
 	}
 	aliasServer := httptest.NewServer(router.Handler())
 	defer aliasServer.Close()
+	router.SetCanaryAllowlist(library)
 
 	// Evaluate Model B and Model C sequentially
 	resB := evaluateModel(cfg.ModelB, baseline, library, router, aliasServer.URL+"/v1/chat/completions", cfg)
@@ -342,10 +349,10 @@ func evaluate(cfg monitor.Config) error {
 	}
 
 	report := map[string]any{
-		"experiment_id":   fmt.Sprintf("eval-B(%s)-and-C(%s)-vs-A(%s)", cfg.ModelB, cfg.ModelC, cfg.ModelA),
-		"timestamp":       time.Now().UTC(),
-		"baseline_file":   baselinePath,
-		"baseline_model":  cfg.ModelA,
+		"experiment_id":  fmt.Sprintf("eval-B(%s)-and-C(%s)-vs-A(%s)", cfg.ModelB, cfg.ModelC, cfg.ModelA),
+		"timestamp":      time.Now().UTC(),
+		"baseline_file":  baselinePath,
+		"baseline_model": cfg.ModelA,
 		"model_b": map[string]any{
 			"model":           cfg.ModelB,
 			"duration":        resB.TotalDuration.String(),
@@ -460,14 +467,23 @@ func score(results []map[string]any) map[string]float64 {
 }
 
 func newRouter(cfg monitor.Config) (*monitor.Router, error) {
+	if cfg.Mock {
+		mock := monitor.NewMockProvider(1)
+		return monitor.NewProviderRouter(map[string]monitor.Upstream{
+			cfg.ModelA: mock, cfg.ModelB: mock, cfg.ModelC: mock,
+			cfg.ModelA + "|local-a": mock, cfg.ModelA + "|local-b": mock, cfg.ModelA + "|local-c": mock,
+			cfg.ModelB + "|local-a": mock, cfg.ModelB + "|local-b": mock, cfg.ModelB + "|local-c": mock,
+			cfg.ModelC + "|local-a": mock, cfg.ModelC + "|local-b": mock, cfg.ModelC + "|local-c": mock,
+		}, healthy(cfg))
+	}
 	client := &http.Client{Timeout: 60 * time.Second}
 	localA := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
 	localB := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
 	localC := monitor.Local{Endpoint: cfg.LocalEndpoint, Client: client}
 	return monitor.NewProviderRouter(map[string]monitor.Upstream{
 		cfg.ModelA: localA, cfg.ModelB: localB, cfg.ModelC: localC,
-		cfg.ModelA + "|local-a": localA, cfg.ModelA + "|local-c": localA,
-		cfg.ModelB + "|local-a": localB, cfg.ModelB + "|local-c": localB,
-		cfg.ModelC + "|local-a": localC, cfg.ModelC + "|local-c": localC,
+		cfg.ModelA + "|local-a": localA, cfg.ModelA + "|local-c": localC,
+		cfg.ModelB + "|local-a": localB, cfg.ModelB + "|local-c": localC,
+		cfg.ModelC + "|local-a": localC, cfg.ModelC + "|local-c": localA,
 	}, healthy(cfg))
 }

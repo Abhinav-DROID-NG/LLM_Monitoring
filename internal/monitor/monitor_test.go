@@ -1,7 +1,10 @@
 package monitor
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
@@ -70,5 +73,25 @@ func TestTextOnlyDifferenceIsNotDrift(t *testing.T) {
 	changed, _, _ := Compare(reference, current)
 	if changed {
 		t.Fatal("single textual variation should not be meaningful drift")
+	}
+}
+
+func TestAliasRejectsRealUserPrompt(t *testing.T) {
+	router, err := NewRouter(fakeUpstream{}, Layers{Model: "a"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	router.SetCanaryAllowlist(canary.Library{Tasks: []canary.Task{{Prompt: "synthetic", MaxTokens: 5}}})
+	server := httptest.NewServer(router.Handler())
+	defer server.Close()
+	payload := map[string]any{"model": Alias, "messages": []Message{{Role: "user", Text: "REAL_USER_MARKER"}}}
+	body, _ := json.Marshal(payload)
+	response, err := http.Post(server.URL+"/v1/chat/completions", "application/json", bytes.NewReader(body))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer response.Body.Close()
+	if response.StatusCode != http.StatusBadRequest {
+		t.Fatalf("real prompt was accepted with status %d", response.StatusCode)
 	}
 }
