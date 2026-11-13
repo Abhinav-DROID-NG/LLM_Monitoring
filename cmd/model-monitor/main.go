@@ -166,7 +166,7 @@ func scheduledLayers(cfg monitor.Config, layers monitor.Layers, epoch int) monit
 }
 
 func healthy(cfg monitor.Config) monitor.Layers {
-	return monitor.Layers{Model: cfg.ModelA, Safety: "strict", RequestConfig: "default", Serving: "local-a", Temperature: cfg.Temperature, MaxTokens: cfg.MaxTokens, SystemPrompt: cfg.SystemPrompt}
+	return monitor.Layers{Model: cfg.ModelA, Safety: "normal", RequestConfig: "default", Serving: "local-a", Temperature: cfg.Temperature, MaxTokens: cfg.MaxTokens, SystemPrompt: cfg.SystemPrompt}
 }
 
 func loadLatestBaseline(dataDir string) ([]monitor.Observation, string, error) {

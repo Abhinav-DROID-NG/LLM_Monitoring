@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"math"
 	"sort"
@@ -122,7 +123,7 @@ func observationFeatures(observations []Observation) map[string]float64 {
 	if len(observations) == 0 {
 		return features
 	}
-	var refusals, validJSON, passed, checks, lengths float64
+	var refusals, validJSON, passed, checks, lengths, inputTokens float64
 	latencies := make([]float64, 0, len(observations))
 	for _, observation := range observations {
 		if isRefusal(strings.ToLower(observation.Response)) || observation.FinishReason == "content_filter" {
@@ -139,6 +140,7 @@ func observationFeatures(observations []Observation) map[string]float64 {
 			}
 		}
 		lengths += float64(observation.OutputTokens)
+		inputTokens += float64(observation.InputTokens)
 		latencies = append(latencies, float64(observation.LatencyMS))
 	}
 	n := float64(len(observations))
@@ -146,11 +148,26 @@ func observationFeatures(observations []Observation) map[string]float64 {
 	features["json_validity_rate"] = validJSON / n
 	features["structure_compliance"] = safeDivide(passed, checks)
 	features["output_token_count"] = lengths / n
+	features["input_token_count"] = inputTokens / n
+	features["returned_model"] = returnedModelCode(observations)
 	features["latency_p50"] = percentile(latencies, 0.50)
 	features["latency_p95"] = percentile(latencies, 0.95)
 	features["finish_reason_length_rate"] = finishRate(observations, "length")
 	features["sentinel_present_rate"] = sentinelRate(observations)
 	return features
+}
+
+func returnedModelCode(observations []Observation) float64 {
+	if len(observations) == 0 {
+		return 0
+	}
+	model := observations[0].ReturnedModel
+	sum := sha256.Sum256([]byte(model))
+	var value uint64
+	for _, byteValue := range sum[:8] {
+		value = value<<8 | uint64(byteValue)
+	}
+	return float64(value%1000000) / 1000000
 }
 
 func noiseFloor(name string, mean float64) float64 {

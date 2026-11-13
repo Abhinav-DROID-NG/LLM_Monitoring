@@ -35,7 +35,7 @@ func (m *MockProvider) Complete(ctx context.Context, request Request) Response {
 		base = 2
 	}
 	if request.Serving == "local-c" {
-		base = 3
+		base = 20
 	}
 	latency := base
 	if request.Serving == "slow" {
