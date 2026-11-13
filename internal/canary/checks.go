@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -64,6 +65,63 @@ func ValidateChecks(checks []Check) error {
 
 func KnownCheckType(name string) bool { return checkTypes[name] || aggregateCheckTypes[name] }
 
+type Result struct {
+	Passed      bool
+	Unavailable bool
+	Detail      string
+}
+
+type ResponseView struct {
+	Text         string
+	FinishReason string
+	InputTokens  *int
+	OutputTokens *int
+	Error        string
+}
+
+type PerResponseChecker func(task Task, check Check, response ResponseView) Result
+
+var Registry = buildRegistry()
+
+func buildRegistry() map[string]PerResponseChecker {
+	registry := make(map[string]PerResponseChecker, len(checkTypes)+len(aggregateCheckTypes))
+	for name := range checkTypes {
+		registry[name] = func(task Task, check Check, response ResponseView) Result {
+			if response.Error != "" {
+				return Result{Detail: response.Error}
+			}
+			return Result{Passed: EvaluateCheckWithFinishReason(check, response.Text, response.FinishReason)}
+		}
+	}
+	for name := range aggregateCheckTypes {
+		registry[name] = func(Task, Check, ResponseView) Result {
+			return Result{Unavailable: true, Detail: "aggregate"}
+		}
+	}
+	registry["finish_reason"] = func(_ Task, check Check, response ResponseView) Result {
+		if response.FinishReason == "" || response.FinishReason == "unknown" {
+			return Result{Unavailable: true, Detail: "finish_reason unavailable"}
+		}
+		return Result{Passed: response.FinishReason == check.ValueString()}
+	}
+	registry["not_refused"] = func(_ Task, _ Check, response ResponseView) Result {
+		class, providerFilter := ClassifyRefusal(response.Text, response.FinishReason)
+		if providerFilter {
+			return Result{Passed: false, Detail: "provider content filter"}
+		}
+		return Result{Passed: class == NotRefusal, Detail: refusalClassName(class)}
+	}
+	return registry
+}
+
+func CheckResponse(task Task, check Check, response ResponseView) Result {
+	checker, ok := Registry[check.Type]
+	if !ok {
+		return Result{Detail: "unregistered check type"}
+	}
+	return checker(task, check, response)
+}
+
 // EvaluateCheck evaluates a textual response. Checks needing provider metadata
 // (finish_reason) can be evaluated with EvaluateCheckWithFinishReason.
 func EvaluateCheck(c Check, output string) bool {
@@ -86,7 +144,7 @@ func EvaluateCheckWithFinishReason(c Check, output, finishReason string) bool {
 		return strings.TrimSpace(output) == value
 	case "regex_full":
 		r, err := regexp.Compile(value)
-		return err == nil && r.FindString(output) == output
+		return err == nil && r.MatchString(strings.TrimSpace(output))
 	case "contains", "contains_any":
 		for _, v := range values {
 			if strings.Contains(strings.ToLower(output), strings.ToLower(v)) {
@@ -109,17 +167,17 @@ func EvaluateCheckWithFinishReason(c Check, output, finishReason string) bool {
 		}
 		return true
 	case "number_equals":
-		a, e1 := strconv.ParseFloat(strings.TrimSpace(output), 64)
-		b, e2 := strconv.ParseFloat(value, 64)
-		return e1 == nil && e2 == nil && a == b
+		a, e1 := firstNumber(output)
+		b, e2 := strconv.ParseFloat(strings.ReplaceAll(value, ",", ""), 64)
+		return e1 && e2 == nil && math.Abs(a-b) <= 1e-9
 	case "number_in_set":
-		a, err := strconv.ParseFloat(strings.TrimSpace(output), 64)
-		if err != nil {
+		a, ok := firstNumber(output)
+		if !ok {
 			return false
 		}
 		for _, v := range values {
-			b, err := strconv.ParseFloat(strings.TrimSpace(v), 64)
-			if err == nil && a == b {
+			b, err := strconv.ParseFloat(strings.ReplaceAll(strings.TrimSpace(v), ",", ""), 64)
+			if err == nil && math.Abs(a-b) <= 1e-9 {
 				return true
 			}
 		}
@@ -287,6 +345,20 @@ func integer(v string, vs []string, d int) int {
 	return n
 }
 func wordCount(s string) int { return len(strings.Fields(s)) }
+
+var numberPattern = regexp.MustCompile(`-?\d+(?:,\d{3})*(?:\.\d+)?`)
+
+func firstNumber(text string) (float64, bool) {
+	if answer := regexp.MustCompile(`(?i)\bANSWER\s*:\s*`).FindStringIndex(text); answer != nil {
+		text = text[answer[1]:]
+	}
+	match := numberPattern.FindString(text)
+	if match == "" {
+		return 0, false
+	}
+	value, err := strconv.ParseFloat(strings.ReplaceAll(match, ",", ""), 64)
+	return value, err == nil
+}
 func lineCount(s string) int {
 	if s == "" {
 		return 0

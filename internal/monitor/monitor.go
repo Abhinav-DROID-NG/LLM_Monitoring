@@ -465,9 +465,11 @@ type Observation struct {
 }
 
 type CheckObservation struct {
-	Type     string `json:"type"`
-	Expected string `json:"expected"`
-	Passed   bool   `json:"passed"`
+	Type        string `json:"type"`
+	Expected    string `json:"expected"`
+	Passed      bool   `json:"passed"`
+	Unavailable bool   `json:"unavailable,omitempty"`
+	Detail      string `json:"detail,omitempty"`
 }
 
 func Run(ctx context.Context, library canary.Library, router *Router, concurrency int) []Observation {
@@ -610,28 +612,16 @@ func callAlias(ctx context.Context, endpoint string, client *http.Client, task c
 
 func checkTask(task canary.Task, response Response) []CheckObservation {
 	results := make([]CheckObservation, 0, len(task.Checks))
-	text := strings.ToLower(response.Text)
 	for _, check := range task.Checks {
-		passed := response.Error == ""
-		expected := check.Type
-		switch check.Type {
-		case "not_refused":
-			passed = passed && !isRefusal(text)
-			expected = "non-refusal"
-		case "contains_all":
-			for _, value := range check.ValuesList() {
-				passed = passed && strings.Contains(text, strings.ToLower(value))
-			}
-			expected = strings.Join(check.ValuesList(), ",")
-		case "contains":
-			passed = passed && strings.Contains(text, strings.ToLower(check.ValueString()))
-			expected = check.ValueString()
-		case "json_valid":
-			var value any
-			passed = passed && json.Unmarshal([]byte(response.Text), &value) == nil
-			expected = "valid JSON"
+		result := canary.CheckResponse(task, check, canary.ResponseView{
+			Text: response.Text, FinishReason: response.FinishReason, Error: response.Error,
+		})
+		expected := check.ValueString()
+		if expected == "" {
+			expected = check.Type
 		}
-		results = append(results, CheckObservation{Type: check.Type, Expected: expected, Passed: passed})
+		results = append(results, CheckObservation{Type: check.Type, Expected: expected,
+			Passed: result.Passed, Unavailable: result.Unavailable, Detail: result.Detail})
 	}
 	return results
 }
