@@ -58,7 +58,7 @@ func runEvaluation(cfg monitor.Config, objective evaluation.Objective) (evaluati
 	client := evaluationClient{provider: provider, model: cfg.ModelA}
 	settings := evaluation.DefaultConfig(cfg.Profile)
 	settings.Seed, settings.Temperature, settings.MaxTokens, settings.Concurrency = cfg.Seed, cfg.Temperature, cfg.MaxTokens, cfg.Concurrency
-	settings.Timeout = 10 * time.Minute
+	settings.Timeout = overallEvaluationTimeout
 	meta := evaluation.Metadata{Model: cfg.ModelA, Provider: map[bool]string{true: "offline-mock", false: "ollama"}[cfg.Mock], Runtime: "monitor", DatasetVersion: dataset.Version}
 	runner := evaluation.Runner{Client: client}
 	ctx, cancel := context.WithTimeout(context.Background(), overallEvaluationTimeout)
