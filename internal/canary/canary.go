@@ -58,19 +58,24 @@ func (c *Check) UnmarshalJSON(data []byte) error {
 }
 
 type Task struct {
-	ID        string  `json:"id"`
-	Division  string  `json:"division"`
-	Tier      string  `json:"tier"`
-	Prompt    string  `json:"prompt"`
-	MaxTokens int     `json:"max_tokens"`
-	Checks    []Check `json:"checks"`
-	EstIn     int     `json:"est_in_tokens"`
-	EstOut    int     `json:"est_out_tokens"`
-	EstTotal  int     `json:"est_total_tokens"`
+	ID             string  `json:"id"`
+	Division       string  `json:"division"`
+	Tier           string  `json:"tier"`
+	Prompt         string  `json:"prompt"`
+	System         string  `json:"system,omitempty"`
+	Filler         any     `json:"filler,omitempty"`
+	Temperature    float64 `json:"temperature,omitempty"`
+	ResponseFormat string  `json:"response_format,omitempty"`
+	MaxTokens      int     `json:"max_tokens"`
+	Checks         []Check `json:"checks"`
+	EstIn          int     `json:"est_in_tokens"`
+	EstOut         int     `json:"est_out_tokens"`
+	EstTotal       int     `json:"est_total_tokens"`
 }
 
 type Division struct {
-	ID string `json:"id"`
+	ID          string  `json:"id"`
+	Temperature float64 `json:"temperature,omitempty"`
 }
 
 type Library struct {
@@ -121,6 +126,9 @@ func Validate(library Library) error {
 		}
 		if task.Prompt == "" || task.MaxTokens <= 0 {
 			return fmt.Errorf("canary %s has invalid prompt or max_tokens", task.ID)
+		}
+		if err := ValidateChecks(task.Checks); err != nil {
+			return fmt.Errorf("canary %s: %w", task.ID, err)
 		}
 		seen[task.ID] = true
 	}
