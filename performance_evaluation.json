@@ -1,0 +1,12 @@
+{
+  "version": "performance-v1",
+  "performance": [
+    {"id":"P01-01","category":"latency","prompt":"Reply with OK.","requests":50,"concurrency":[1]},
+    {"id":"P01-02","category":"latency","prompt":"Explain in one sentence why the sky is blue.","requests":50,"concurrency":[1]},
+    {"id":"P02-01","category":"throughput","prompt":"Count from 1 to 10.","requests":50,"concurrency":[1,5,10,20]},
+    {"id":"P03-01","category":"resource_consumption","prompt":"Reply with OK.","requests":20,"concurrency":[1]},
+    {"id":"P04-01","category":"load_testing","prompt":"Reply with OK.","requests":50,"concurrency":[1,5,10,20]},
+    {"id":"P06-01","category":"reliability","prompt":"Reply with OK.","requests":50,"concurrency":[1]},
+    {"id":"P07-01","category":"long_running_stability","prompt":"Reply with OK.","requests":50,"concurrency":[1]}
+  ]
+}
