@@ -60,6 +60,8 @@ func run() error {
 		return execute(command, cfg)
 	case "evaluate":
 		return evaluate(cfg)
+	case "compare":
+		return legacyEvaluate(cfg)
 	case "validate":
 		_, err := canary.Load("canaries_fixed.json")
 		if err == nil {
@@ -77,7 +79,7 @@ func run() error {
 		fmt.Println("stored_real_user_content = 0")
 		return nil
 	default:
-		return errors.New("usage: model-monitor [baseline|run|start|evaluate|validate|privacy-check]")
+		return errors.New("usage: model-monitor [baseline|run|start|evaluate|compare|validate|privacy-check]")
 	}
 }
 
