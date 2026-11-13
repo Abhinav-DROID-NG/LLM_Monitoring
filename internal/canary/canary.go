@@ -279,6 +279,44 @@ func (l Library) ByDivision(id string) []Task {
 	return tasks
 }
 
+type PlannedProbe struct {
+	Task        Task `json:"task"`
+	RepeatIndex int  `json:"repeat_index"`
+}
+
+func (l Library) Plan(profile string, cycleIndex int) []PlannedProbe {
+	repeats := map[string]int{"easy": 10, "general": 6, "expensive": 3}
+	expensiveEvery := 4
+	if profile == "development" {
+		repeats["easy"], repeats["general"], repeats["expensive"] = 1, 1, 1
+		expensiveEvery = 1
+	} else if profile == "deep_analysis" {
+		expensiveEvery = 1
+	}
+	if configured, ok := l.Profiles[profile].(map[string]any); ok {
+		if overrides, ok := configured["repeat_overrides"].(map[string]any); ok {
+			for tier, value := range overrides {
+				if number, ok := value.(float64); ok {
+					repeats[tier] = int(number)
+				}
+			}
+		}
+		if value, ok := configured["expensive_every_n_cycles"].(float64); ok && value > 0 {
+			expensiveEvery = int(value)
+		}
+	}
+	planned := make([]PlannedProbe, 0)
+	for _, task := range l.Pinned() {
+		if task.Tier == "expensive" && (cycleIndex <= 0 || cycleIndex%expensiveEvery != 0) {
+			continue
+		}
+		for repeat := 0; repeat < repeats[task.Tier]; repeat++ {
+			planned = append(planned, PlannedProbe{Task: task, RepeatIndex: repeat + 1})
+		}
+	}
+	return planned
+}
+
 func RequestIdentity(task Task, model string, temperature float64, maxTokens int, system string, responseFormat string) string {
 	canonical := struct {
 		MaxTokens      int     `json:"max_tokens"`
