@@ -345,11 +345,9 @@ func legacyEvaluate(cfg monitor.Config) error {
 	}
 
 	bEvalResults := []map[string]any{
-		{"experiment_id": "control-baseline", "actual_layer": "", "predicted_layer": "", "detected": false},
 		{"experiment_id": "eval-" + cfg.ModelB, "actual_layer": "model", "predicted_layer": resB.Analysis.PredictedLayer, "detected": resB.Analysis.Detected},
 	}
 	cEvalResults := []map[string]any{
-		{"experiment_id": "control-baseline", "actual_layer": "", "predicted_layer": "", "detected": false},
 		{"experiment_id": "eval-" + cfg.ModelC, "actual_layer": "model", "predicted_layer": resC.Analysis.PredictedLayer, "detected": resC.Analysis.Detected},
 	}
 
