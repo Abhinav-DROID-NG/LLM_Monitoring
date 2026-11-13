@@ -37,6 +37,11 @@ type Config struct {
 	DataDir       string        `json:"data_dir"`
 	Concurrency   int           `json:"concurrency"`
 	Mock          bool          `json:"mock"`
+	Profile       string        `json:"profile"`
+	Tier          string        `json:"tier"`
+	Seed          int64         `json:"seed"`
+	Trials        int           `json:"trials"`
+	Quiet         bool          `json:"quiet"`
 }
 
 func DefaultConfig() Config {

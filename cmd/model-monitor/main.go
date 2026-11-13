@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -31,10 +32,25 @@ func run() error {
 		command = os.Args[1]
 	}
 	cfg := monitor.DefaultConfig()
-	for _, arg := range os.Args[2:] {
-		if arg == "--mock" {
-			cfg.Mock = true
-		}
+	flags := flag.NewFlagSet(command, flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	mock := flags.Bool("mock", false, "use the offline mock provider")
+	profile := flags.String("profile", "monitoring", "execution profile")
+	tier := flags.String("tier", "", "comma-separated tiers")
+	dataDir := flags.String("data-dir", "", "data directory")
+	seed := flags.Int64("seed", 1, "random seed")
+	trials := flags.Int("trials", 0, "evaluation trial count")
+	concurrency := flags.Int("concurrency", 0, "probe concurrency")
+	quiet := flags.Bool("quiet", false, "suppress progress output")
+	if err := flags.Parse(os.Args[2:]); err != nil {
+		return err
+	}
+	cfg.Mock, cfg.Profile, cfg.Tier, cfg.Seed, cfg.Trials, cfg.Quiet = *mock, *profile, *tier, *seed, *trials, *quiet
+	if *dataDir != "" {
+		cfg.DataDir = *dataDir
+	}
+	if *concurrency > 0 {
+		cfg.Concurrency = *concurrency
 	}
 	if err := cfg.Normalize(); err != nil {
 		return err
@@ -44,8 +60,24 @@ func run() error {
 		return execute(command, cfg)
 	case "evaluate":
 		return evaluate(cfg)
+	case "validate":
+		_, err := canary.Load("canaries_fixed.json")
+		if err == nil {
+			fmt.Println("canary library is valid")
+		}
+		return err
+	case "privacy-check":
+		library, err := canary.Load("canaries_fixed.json")
+		if err != nil {
+			return err
+		}
+		if err := monitor.PrivacyCheck(library, nil); err != nil {
+			return err
+		}
+		fmt.Println("stored_real_user_content = 0")
+		return nil
 	default:
-		return errors.New("usage: model-monitor [baseline|run|start|evaluate]")
+		return errors.New("usage: model-monitor [baseline|run|start|evaluate|validate|privacy-check]")
 	}
 }
 
