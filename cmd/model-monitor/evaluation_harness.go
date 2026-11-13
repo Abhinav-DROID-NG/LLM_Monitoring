@@ -46,9 +46,6 @@ type harnessScenarioResult struct {
 }
 
 func evaluate(cfg monitor.Config) error {
-	if !cfg.Mock {
-		return fmt.Errorf("evaluation harness is offline-only; pass --mock")
-	}
 	spec, err := evalspec.Load("problem3_test_cases.json")
 	if err != nil {
 		return err
@@ -82,7 +79,7 @@ func evaluate(cfg monitor.Config) error {
 
 	results := make([]harnessScenarioResult, 0, len(scenarios))
 	for _, scenario := range scenarios {
-		trials := trialCount(scenario)
+		trials := trialCount(scenario, cfg.Trials)
 		baseline := buildHarnessBaseline(router, library, base, cfg.Concurrency)
 		result := runHarnessScenario(router, library, base, baseline, scenario, trials, cfg)
 		results = append(results, result)
@@ -90,7 +87,7 @@ func evaluate(cfg monitor.Config) error {
 	report := map[string]any{
 		"timestamp":       time.Now().UTC(),
 		"evaluation_spec": "problem3_test_cases.json",
-		"mode":            "deterministic-independent-mock-trials",
+		"mode":            map[bool]string{true: "deterministic-independent-mock-trials", false: "live-ollama-trials"}[cfg.Mock],
 		"scenarios":       results,
 	}
 	jsonPath := filepath.Join(cfg.DataDir, "evaluation_results.json")
@@ -105,7 +102,10 @@ func evaluate(cfg monitor.Config) error {
 	return nil
 }
 
-func trialCount(s harnessScenario) int {
+func trialCount(s harnessScenario, configured int) int {
+	if configured > 0 {
+		return configured
+	}
 	if s.ID == "S0" {
 		return 300
 	}
