@@ -148,12 +148,153 @@ func loadLatestBaseline(dataDir string) ([]monitor.Observation, string, error) {
 	return observations, latest, nil
 }
 
+type TaskComparison struct {
+	CanaryID        string   `json:"canary_id"`
+	Status          string   `json:"status"`
+	Reasons         []string `json:"reasons,omitempty"`
+	BaselineChecks  int      `json:"baseline_checks_passed"`
+	EvalChecks      int      `json:"eval_checks_passed"`
+	TotalChecks     int      `json:"total_checks"`
+	BaselineLatency float64  `json:"baseline_latency_sec"`
+	EvalLatency     float64  `json:"eval_latency_sec"`
+}
+
+type ModelEvalResult struct {
+	ModelName      string
+	Observations   []monitor.Observation
+	WithBaseline   int
+	BelowBaseline  int
+	AboveBaseline  int
+	BelowDetails   []string
+	WithDetails    []string
+	Comparisons    []TaskComparison
+	Analysis       monitor.Analysis
+	TotalDuration  time.Duration
+	AvgLatencySec  float64
+	ChecksPassRate float64
+}
+
+func evaluateModel(modelName string, baseline []monitor.Observation, library canary.Library, router *monitor.Router, endpoint string, cfg monitor.Config) ModelEvalResult {
+	layers := healthy(cfg)
+	layers.Model = modelName
+	router.SetLayers(layers)
+
+	fmt.Println("--------------------------------------------------------------------------------")
+	fmt.Printf("EVALUATING MODEL: %s (1 round, %d tasks)\n", modelName, len(library.Tasks))
+	fmt.Println("--------------------------------------------------------------------------------")
+
+	start := time.Now()
+	current := monitor.RunViaAlias(context.Background(), library, endpoint, nil, cfg.Concurrency)
+	duration := time.Since(start)
+
+	modelSlug := strings.ReplaceAll(strings.ReplaceAll(modelName, ":", "-"), "/", "-")
+	_ = monitor.SaveJSON(filepath.Join(cfg.DataDir, fmt.Sprintf("eval-%s-%s.json", modelSlug, time.Now().UTC().Format("20060102T150405Z"))), current)
+
+	baseMap := make(map[string]monitor.Observation, len(baseline))
+	for _, obs := range baseline {
+		baseMap[obs.CanaryID] = obs
+	}
+
+	res := ModelEvalResult{
+		ModelName:     modelName,
+		Observations:  current,
+		TotalDuration: duration,
+	}
+
+	var totalLatency float64
+	var totalChecks, totalChecksPassed int
+
+	for _, cur := range current {
+		base, exists := baseMap[cur.CanaryID]
+		comp := TaskComparison{
+			CanaryID:        cur.CanaryID,
+			TotalChecks:     len(cur.Checks),
+			BaselineLatency: float64(base.LatencyMS) / 1000.0,
+			EvalLatency:     float64(cur.LatencyMS) / 1000.0,
+		}
+		totalLatency += comp.EvalLatency
+
+		basePassed := 0
+		for _, c := range base.Checks {
+			if c.Passed {
+				basePassed++
+			}
+		}
+		curPassed := 0
+		for _, c := range cur.Checks {
+			if c.Passed {
+				curPassed++
+				totalChecksPassed++
+			}
+			totalChecks++
+		}
+		comp.BaselineChecks = basePassed
+		comp.EvalChecks = curPassed
+
+		if !exists {
+			comp.Status = "NEW"
+			res.Comparisons = append(res.Comparisons, comp)
+			continue
+		}
+
+		if cur.Error != "" && base.Error == "" {
+			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Execution error: %s", cur.Error))
+		}
+
+		for i, curChk := range cur.Checks {
+			if i < len(base.Checks) {
+				if base.Checks[i].Passed && !curChk.Passed {
+					comp.Reasons = append(comp.Reasons, fmt.Sprintf("Check '%s' failed", curChk.Type))
+				}
+			}
+		}
+
+		if base.FinishReason == "stop" && cur.FinishReason != "stop" && cur.FinishReason != "" {
+			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Finish reason changed from stop to %s", cur.FinishReason))
+		}
+
+		if base.LatencyMS > 0 && cur.LatencyMS > base.LatencyMS*5/2 {
+			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Latency degraded (%.2fs vs base %.2fs)", comp.EvalLatency, comp.BaselineLatency))
+		}
+
+		if len(comp.Reasons) > 0 || curPassed < basePassed {
+			comp.Status = "BELOW_BASELINE"
+			res.BelowBaseline++
+			reasonStr := strings.Join(comp.Reasons, "; ")
+			if reasonStr == "" {
+				reasonStr = fmt.Sprintf("Check pass dropped (%d/%d vs base %d/%d)", curPassed, comp.TotalChecks, basePassed, comp.TotalChecks)
+			}
+			res.BelowDetails = append(res.BelowDetails, fmt.Sprintf("[%s] %s (latency: %.2fs vs %.2fs)", cur.CanaryID, reasonStr, comp.EvalLatency, comp.BaselineLatency))
+		} else if curPassed > basePassed {
+			comp.Status = "ABOVE_BASELINE"
+			res.AboveBaseline++
+			res.WithBaseline++
+			res.WithDetails = append(res.WithDetails, fmt.Sprintf("[%s] Improved (%d/%d vs base %d/%d, latency: %.2fs vs %.2fs)", cur.CanaryID, curPassed, comp.TotalChecks, basePassed, comp.TotalChecks, comp.EvalLatency, comp.BaselineLatency))
+		} else {
+			comp.Status = "WITH_BASELINE"
+			res.WithBaseline++
+			res.WithDetails = append(res.WithDetails, fmt.Sprintf("[%s] Matched baseline (%d/%d checks passed, latency: %.2fs)", cur.CanaryID, curPassed, comp.TotalChecks, comp.EvalLatency))
+		}
+
+		res.Comparisons = append(res.Comparisons, comp)
+	}
+
+	if len(current) > 0 {
+		res.AvgLatencySec = totalLatency / float64(len(current))
+	}
+	if totalChecks > 0 {
+		res.ChecksPassRate = float64(totalChecksPassed) * 100.0 / float64(totalChecks)
+	}
+	res.Analysis = monitor.Analyze(baseline, current)
+	return res
+}
+
 func evaluate(cfg monitor.Config) error {
 	baseline, baselinePath, err := loadLatestBaseline(cfg.DataDir)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Loaded baseline from: %s (%d observations)\n\n", baselinePath, len(baseline))
+	fmt.Printf("Loaded baseline from: %s (%d observations, Model A: %s)\n\n", baselinePath, len(baseline), cfg.ModelA)
 
 	library, err := canary.Load("canaries_fixed.json")
 	if err != nil {
@@ -166,183 +307,106 @@ func evaluate(cfg monitor.Config) error {
 	aliasServer := httptest.NewServer(router.Handler())
 	defer aliasServer.Close()
 
-	// Switch the active router layers to lower model (Model B)
-	bLayers := healthy(cfg)
-	bLayers.Model = cfg.ModelB
-	router.SetLayers(bLayers)
+	// Evaluate Model B and Model C sequentially
+	resB := evaluateModel(cfg.ModelB, baseline, library, router, aliasServer.URL+"/v1/chat/completions", cfg)
+	resC := evaluateModel(cfg.ModelC, baseline, library, router, aliasServer.URL+"/v1/chat/completions", cfg)
 
-	fmt.Printf("Running 1 evaluation round for lower model (Model B: %s)...\n\n", cfg.ModelB)
-	current := monitor.RunViaAlias(context.Background(), library, aliasServer.URL+"/v1/chat/completions", nil, cfg.Concurrency)
-
-	// Cross-check against baseline
-	baseMap := make(map[string]monitor.Observation, len(baseline))
-	for _, obs := range baseline {
-		baseMap[obs.CanaryID] = obs
-	}
-
-	type TaskComparison struct {
-		CanaryID        string   `json:"canary_id"`
-		Status          string   `json:"status"`
-		Reasons         []string `json:"reasons,omitempty"`
-		BaselineChecks  int      `json:"baseline_checks_passed"`
-		EvalChecks      int      `json:"eval_checks_passed"`
-		TotalChecks     int      `json:"total_checks"`
-		BaselineLatency float64  `json:"baseline_latency_sec"`
-		EvalLatency     float64  `json:"eval_latency_sec"`
-	}
-
-	var withBaseline, belowBaseline, aboveBaseline int
-	var comparisons []TaskComparison
-	var belowDetails []string
-	var withDetails []string
-
-	for _, cur := range current {
-		base, exists := baseMap[cur.CanaryID]
-		comp := TaskComparison{
-			CanaryID:        cur.CanaryID,
-			TotalChecks:     len(cur.Checks),
-			BaselineLatency: float64(base.LatencyMS) / 1000.0,
-			EvalLatency:     float64(cur.LatencyMS) / 1000.0,
-		}
-
-		basePassed := 0
-		for _, c := range base.Checks {
+	// Baseline stats
+	var baseTotalLatency float64
+	var baseTotalChecks, baseTotalChecksPassed int
+	for _, b := range baseline {
+		baseTotalLatency += float64(b.LatencyMS) / 1000.0
+		for _, c := range b.Checks {
 			if c.Passed {
-				basePassed++
+				baseTotalChecksPassed++
 			}
+			baseTotalChecks++
 		}
-		curPassed := 0
-		for _, c := range cur.Checks {
-			if c.Passed {
-				curPassed++
-			}
-		}
-		comp.BaselineChecks = basePassed
-		comp.EvalChecks = curPassed
-
-		if !exists {
-			comp.Status = "NEW"
-			comparisons = append(comparisons, comp)
-			continue
-		}
-
-		if cur.Error != "" && base.Error == "" {
-			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Execution error: %s", cur.Error))
-		}
-
-		// Check for check regressions
-		for i, curChk := range cur.Checks {
-			if i < len(base.Checks) {
-				if base.Checks[i].Passed && !curChk.Passed {
-					comp.Reasons = append(comp.Reasons, fmt.Sprintf("Check '%s' failed", curChk.Type))
-				}
-			}
-		}
-
-		// Finish reason regression
-		if base.FinishReason == "stop" && cur.FinishReason != "stop" && cur.FinishReason != "" {
-			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Finish reason changed from stop to %s", cur.FinishReason))
-		}
-
-		// Significant latency degradation (> 2.5x slower)
-		if base.LatencyMS > 0 && cur.LatencyMS > base.LatencyMS*5/2 {
-			comp.Reasons = append(comp.Reasons, fmt.Sprintf("Latency degraded (%.2fs vs base %.2fs)", comp.EvalLatency, comp.BaselineLatency))
-		}
-
-		if len(comp.Reasons) > 0 || curPassed < basePassed {
-			comp.Status = "BELOW_BASELINE"
-			belowBaseline++
-			reasonStr := strings.Join(comp.Reasons, "; ")
-			if reasonStr == "" {
-				reasonStr = fmt.Sprintf("Check pass dropped (%d/%d vs base %d/%d)", curPassed, comp.TotalChecks, basePassed, comp.TotalChecks)
-			}
-			belowDetails = append(belowDetails, fmt.Sprintf("[%s] %s (latency: %.2fs vs %.2fs)", cur.CanaryID, reasonStr, comp.EvalLatency, comp.BaselineLatency))
-		} else if curPassed > basePassed {
-			comp.Status = "ABOVE_BASELINE"
-			aboveBaseline++
-			withBaseline++
-			withDetails = append(withDetails, fmt.Sprintf("[%s] Improved (%d/%d vs base %d/%d, latency: %.2fs vs %.2fs)", cur.CanaryID, curPassed, comp.TotalChecks, basePassed, comp.TotalChecks, comp.EvalLatency, comp.BaselineLatency))
-		} else {
-			comp.Status = "WITH_BASELINE"
-			withBaseline++
-			withDetails = append(withDetails, fmt.Sprintf("[%s] Matched baseline (%d/%d checks passed, latency: %.2fs)", cur.CanaryID, curPassed, comp.TotalChecks, comp.EvalLatency))
-		}
-
-		comparisons = append(comparisons, comp)
+	}
+	baseAvgLatency := 0.0
+	if len(baseline) > 0 {
+		baseAvgLatency = baseTotalLatency / float64(len(baseline))
+	}
+	basePassRate := 0.0
+	if baseTotalChecks > 0 {
+		basePassRate = float64(baseTotalChecksPassed) * 100.0 / float64(baseTotalChecks)
 	}
 
-	analysis := monitor.Analyze(baseline, current)
-	control := monitor.Analyze(baseline, baseline)
-
-	evalResults := []map[string]any{
-		{"experiment_id": "control-baseline", "actual_layer": "", "predicted_layer": control.PredictedLayer, "detected": control.Detected},
-		{"experiment_id": "eval-" + cfg.ModelB, "actual_layer": "model", "predicted_layer": analysis.PredictedLayer, "detected": analysis.Detected},
+	bEvalResults := []map[string]any{
+		{"experiment_id": "control-baseline", "actual_layer": "", "predicted_layer": "", "detected": false},
+		{"experiment_id": "eval-" + cfg.ModelB, "actual_layer": "model", "predicted_layer": resB.Analysis.PredictedLayer, "detected": resB.Analysis.Detected},
+	}
+	cEvalResults := []map[string]any{
+		{"experiment_id": "control-baseline", "actual_layer": "", "predicted_layer": "", "detected": false},
+		{"experiment_id": "eval-" + cfg.ModelC, "actual_layer": "model", "predicted_layer": resC.Analysis.PredictedLayer, "detected": resC.Analysis.Detected},
 	}
 
 	report := map[string]any{
-		"experiment_id":    fmt.Sprintf("eval-%s-vs-%s", cfg.ModelB, cfg.ModelA),
-		"baseline_file":    baselinePath,
-		"baseline_model":   cfg.ModelA,
-		"evaluated_model":  cfg.ModelB,
-		"total_tasks":      len(current),
-		"with_baseline":    withBaseline,
-		"below_baseline":   belowBaseline,
-		"above_baseline":   aboveBaseline,
-		"drift_detected":   analysis.Detected,
-		"drift_confidence": analysis.Confidence,
-		"predicted_layer":  analysis.PredictedLayer,
-		"drift_evidence":   analysis.Evidence,
-		"metrics":          score(evalResults),
-		"task_comparisons": comparisons,
+		"experiment_id":   fmt.Sprintf("eval-B(%s)-and-C(%s)-vs-A(%s)", cfg.ModelB, cfg.ModelC, cfg.ModelA),
+		"timestamp":       time.Now().UTC(),
+		"baseline_file":   baselinePath,
+		"baseline_model":  cfg.ModelA,
+		"model_b": map[string]any{
+			"model":           cfg.ModelB,
+			"duration":        resB.TotalDuration.String(),
+			"avg_latency_sec": resB.AvgLatencySec,
+			"check_pass_rate": resB.ChecksPassRate,
+			"with_baseline":   resB.WithBaseline,
+			"below_baseline":  resB.BelowBaseline,
+			"drift_analysis":  resB.Analysis,
+			"metrics":         score(bEvalResults),
+			"comparisons":     resB.Comparisons,
+		},
+		"model_c": map[string]any{
+			"model":           cfg.ModelC,
+			"duration":        resC.TotalDuration.String(),
+			"avg_latency_sec": resC.AvgLatencySec,
+			"check_pass_rate": resC.ChecksPassRate,
+			"with_baseline":   resC.WithBaseline,
+			"below_baseline":  resC.BelowBaseline,
+			"drift_analysis":  resC.Analysis,
+			"metrics":         score(cEvalResults),
+			"comparisons":     resC.Comparisons,
+		},
 	}
 
-	fmt.Println("\n================================================================================")
-	fmt.Println("                       MODEL EVALUATION REPORT                                 ")
-	fmt.Println("================================================================================")
-	fmt.Printf("Baseline (Model A):  %s (%s)\n", cfg.ModelA, filepath.Base(baselinePath))
-	fmt.Printf("Evaluated (Model B): %s (1 round, %d tasks)\n\n", cfg.ModelB, len(current))
+	fmt.Println("\n==========================================================================================")
+	fmt.Println("                       MULTI-MODEL EVALUATION REPORT (A vs B vs C)                        ")
+	fmt.Println("==========================================================================================")
+	fmt.Printf("Baseline File: %s\n\n", filepath.Base(baselinePath))
 
-	fmt.Println("--------------------------------------------------------------------------------")
-	fmt.Println("SUMMARY COMPARISON WITH BASELINE:")
-	fmt.Println("--------------------------------------------------------------------------------")
-	fmt.Printf("Total Tasks Evaluated:  %d\n", len(current))
-	fmt.Printf("At / With Baseline:     %d (%.1f%%)\n", withBaseline, float64(withBaseline)*100.0/float64(len(current)))
-	fmt.Printf("Below Baseline:         %d (%.1f%%)\n", belowBaseline, float64(belowBaseline)*100.0/float64(len(current)))
-	fmt.Printf("Drift Detected:         %v (Confidence: %.2f)\n", analysis.Detected, analysis.Confidence)
-	fmt.Printf("Predicted Shift Layer:  %s\n\n", analysis.PredictedLayer)
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Metric", "Model A (FP16)", "Model B (Q8_0)", "Model C (Q4_K_M)")
+	fmt.Println("------------------------------------------------------------------------------------------")
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Model Tag", cfg.ModelA, cfg.ModelB, cfg.ModelC)
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Approx Disk Size", "~6.2 GB", "~3.3 GB", "~1.9 GB")
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Run Duration", "Baseline Reference", resB.TotalDuration.Round(time.Second).String(), resC.TotalDuration.Round(time.Second).String())
+	fmt.Printf("%-24s | %-18.2fs | %-18.2fs | %-18.2fs\n", "Average Latency", baseAvgLatency, resB.AvgLatencySec, resC.AvgLatencySec)
+	fmt.Printf("%-24s | %-17.1f%% | %-17.1f%% | %-17.1f%%\n", "Check Pass Rate", basePassRate, resB.ChecksPassRate, resC.ChecksPassRate)
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "At/With Baseline", fmt.Sprintf("%d/%d (100%%)", len(baseline), len(baseline)), fmt.Sprintf("%d/%d (%.1f%%)", resB.WithBaseline, len(resB.Observations), float64(resB.WithBaseline)*100.0/float64(len(resB.Observations))), fmt.Sprintf("%d/%d (%.1f%%)", resC.WithBaseline, len(resC.Observations), float64(resC.WithBaseline)*100.0/float64(len(resC.Observations))))
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Below Baseline", "0 (0%)", fmt.Sprintf("%d/%d (%.1f%%)", resB.BelowBaseline, len(resB.Observations), float64(resB.BelowBaseline)*100.0/float64(len(resB.Observations))), fmt.Sprintf("%d/%d (%.1f%%)", resC.BelowBaseline, len(resC.Observations), float64(resC.BelowBaseline)*100.0/float64(len(resC.Observations))))
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Drift Detected", "No (Baseline)", fmt.Sprintf("%v (conf: %.2f)", resB.Analysis.Detected, resB.Analysis.Confidence), fmt.Sprintf("%v (conf: %.2f)", resC.Analysis.Detected, resC.Analysis.Confidence))
+	fmt.Printf("%-24s | %-18s | %-18s | %-18s\n", "Attributed Layer", "N/A", resB.Analysis.PredictedLayer, resC.Analysis.PredictedLayer)
+	fmt.Println("------------------------------------------------------------------------------------------")
 
-	if len(belowDetails) > 0 {
-		fmt.Println("--------------------------------------------------------------------------------")
-		fmt.Printf("TASKS BELOW BASELINE (%d Regressions):\n", len(belowDetails))
-		fmt.Println("--------------------------------------------------------------------------------")
-		for _, d := range belowDetails {
+	if len(resB.BelowDetails) > 0 {
+		fmt.Printf("\n>>> MODEL B (%s) REGRESSIONS BELOW BASELINE (%d):\n", cfg.ModelB, len(resB.BelowDetails))
+		for _, d := range resB.BelowDetails {
 			fmt.Printf(" [BELOW] %s\n", d)
 		}
-		fmt.Println()
 	}
 
-	if len(withDetails) > 0 {
-		fmt.Println("--------------------------------------------------------------------------------")
-		fmt.Printf("TASKS AT OR ABOVE BASELINE (%d Parity/Maintained):\n", len(withDetails))
-		fmt.Println("--------------------------------------------------------------------------------")
-		sampleCount := 5
-		if len(withDetails) < sampleCount {
-			sampleCount = len(withDetails)
+	if len(resC.BelowDetails) > 0 {
+		fmt.Printf("\n>>> MODEL C (%s) REGRESSIONS BELOW BASELINE (%d):\n", cfg.ModelC, len(resC.BelowDetails))
+		for _, d := range resC.BelowDetails {
+			fmt.Printf(" [BELOW] %s\n", d)
 		}
-		for i := 0; i < sampleCount; i++ {
-			fmt.Printf(" [OK]    %s\n", dOrSample(withDetails, i))
-		}
-		if len(withDetails) > sampleCount {
-			fmt.Printf(" ... and %d more tasks matched baseline\n", len(withDetails)-sampleCount)
-		}
-		fmt.Println()
 	}
 
 	evalPath := filepath.Join(cfg.DataDir, "evaluation.json")
 	if err := monitor.SaveJSON(evalPath, report); err != nil {
 		return err
 	}
-	fmt.Printf("Detailed evaluation saved to: %s\n================================================================================\n\n", evalPath)
+	fmt.Printf("\nComprehensive multi-model evaluation saved to: %s\n==========================================================================================\n\n", evalPath)
 	return nil
 }
 
