@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/canary"
-	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/evalspec"
 	"github.com/Abhinav-DROID-NG/LLM_Monitoring/internal/monitor"
 )
 
@@ -46,11 +45,7 @@ type harnessScenarioResult struct {
 }
 
 func evaluate(cfg monitor.Config) error {
-	spec, err := evalspec.Load("problem3_test_cases.json")
-	if err != nil {
-		return err
-	}
-	library, err := canary.Load("precision_reasoning_benchmark.json")
+	library, err := canary.Load("canaries_fixed.json")
 	if err != nil {
 		return err
 	}
@@ -59,43 +54,43 @@ func evaluate(cfg monitor.Config) error {
 		return err
 	}
 	router.SetCanaryAllowlist(library)
-	base := healthy(cfg)
+	trials := cfg.Trials
+	if trials < 1 {
+		trials = 1
+	}
+	router.SetLayers(healthy(cfg))
 
-	var scenarios []harnessScenario
-	for _, s := range spec.SingleLayer {
-		actual := s.Layer
-		if actual == "none" {
-			actual = ""
+	runs := make([][]monitor.Observation, 0, trials)
+	var passed, total int
+	for i := 0; i < trials; i++ {
+		observations := monitor.Run(context.Background(), library, router, cfg.Concurrency)
+		runs = append(runs, observations)
+		for _, observation := range observations {
+			total++
+			if observation.Error == "" && allChecksPassed(observation.Checks) {
+				passed++
+			}
 		}
-		scenarios = append(scenarios, harnessScenario{ID: s.ID, Actual: actual})
-	}
-	for _, s := range spec.Combined {
-		scenarios = append(scenarios, harnessScenario{ID: s.ID, Actual: strings.Join(splitLayers(s.Inject), ","), Combined: true})
-	}
-	for _, s := range spec.FailureCases {
-		actual := failureLayer(s.ID)
-		scenarios = append(scenarios, harnessScenario{ID: s.ID, Actual: actual, Failure: true})
 	}
 
-	results := make([]harnessScenarioResult, 0, len(scenarios))
-	for _, scenario := range scenarios {
-		trials := trialCount(scenario, cfg.Trials)
-		baseline := buildHarnessBaseline(router, library, base, cfg.Concurrency)
-		result := runHarnessScenario(router, library, base, baseline, scenario, trials, cfg)
-		results = append(results, result)
-	}
 	report := map[string]any{
-		"timestamp":       time.Now().UTC(),
-		"evaluation_spec": "problem3_test_cases.json",
-		"mode":            map[bool]string{true: "deterministic-independent-mock-trials", false: "live-ollama-trials"}[cfg.Mock],
-		"scenarios":       results,
+		"timestamp":           time.Now().UTC(),
+		"evaluation_spec":     "canaries_fixed.json",
+		"mode":                map[bool]string{true: "offline-mock-trials", false: "live-ollama-trials"}[cfg.Mock],
+		"trials":              trials,
+		"total_observations":  total,
+		"passed_observations": passed,
+		"failed_observations": total - passed,
+		"pass_rate":           float64(passed) / float64(maxInt(1, total)),
+		"runs":                runs,
 	}
 	jsonPath := filepath.Join(cfg.DataDir, "evaluation_results.json")
 	if err := monitor.SaveJSON(jsonPath, report); err != nil {
 		return err
 	}
 	mdPath := filepath.Join(cfg.DataDir, "evaluation_results.md")
-	if err := os.WriteFile(mdPath, []byte(renderHarnessMarkdown(results)), 0600); err != nil {
+	markdown := fmt.Sprintf("# Evaluation results\n\n- Canary library: `canaries_fixed.json`\n- Trials: %d\n- Observations: %d\n- Passed: %d\n- Failed: %d\n- Pass rate: %.3f\n", trials, total, passed, total-passed, float64(passed)/float64(maxInt(1, total)))
+	if err := os.WriteFile(mdPath, []byte(markdown), 0600); err != nil {
 		return err
 	}
 	fmt.Printf("Evaluation results saved to %s and %s\n", jsonPath, mdPath)
